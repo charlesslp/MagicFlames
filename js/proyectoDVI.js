@@ -35,6 +35,14 @@ var game = function() {
 
   });
 
+
+
+  //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  //PERSONAJES
+  //PERSONAJES
+  //PERSONAJES
+  //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
    //Animaciones del heroe
    Q.animations('PlayerAnimation', {
     	walk_down:{frames: [0, 1, 2], rate: 1/4},
@@ -221,6 +229,65 @@ var selector = Q.Sprite.extend("Selector", {
 
 
 
+
+
+
+
+
+
+//Animaciones de peronaje
+  Q.animations('CharacterAnimation', {
+    walk_down:{frames: [0, 1, 2], rate: 1/4},
+    walk_left: {frames: [3, 4, 5], rate: 1/4},
+    walk_right: {frames: [6, 7, 8], rate: 1/4},
+    walk_up: {frames: [9, 10, 11], rate: 1/4},
+    stop_down:{frames: [1], loop : false},
+    stop_left:{frames: [4], loop : false},
+    stop_right:{frames: [7], loop : false},
+    stop_up:{frames: [10], loop : false},
+    habla:{frames:[1], loop:false, trigger: "hablar"}
+   });
+
+    //Sprite de un jarron
+    var personaje = Q.Sprite.extend("Personaje",{
+      init: function(p) {
+        //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
+        this._super(p, { sprite: "CharacterAnimation", sheet: "character_walk_down", gravity:0});
+        this.add('2d, animation');
+
+        this.p.conversacion = [];
+
+        this.p.conversacion[0] = "En mis tiempos esto era otra cosa";
+        this.p.conversacion[1] = "Los chavales de hoy en día";
+        this.p.conversacion[2] = "no os despegais de los pergaminos...";
+        this.play("stop_down");
+
+        this.hablar = function(conv){
+            Q.state.set("texto_conversacion", this.p.conversacion);
+            console.log("Has hablado conmigo: "+this.p.conversacion);
+
+        }
+      }
+    });
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN PERSONAJES
+//FIN PERSONAJES
+//FIN PERSONAJES
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//MAGIA
+//MAGIA
+//MAGIA
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
   Q.animations('MagicAnimation', {
 
     fuego: { frames: [0, 9], rate: 1/4, loop: true},
@@ -286,6 +353,31 @@ var magia = Q.Sprite.extend("Magic", {
   }
 });
 
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN MAGIA
+//FIN MAGIA
+//FIN MAGIA
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//OBJETOS
+//OBJETOS
+//OBJETOS
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
 //Hierba
   Q.animations('miHierba', {
     destruir_hierba: {frames: [1], rate: 9/15, loop:false, trigger: "destruir"}
@@ -318,6 +410,10 @@ var magia = Q.Sprite.extend("Magic", {
 		}
 	});
 
+
+
+
+
   //Jarron
     Q.animations('miJarron', {
       destruir_jarron: {frames: [1,2,3], rate: 1/5, loop:false, trigger: "destruir"}
@@ -349,6 +445,9 @@ var magia = Q.Sprite.extend("Magic", {
   	});
 
 
+
+
+
     //Cofre
       Q.animations('CofreAnimacion', {
         abrir_cofre: {frames: [1,2,3], rate: 1/5, loop:false, trigger: "abrir"}
@@ -370,40 +469,146 @@ var magia = Q.Sprite.extend("Magic", {
         }
       });
 
-    //Animaciones de peronaje
-      Q.animations('CharacterAnimation', {
-        walk_down:{frames: [0, 1, 2], rate: 1/4},
-        walk_left: {frames: [3, 4, 5], rate: 1/4},
-        walk_right: {frames: [6, 7, 8], rate: 1/4},
-        walk_up: {frames: [9, 10, 11], rate: 1/4},
-        stop_down:{frames: [1], loop : false},
-        stop_left:{frames: [4], loop : false},
-        stop_right:{frames: [7], loop : false},
-        stop_up:{frames: [10], loop : false},
-        habla:{frames:[1], loop:false, trigger: "hablar"}
-       });
 
-        //Sprite de un jarron
-        var personaje = Q.Sprite.extend("Personaje",{
-          init: function(p) {
-            //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
-            this._super(p, { sprite: "CharacterAnimation", sheet: "character_walk_down", gravity:0});
-            this.add('2d, animation');
 
-            this.p.conversacion = [];
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN OBJETOS
+//FIN OBJETOS
+//FIN OBJETOS
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-            this.p.conversacion[0] = "En mis tiempos esto era otra cosa";
-            this.p.conversacion[1] = "Los chavales de hoy en día";
-            this.p.conversacion[2] = "no os despegais de los pergaminos...";
-            this.play("stop_down");
 
-            this.hablar = function(conv){
-                Q.state.set("texto_conversacion", this.p.conversacion);
-                console.log("Has hablado conmigo: "+this.p.conversacion);
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//ENEMIGOS
+//ENEMIGOS
+//ENEMIGOS
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-            }
-          }
-        });
+
+  Q.component("defaultEnemy", {
+    added: function(){
+      var entity = this.entity;
+      entity.play("enemy_walk_down");
+
+      entity.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
+        if(collision.obj.isA("Player")){
+          collision.obj.destroy();
+        }
+      });
+    } 
+  });
+
+  Q.animations('murcielagoAnimation', {
+      enemy_walk_down: {frames: [0, 1, 2, 3], rate: 1/4},
+      enemy_walk_up:{frames: [4, 5, 6, 7], rate: 1/4},
+      enemy_walk_right: {frames: [8, 9, 10, 11], rate: 1/4},
+      enemy_walk_left: {frames: [12, 13, 14, 15], rate: 1/4}
+  });
+
+  var murcielago = Q.Sprite.extend("Murcielago",{
+    init: function(p){
+      this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: 0, vy: 0, gravity: 0, direccion: "down"});
+      this.add('2d, animation, defaultEnemy');
+    },
+    step: function(){
+      if(this.p.direction === "down")
+        this.play("enemy_walk_down");
+      else if(this.p.direction === "up")
+        this.play("enemy_walk_up");
+      else if(this.p.direction === "left")
+        this.play("enemy_walk_left");
+      else if(this.p.direction === "right")
+        this.play("enemy_walk_right");
+    }
+  });
+
+
+  
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN ENEMIGOS
+//FIN ENEMIGOS
+//FIN ENEMIGOS
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//CONVERSACIÓN
+//CONVERSACIÓN
+//CONVERSACIÓN
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+  //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
+  Q.UI.Text.extend("Conversacion",{
+    init: function(p) {
+      this.keydown = false;
+      this.conversacion;
+      this.i = 0;
+      this._super(p,{
+        label: Q.state.get("texto_conversacion"),
+        color: "white",
+        size: 12,
+        x: 0,
+        y: 0
+      });
+
+      Q.state.on("change.texto_conversacion",this,"update_conv");
+    },
+    update_conv: function(conversacion) {
+
+        if(conversacion !== this.i)
+        	this.conversacion = conversacion;
+
+        this.p.label = this.conversacion[this.i];
+        Q.stage(0).pause();
+        this.keydown = true;
+        this.i++;
+
+    },
+    step: function(dt) {
+
+
+	    if(Q.stage(0).paused){
+	      if(!Q.inputs['fire'])
+	        this.keydown = false;
+
+	    	if(!this.keydown && Q.inputs['fire']){
+	    		if(!this.conversacion[this.i]){
+	    			this.i = 0;
+	    			this.conversacion = [];
+	    			this.conversacion[0] = "";
+			        Q.state.set("texto_conversacion", this.conversacion);
+			        this.i = 0;
+			        Q.stage(0).unpause();
+			    }
+			    else {
+			        Q.state.set("texto_conversacion", this.i);
+			    }
+	    	}
+	    }
+    }
+  });
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN CONVERSACIÓN
+//FIN CONVERSACIÓN
+//FIN CONVERSACIÓN
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//JUEGO
+//JUEGO
+//JUEGO
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 
 
@@ -463,92 +668,14 @@ var magia = Q.Sprite.extend("Magic", {
   });
 
 
-  //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
-  Q.UI.Text.extend("Conversacion",{
-    init: function(p) {
-      this.keydown = false;
-      this.conversacion;
-      this.i = 0;
-      this._super(p,{
-        label: Q.state.get("texto_conversacion"),
-        color: "white",
-        size: 12,
-        x: 0,
-        y: 0
-      });
 
-      Q.state.on("change.texto_conversacion",this,"update_conv");
-    },
-    update_conv: function(conversacion) {
-
-        if(conversacion !== this.i)
-        	this.conversacion = conversacion;
-
-        this.p.label = this.conversacion[this.i];
-        Q.stage(0).pause();
-        this.keydown = true;
-        this.i++;
-
-    },
-    step: function(dt) {
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN JUEGO
+//FIN JUEGO
+//FIN JUEGO
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-	    if(Q.stage(0).paused){
-	      if(!Q.inputs['fire'])
-	        this.keydown = false;
 
-	    	if(!this.keydown && Q.inputs['fire']){
-	    		if(!this.conversacion[this.i]){
-	    			this.i = 0;
-	    			this.conversacion = [];
-	    			this.conversacion[0] = "";
-			        Q.state.set("texto_conversacion", this.conversacion);
-			        this.i = 0;
-			        Q.stage(0).unpause();
-			    }
-			    else {
-			        Q.state.set("texto_conversacion", this.i);
-			    }
-	    	}
-	    }
-    }
-  });
-
-  Q.component("defaultEnemy", {
-    added: function(){
-      var entity = this.entity;
-      entity.play("enemy_walk_down");
-
-      entity.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
-        if(collision.obj.isA("Player")){
-          collision.obj.destroy();
-        }
-      });
-    } 
-  });
-
-  Q.animations('murcielagoAnimation', {
-      enemy_walk_down: {frames: [0, 1, 2, 3], rate: 1/4},
-      enemy_walk_up:{frames: [4, 5, 6, 7], rate: 1/4},
-      enemy_walk_right: {frames: [8, 9, 10, 11], rate: 1/4},
-      enemy_walk_left: {frames: [12, 13, 14, 15], rate: 1/4}
-  });
-
-  var murcielago = Q.Sprite.extend("Murcielago",{
-    init: function(p){
-      this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: 0, vy: 0, gravity: 0, direccion: "down"});
-      this.add('2d, animation, defaultEnemy');
-    },
-    step: function(){
-      if(this.p.direction === "down")
-        this.play("enemy_walk_down");
-      else if(this.p.direction === "up")
-        this.play("enemy_walk_up");
-      else if(this.p.direction === "left")
-        this.play("enemy_walk_left");
-      else if(this.p.direction === "right")
-        this.play("enemy_walk_right");
-    }
-  });
 
 }
