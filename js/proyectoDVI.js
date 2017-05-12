@@ -64,7 +64,6 @@ var game = function() {
           // grab the entity's properties for easy reference
           var p = this.entity.p;
 
-          if(!this.entity.hablando){
         		//Movimiento arriba
             if(Q.inputs['up'] && !Q.inputs['down'] && !Q.inputs['right'] && !Q.inputs['left']){
               p.vy = -p.speed;
@@ -114,8 +113,6 @@ var game = function() {
                           Q.inputs['right'] ? 'right' :
                           Q.inputs['up']    ? 'up' :
                           Q.inputs['down']  ? 'down' : p.direction;
-        }
-
         }
   });
 
@@ -393,19 +390,18 @@ var magia = Q.Sprite.extend("Magic", {
             this._super(p, { sprite: "CharacterAnimation", sheet: "character_walk_down", gravity:0});
             this.add('2d, animation');
 
-            this.p.conversacion = "En mis tiempos esto era otra cosa";
+            this.p.conversacion = [];
+
+            this.p.conversacion[0] = "En mis tiempos esto era otra cosa";
+            this.p.conversacion[1] = "Los chavales de hoy en día";
+            this.p.conversacion[2] = "no os despegais de los pergaminos...";
             this.play("stop_down");
 
             this.hablar = function(conv){
-                Q.state.set("texto_conversacion", this.p.conversacion, false);
+                Q.state.set("texto_conversacion", this.p.conversacion);
                 console.log("Has hablado conmigo: "+this.p.conversacion);
 
             }
-
-            this.on("hablar", function(){
-                //Conversar
-                console.log("Has hablado conmigo: "+this.p.conversacion);
-            });
           }
         });
 
@@ -451,10 +447,10 @@ var magia = Q.Sprite.extend("Magic", {
       y: Q.height-50,
       w: Q.width,
       h: 50,
-      fill: "black1",
+      fill: "black",
       border: 5,
       shadow: 10,
-      shadowColor: "rgba(0,0,0,0.5)"
+      shadowColor: "rgba(0,0,0,1)"
     }));
 
     container.insert(new Q.Conversacion({
@@ -471,6 +467,8 @@ var magia = Q.Sprite.extend("Magic", {
   Q.UI.Text.extend("Conversacion",{
     init: function(p) {
       this.keydown = false;
+      this.conversacion;
+      this.i = 0;
       this._super(p,{
         label: Q.state.get("texto_conversacion"),
         color: "white",
@@ -481,22 +479,38 @@ var magia = Q.Sprite.extend("Magic", {
 
       Q.state.on("change.texto_conversacion",this,"update_conv");
     },
-    update_conv: function(texto, reset) {
-      if(!reset){
-        this.p.label = texto;
+    update_conv: function(conversacion) {
+
+        if(conversacion !== this.i)
+        	this.conversacion = conversacion;
+
+        this.p.label = this.conversacion[this.i];
         Q.stage(0).pause();
         this.keydown = true;
-      }
+        this.i++;
+
     },
     step: function(dt) {
 
-      if(!Q.inputs['fire'])
-        this.keydown = false;
 
-    	if(!this.keydown && Q.inputs['fire']){
-        Q.state.set("texto_conversacion", "", true);
-        Q.stage(0).unpause();
-    	}
+	    if(Q.stage(0).paused){
+	      if(!Q.inputs['fire'])
+	        this.keydown = false;
+
+	    	if(!this.keydown && Q.inputs['fire']){
+	    		if(!this.conversacion[this.i]){
+	    			this.i = 0;
+	    			this.conversacion = [];
+	    			this.conversacion[0] = "";
+			        Q.state.set("texto_conversacion", this.conversacion);
+			        this.i = 0;
+			        Q.stage(0).unpause();
+			    }
+			    else {
+			        Q.state.set("texto_conversacion", this.i);
+			    }
+	    	}
+	    }
     }
   });
 
