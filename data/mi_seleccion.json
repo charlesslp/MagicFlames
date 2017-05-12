@@ -1,0 +1,9 @@
+{
+	"hierba":{"sx":128,"sy":64,"tileW":32,"tileH":32,"frames":2},
+	"jarron":{"sx":128,"sy":32,"tileW":32,"tileH":32,"frames":4},
+	"cofre":{"sx":128,"sy":0,"tileW":32,"tileH":32,"frames":4},
+	"fuego":{"sx":128,"sy":96,"tileW":32,"tileH":32,"frames":10},
+	"agua":{"sx":192,"sy":96,"tileW":32,"tileH":32,"frames":10},
+	"viento":{"sx":224,"sy":96,"tileW":32,"tileH":32,"frames":10},
+	"tierra":{"sx":160,"sy":96,"tileW":32,"tileH":32,"frames":10}
+}
