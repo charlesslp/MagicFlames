@@ -29,7 +29,7 @@ var game = function() {
     Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   	 //Cargamos el contenido del TMX
-  	Q.loadTMX("level.tmx, Prueba.tmx", function() {
+  	Q.loadTMX("level.tmx, Prueba.tmx, Fuego.tmx", function() {
   		Q.stageScene("startGame");
   	});
 
@@ -221,6 +221,10 @@ var selector = Q.Sprite.extend("Selector", {
       else if(collision.obj.isA("Personaje")){
         collision.obj.hablar();
       }
+      else if(collision.obj.isA("Portal")){
+        if(collision.obj.p.abierto)
+        cambiarNivel(collision.obj.p.level);
+      }
 
       this.destroy();
     });
@@ -306,7 +310,7 @@ var magia = Q.Sprite.extend("Magic", {
     this._super(p, { sprite:"MagicAnimation", speed: 250, sheet: p.tipo, gravity: 0, sensor:true});
     this.add('2d, animation');
 
-    var margen = 32;
+    var margen = 34;
     if(this.p.direction === 'up'){
       this.p.vy = -this.p.speed;
       this.p.vx = 0;
@@ -469,6 +473,16 @@ var magia = Q.Sprite.extend("Magic", {
         }
       });
 
+      //Portal
+      var portal = Q.Sprite.extend("Portal",{
+         init: function(p) {
+          
+          this._super(p, { sprite: "CofreAnimacion", sheet: "cofre", gravity:0});
+          this.add('2d, animation');
+        }
+
+      });
+
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -622,12 +636,16 @@ var magia = Q.Sprite.extend("Magic", {
 	}));
 	var button = container.insert(new Q.UI.Button({x: -Q.width/2, y: -Q.height/2, asset: "Intro.png", keyActionName: "fire"}));
 	button.on("click", function(){
-		Q.clearStages();
-		Q.stageScene(Q.state.get("level"));
-    Q.stageScene('HUD', 2);
+	cambiarNivel(Q.state.get("level"));
   });
 	container.fit(20);
 });
+
+  function cambiarNivel(nivel){
+        Q.clearStages();
+        Q.stageScene(nivel);
+        Q.stageScene('HUD', 2);
+  }
 
 	//Nivel de prueba en el que tendremos todos los objetos y poderes
   Q.scene("Prueba", function(stage) {
@@ -640,8 +658,25 @@ var magia = Q.Sprite.extend("Magic", {
 	  var player = stage.insert(new heroe({ x: 300, y: 220 }));
 	  stage.follow(player);
 
-    //stage.insert(new cofre({ x: 200, y: 220 }));
-    stage.insert(new personaje({x:200, y:220}));
+    stage.insert(new portal({ x: 200, y: 220, level: "fuego", abierto:true}));
+    stage.insert(new portal({ x: 200, y: 320, level: "fuego", abierto:false}));
+    stage.insert(new personaje({x:150, y:220}));
+
+  });
+
+  //Nivel de fuego
+  Q.scene("fuego", function(stage) {
+    Q.stageTMX("Fuego.tmx", stage);
+    stage.add("viewport");
+    
+    stage.insert(new murcielago({x: 300, y: 260}));
+
+    Q.state.set("texto_conversacion", "", true);
+    var player = stage.insert(new heroe({ x: 300, y: 220 }));
+    stage.follow(player);
+
+    stage.insert(new portal({ x: 200, y: 220, level: "Prueba", abierto:true }));
+    stage.insert(new personaje({x:150, y:220}));
 
   });
 
