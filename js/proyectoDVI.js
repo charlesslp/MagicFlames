@@ -479,7 +479,7 @@ var magia = Q.Sprite.extend("Magic", {
       //Portal
       var portal = Q.Sprite.extend("Portal",{
          init: function(p) {
-          
+
           this._super(p, { sprite: "CofreAnimacion", sheet: "cofre", gravity:0});
           this.add('2d, animation');
         }
@@ -512,7 +512,7 @@ var magia = Q.Sprite.extend("Magic", {
           collision.obj.destroy();
         }
       });
-    } 
+    }
   });
 
   Q.animations('murcielagoAnimation', {
@@ -540,7 +540,7 @@ var magia = Q.Sprite.extend("Magic", {
   });
 
 
-  
+
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //FIN ENEMIGOS
@@ -654,7 +654,7 @@ var magia = Q.Sprite.extend("Magic", {
   Q.scene("Prueba", function(stage) {
 	  Q.stageTMX("Prueba.tmx", stage);
 	  stage.add("viewport");
-    
+
     stage.insert(new murcielago({x: 300, y: 260}));
 
     Q.state.set("texto_conversacion", "", true);
@@ -671,7 +671,7 @@ var magia = Q.Sprite.extend("Magic", {
   Q.scene("fuego", function(stage) {
     Q.stageTMX("Fuego.tmx", stage);
     stage.add("viewport");
-    
+
     stage.insert(new murcielago({x: 300, y: 260}));
 
     Q.state.set("texto_conversacion", "", true);
