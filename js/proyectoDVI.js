@@ -9,7 +9,7 @@ Alumnos:
 var game = function() {
 
 //Cargamos el modulo de quintus, con los modilos necesarios
-  var Q = window.Q = Quintus({ audioSupported: [ 'mp3' ] })
+  var Q = window.Q = Quintus({ audioSupported: [ 'ogg','mp3' ] })
    .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI, TMX, Audio")
    // Maximize permite maximizar el tamaño al de la pantalla
    .setup({ maximize: false, width:420, height:420 })
@@ -17,7 +17,8 @@ var game = function() {
    .controls().touch().enableSound();
 
    //Cargamos recursos y lo necesario para el menu del titulo
-   var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, Intro.png, mago.png, mago.json, murcielago.png, murcielago.json';
+   var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json,'+
+   'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg';
 
   Q.load( recursos , function(){
 
@@ -309,7 +310,7 @@ var magia = Q.Sprite.extend("Magic", {
 
     this._super(p, { sprite:"MagicAnimation", speed: 250, sheet: p.tipo, gravity: 0, sensor:true});
     this.add('2d, animation');
-
+     Q.audio.play("magia.ogg");
     var margen = 34;
     if(this.p.direction === 'up'){
       this.p.vy = -this.p.speed;
@@ -345,9 +346,11 @@ var magia = Q.Sprite.extend("Magic", {
           this.destroy();
           collision.obj.play("destruir_hierba");
         } else if(collision.obj.isA("Jarron")){
+          Q.audio.play("Jarron_roto.ogg");
           this.destroy();
           collision.obj.play("destruir_jarron");
         } else if(collision.obj.isA("Murcielago")){
+          Q.audio.play("monster_die.ogg");
           this.destroy();
           collision.obj.destroy();
         } else{
