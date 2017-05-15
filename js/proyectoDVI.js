@@ -133,6 +133,9 @@ var game = function() {
 		},
 		step: function(dt) {
 
+		if(Q.state.get("texto_mana") < 100)
+			Q.state.inc("texto_mana", dt*5);
+
   		//se mueve ejecuta la animacion de andar
         if(this.p.direction === "down" && Q.inputs['down'] && !this.p.parado)
           this.play("walk_down");
@@ -163,20 +166,33 @@ var game = function() {
           this.play("stop_right");
 
         if(Q.inputs['a'] && !this.p.lanzado){
-          this.stage.insert(new magia({tipo: "fuego", direction: this.p.direction, x: this.p.x, y: this.p.y}));
-          this.p.lanzado = true;
+        	if(Q.state.get("texto_mana") >= 10){
+        		Q.state.dec("texto_mana", 10);
+          		this.stage.insert(new magia({tipo: "fuego", direction: this.p.direction, x: this.p.x, y: this.p.y}));
+          		this.p.lanzado = true;
+          	}
         }
         if(Q.inputs['s'] && !this.p.lanzado){
-          this.stage.insert(new magia({tipo: "agua", direction: this.p.direction, x: this.p.x, y: this.p.y}));
-          this.p.lanzado = true;
+
+        	if(Q.state.get("texto_mana") >= 20){
+        		Q.state.dec("texto_mana", 20);
+          		this.stage.insert(new magia({tipo: "agua", direction: this.p.direction, x: this.p.x, y: this.p.y}));
+          		this.p.lanzado = true;
+          	}
         }
         if(Q.inputs['d'] && !this.p.lanzado){
-          this.stage.insert(new magia({tipo: "tierra", direction: this.p.direction, x: this.p.x, y: this.p.y}));
-          this.p.lanzado = true;
+        	if(Q.state.get("texto_mana") >= 30){
+        		Q.state.dec("texto_mana", 30);
+          		this.stage.insert(new magia({tipo: "tierra", direction: this.p.direction, x: this.p.x, y: this.p.y}));
+          		this.p.lanzado = true;
+          	}
         }
         if(Q.inputs['f'] && !this.p.lanzado){
-          this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x, y: this.p.y}));
-          this.p.lanzado = true;
+        	if(Q.state.get("texto_mana") >= 50){
+        		Q.state.dec("texto_mana", 50);
+          		this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x, y: this.p.y}));
+          		this.p.lanzado = true;
+          	}
         }
 
 
@@ -509,7 +525,22 @@ var magia = Q.Sprite.extend("Magic", {
 
       entity.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
         if(collision.obj.isA("Player")){
-          collision.obj.destroy();
+
+        	Q.state.dec("texto_vida", 10);
+
+        	if(Q.state.get("texto_vida") <= 0)
+        		collision.obj.destroy();
+        	else{
+
+        		switch(collision.obj.p.direction){
+        			case "up": collision.obj.p.y = collision.obj.p.y+35; break;
+        			case "down": collision.obj.p.y = collision.obj.p.y-35; break;
+        			case "right": collision.obj.p.x = collision.obj.p.x-35; break;
+        			case "left": collision.obj.p.x = collision.obj.p.x+35; break;
+        		}
+
+        		
+        	}
         }
       });
     }
@@ -657,7 +688,9 @@ var magia = Q.Sprite.extend("Magic", {
 
     stage.insert(new murcielago({x: 300, y: 260}));
 
-    Q.state.set("texto_conversacion", "", true);
+    Q.state.set("texto_conversacion", "");
+    Q.state.set("texto_mana", 100);
+    Q.state.set("texto_vida", 100);
 	  var player = stage.insert(new heroe({ x: 300, y: 220 }));
 	  stage.follow(player);
 
@@ -674,7 +707,9 @@ var magia = Q.Sprite.extend("Magic", {
 
     stage.insert(new murcielago({x: 300, y: 260}));
 
-    Q.state.set("texto_conversacion", "", true);
+    Q.state.set("texto_conversacion", "");
+    Q.state.set("texto_mana", 100);
+    Q.state.set("texto_vida", 100);
     var player = stage.insert(new heroe({ x: 300, y: 220 }));
     stage.follow(player);
 
@@ -683,34 +718,120 @@ var magia = Q.Sprite.extend("Magic", {
 
   });
 
-  Q.scene('HUD',function(stage) {
-
-    var container = stage.insert(new Q.UI.Container({
-      x: 100,
-      y: Q.height-50,
-      w: Q.width,
-      h: 50,
-      fill: "black",
-      border: 5,
-      shadow: 10,
-      shadowColor: "rgba(0,0,0,1)"
-    }));
-
-    container.insert(new Q.Conversacion({
-        x: container.p.x,
-        y: -20,
-
-    }));
-
-    container.fit(20);
-  });
-
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //FIN JUEGO
 //FIN JUEGO
 //FIN JUEGO
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//HUD
+//HUD
+//HUD
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+  Q.scene('HUD',function(stage) {
+
+    var container = stage.insert(new Q.UI.Container({
+      x: 0,
+      y: 0,
+      w: Q.width,
+      h: Q.height,
+      fill: "rgba(0,0,0,0.5)",
+      border: 1,
+      shadow: 0,
+      shadowColor: "rgba(0,0,0,0.5)"
+    }));
+
+    container.insert(new Q.Conversacion({
+        x: container.p.x,
+        y: Q.height-50,
+
+    }));
+
+    container.insert(new Q.Vidas({
+        x: 50,
+        y: 40,
+
+    }));
+
+    container.fit(10);
+
+
+    var container2 = stage.insert(new Q.UI.Container({
+      x: 0,
+      y: 0,
+      w: Q.width,
+      h: Q.height,
+      fill: "rgba(0,0,0,0.5)",
+      border: 1,
+      shadow: 0,
+      shadowColor: "rgba(0,0,0,0.5)"
+    }));
+
+    container2.insert(new Q.Mana({
+        x: Q.width-50,
+        y: 40,
+
+    }));
+
+    container2.fit(10);
+  });
+
+
+
+
+
+  //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
+  Q.UI.Text.extend("Vidas",{
+    init: function(p) {
+
+      this._super(p,{
+        label: "Vidas: " + Q.state.get("texto_vida"),
+        color: "red",
+        size: 12,
+        x: 0,
+        y: 0
+      });
+
+      Q.state.on("change.texto_vida",this,"update_vidas");
+    },
+    update_vidas: function(vidas) {
+        this.p.label = "Vidas: " + vidas;
+    }
+  });
+
+
+
+  //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
+  Q.UI.Text.extend("Mana",{
+    init: function(p) {
+
+      this._super(p,{
+        label: "Maná: " + Q.state.get("texto_mana").toFixed(0),
+        color: "red",
+        size: 12,
+        x: 0,
+        y: 0
+      });
+
+      Q.state.on("change.texto_mana",this,"update_mana");
+    },
+    update_mana: function(mana) {
+        this.p.label = "Maná: " + mana.toFixed();
+    }
+  });
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN HUD
+//FIN HUD
+//FIN HUD
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 

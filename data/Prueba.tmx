@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="107">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="109">
  <tileset firstgid="1" name="Player" tilewidth="32" tileheight="32" tilecount="12" columns="3">
   <image source="../images/character.png" width="96" height="128"/>
   <tile id="0">
@@ -10041,6 +10041,7 @@
   <object id="102" gid="26" x="64" y="192" width="32" height="32"/>
   <object id="103" gid="26" x="64" y="256" width="32" height="32"/>
   <object id="104" gid="26" x="64" y="224" width="32" height="32"/>
+  <object id="108" gid="26" x="256" y="192" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Hierbas">
   <object id="24" gid="35" x="64" y="96" width="32" height="32"/>
@@ -10634,7 +10635,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="26"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
