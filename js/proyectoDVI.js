@@ -379,7 +379,6 @@ var magia = Q.Sprite.extend("Magic", {
           Q.audio.play("Jarron_roto.ogg");
           collision.obj.play("destruir_jarron");
         } else if(collision.obj.isA("Murcielago")){
-          Q.audio.play("monster_die.ogg");
           collision.obj.hit(this.p.potencia);
         }
 
@@ -607,7 +606,7 @@ var magia = Q.Sprite.extend("Magic", {
       this.hitted = false;
 
       this.hit = function(potencia){
-        if(!this.hitted){
+        if(!this.hitted && this.p.vida > 1){
           this.hitted = true;
           this.p.vida-=potencia;
           this.p.vx = 0;
@@ -619,6 +618,7 @@ var magia = Q.Sprite.extend("Magic", {
         this.hitted = false;
         if(this.p.vida <= 0){
           this.destroy();
+          Q.audio.play("monster_die.ogg");
         }
         this.p.vx = this.p.velX;
         this.p.vy = this.p.velY;
