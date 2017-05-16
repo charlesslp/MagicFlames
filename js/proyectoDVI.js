@@ -17,7 +17,7 @@ var game = function() {
    .controls().touch().enableSound();
 
    //Cargamos recursos y lo necesario para el menu del titulo
-   var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json,'+
+   var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, '+
    'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg';
 
   Q.load( recursos , function(){
@@ -31,7 +31,7 @@ var game = function() {
     Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   	 //Cargamos el contenido del TMX
-  	Q.loadTMX("level.tmx, Prueba.tmx, Fuego.tmx", function() {
+  	Q.loadTMX("level.tmx, Prueba.tmx, Fuego.tmx, Mago.tmx", function() {
   		Q.stageScene("startGame");
   	});
 
@@ -240,8 +240,8 @@ var selector = Q.Sprite.extend("Selector", {
         collision.obj.hablar(this.p.direction);
       }
       else if(collision.obj.isA("Portal")){
-        if(collision.obj.p.abierto)
-        cambiarNivel(collision.obj.p.level);
+        if(collision.obj.p.abierto === "true")
+          cambiarNivel(collision.obj.p.level);
       }
 
       this.destroy();
@@ -506,9 +506,16 @@ var magia = Q.Sprite.extend("Magic", {
       });
 
 
+
       Q.animations('portalAnimacion', {
-        move: {frames: [0,1,2,3], rate: 2/5},
-        closed: {frames: [4], loop: false}
+        move_red: {frames: [0,1,2,3], rate: 2/5},
+        closed_red: {frames: [4], loop: false},
+        move_yellow: {frames: [5,6,7,8], rate: 2/5},
+        closed_yellow: {frames: [9], loop: false},
+        move_green: {frames: [10,11,12,13], rate: 2/5},
+        closed_green: {frames: [14], loop: false},
+        move_blue: {frames: [15,16,17,18], rate: 2/5},
+        closed_blue: {frames: [19], loop: false}
       });
 
       //Portal
@@ -517,10 +524,12 @@ var magia = Q.Sprite.extend("Magic", {
           this._super(p, { sprite: "portalAnimacion", sheet: "portales", gravity:0});
           this.add('2d, animation');
 
-          if(p.abierto)
-            this.play("move");
+
+
+          if(p.abierto === "true")
+            this.play("move_"+p.tipo);
           else
-            this.play("closed");
+            this.play("closed_"+p.tipo);
         }
 
       });
@@ -752,11 +761,26 @@ var magia = Q.Sprite.extend("Magic", {
 	  var player = stage.insert(new heroe({ x: 300, y: 220 }));
 	  stage.follow(player);
 
-    stage.insert(new portal({ x: 200, y: 220, level: "fuego", abierto:true}));
-    stage.insert(new portal({ x: 200, y: 320, level: "fuego", abierto:false}));
+    stage.insert(new portal({ x: 200, y: 220, level: "mago", abierto:"true", tipo:"red"}));
+    stage.insert(new portal({ x: 200, y: 350, level: "fuego", abierto:"true", tipo:"red"}));
+    stage.insert(new portal({ x: 250, y: 350, level: "fuego", abierto:"false", tipo:"red"}));
     stage.insert(new personaje({x:150, y:220}));
 
   });
+
+  //Nivel de mago
+  Q.scene("mago", function(stage) {
+    Q.stageTMX("Mago.tmx", stage);
+    stage.add("viewport");
+
+    Q.state.set("texto_conversacion", "");
+    var player = stage.insert(new heroe({ x: 300, y: 220 }));
+    stage.follow(player);
+
+    //stage.insert(new portal({ x: 192, y: 256, level: "Prueba", abierto:true }));
+
+  });
+
 
   //Nivel de fuego
   Q.scene("fuego", function(stage) {
@@ -767,7 +791,7 @@ var magia = Q.Sprite.extend("Magic", {
     var player = stage.insert(new heroe({ x: 300, y: 220 }));
     stage.follow(player);
 
-    stage.insert(new portal({ x: 200, y: 220, level: "Prueba", abierto:true }));
+    stage.insert(new portal({ x: 200, y: 220, level: "Prueba", abierto:"true", tipo:"red"}));
 
   });
 
