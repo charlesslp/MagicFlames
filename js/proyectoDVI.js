@@ -31,7 +31,7 @@ var game = function() {
     Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   	 //Cargamos el contenido del TMX
-  	Q.loadTMX("level.tmx, Prueba.tmx, Fuego.tmx, Mago.tmx", function() {
+  	Q.loadTMX("level.tmx, Prueba.tmx, Fuego.tmx, Portales.tmx", function() {
   		Q.stageScene("startGame");
   	});
 
@@ -754,7 +754,7 @@ var magia = Q.Sprite.extend("Magic", {
 
 	Q.scene("startGame", function(stage){
 		//Tendremos en el estado el nivel en el que se encuentra el personaje aparte de la vida, mana, etc..
-	Q.state.reset({ level:"Prueba"});
+	Q.state.reset({ level:"portales"});
 
 	var container = stage.insert(new Q.UI.Container({
 		x: Q.width, y: Q.height, fill: "rgba(0,0,0,0.5)", w: 480, h: 480
@@ -787,9 +787,9 @@ var magia = Q.Sprite.extend("Magic", {
 
   });
 
-  //Nivel de mago
-  Q.scene("mago", function(stage) {
-    Q.stageTMX("Mago.tmx", stage);
+  //Nivel de los portales
+  Q.scene("portales", function(stage) {
+    Q.stageTMX("Portales.tmx", stage);
     stage.add("viewport");
 
     Q.state.set("texto_conversacion", "");

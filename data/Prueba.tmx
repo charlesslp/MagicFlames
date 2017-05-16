@@ -10076,7 +10076,7 @@
   <object id="116" gid="114" x="192" y="192" width="40" height="68">
    <properties>
     <property name="abierto" type="bool" value="true"/>
-    <property name="level" value="mago"/>
+    <property name="level" value="portales"/>
     <property name="tipo" value="red"/>
    </properties>
   </object>
