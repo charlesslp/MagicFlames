@@ -521,6 +521,7 @@ var magia = Q.Sprite.extend("Magic", {
   Q.component("defaultEnemy", {
     added: function(){
       var entity = this.entity;
+
       entity.play("enemy_walk_down");
 
       entity.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
@@ -542,9 +543,18 @@ var magia = Q.Sprite.extend("Magic", {
         		
         	}
         }
+
+        entity.p.velY = -entity.p.velY;
+        entity.p.velX = -entity.p.velX;
+
+        entity.p.vy = entity.p.velY;
+        entity.p.vx = entity.p.velX;
+
       });
     }
   });
+
+
 
   Q.animations('murcielagoAnimation', {
       enemy_walk_down: {frames: [0, 1, 2, 3], rate: 1/4},
@@ -555,10 +565,22 @@ var magia = Q.Sprite.extend("Magic", {
 
   var murcielago = Q.Sprite.extend("Murcielago",{
     init: function(p){
-      this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: 0, vy: 0, gravity: 0, direccion: "down"});
+      this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: p.velX, vy: p.velY, gravity: 0});
       this.add('2d, animation, defaultEnemy');
     },
-    step: function(){
+    step: function(dt){
+
+      if(this.p.vy > 0)
+        this.play("enemy_walk_down");
+      else if(this.p.vy < 0){
+        this.play("enemy_walk_up");
+      }
+      else if(this.p.vx < 0)
+        this.play("enemy_walk_left");
+      else if(this.p.vx > 0)
+        this.play("enemy_walk_right");
+
+      /*
       if(this.p.direction === "down")
         this.play("enemy_walk_down");
       else if(this.p.direction === "up")
@@ -567,6 +589,7 @@ var magia = Q.Sprite.extend("Magic", {
         this.play("enemy_walk_left");
       else if(this.p.direction === "right")
         this.play("enemy_walk_right");
+      */
     }
   });
 
@@ -673,6 +696,10 @@ var magia = Q.Sprite.extend("Magic", {
 	cambiarNivel(Q.state.get("level"));
   });
 	container.fit(20);
+
+
+  Q.state.set("texto_mana", 100);
+  Q.state.set("texto_vida", 100);
 });
 
   function cambiarNivel(nivel){
@@ -686,11 +713,7 @@ var magia = Q.Sprite.extend("Magic", {
 	  Q.stageTMX("Prueba.tmx", stage);
 	  stage.add("viewport");
 
-    stage.insert(new murcielago({x: 300, y: 260}));
-
     Q.state.set("texto_conversacion", "");
-    Q.state.set("texto_mana", 100);
-    Q.state.set("texto_vida", 100);
 	  var player = stage.insert(new heroe({ x: 300, y: 220 }));
 	  stage.follow(player);
 
@@ -705,16 +728,11 @@ var magia = Q.Sprite.extend("Magic", {
     Q.stageTMX("Fuego.tmx", stage);
     stage.add("viewport");
 
-    stage.insert(new murcielago({x: 300, y: 260}));
-
     Q.state.set("texto_conversacion", "");
-    Q.state.set("texto_mana", 100);
-    Q.state.set("texto_vida", 100);
     var player = stage.insert(new heroe({ x: 300, y: 220 }));
     stage.follow(player);
 
     stage.insert(new portal({ x: 200, y: 220, level: "Prueba", abierto:true }));
-    stage.insert(new personaje({x:150, y:220}));
 
   });
 
@@ -749,7 +767,7 @@ var magia = Q.Sprite.extend("Magic", {
     }));
 
     container.insert(new Q.Conversacion({
-        x: container.p.x,
+        x: Q.width/2,
         y: Q.height-50,
 
     }));
