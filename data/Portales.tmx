@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="30" tilewidth="32" tileheight="32" nextobjectid="134">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="30" tilewidth="32" tileheight="32" nextobjectid="139">
  <tileset firstgid="1" name="Player" tilewidth="32" tileheight="32" tilecount="12" columns="3">
   <image source="../images/character.png" width="96" height="128"/>
   <tile id="0">
@@ -3241,6 +3241,20 @@
  </objectgroup>
  <objectgroup name="heroe"/>
  <objectgroup name="portales">
+  <object id="124" gid="4514" x="512" y="96" width="40" height="68">
+   <properties>
+    <property name="abierto" type="bool" value="false"/>
+    <property name="level" value="fuego"/>
+    <property name="tipo" value="blue"/>
+   </properties>
+  </object>
+  <object id="123" gid="4514" x="384" y="96" width="40" height="68">
+   <properties>
+    <property name="abierto" type="bool" value="false"/>
+    <property name="level" value="fuego"/>
+    <property name="tipo" value="green"/>
+   </properties>
+  </object>
   <object id="119" gid="4514" x="256" y="96" width="40" height="68">
    <properties>
     <property name="abierto" type="bool" value="true"/>
@@ -3255,45 +3269,31 @@
     <property name="tipo" value="red"/>
    </properties>
   </object>
-  <object id="123" gid="4514" x="384" y="96" width="40" height="68">
-   <properties>
-    <property name="abierto" type="bool" value="false"/>
-    <property name="level" value="fuego"/>
-    <property name="tipo" value="green"/>
-   </properties>
-  </object>
-  <object id="124" gid="4514" x="512" y="96" width="40" height="68">
-   <properties>
-    <property name="abierto" type="bool" value="false"/>
-    <property name="level" value="fuego"/>
-    <property name="tipo" value="blue"/>
-   </properties>
-  </object>
  </objectgroup>
  <objectgroup name="salida">
-  <object id="130" gid="1769" x="352" y="544" width="32" height="32">
+  <object id="134" gid="1769" x="352" y="544" width="32" height="32">
    <properties>
-    <property name="level" value="Prueba"/>
+    <property name="level" value="Nivel1"/>
    </properties>
   </object>
-  <object id="132" gid="1769" x="352" y="576" width="32" height="32">
+  <object id="135" gid="1769" x="352" y="576" width="32" height="32">
    <properties>
-    <property name="level" value="Prueba"/>
+    <property name="level" value="Nivel1"/>
    </properties>
   </object>
-  <object id="129" gid="1769" x="320" y="576" width="32" height="32">
+  <object id="136" gid="1769" x="320" y="576" width="32" height="32">
    <properties>
-    <property name="level" value="Prueba"/>
+    <property name="level" value="Nivel1"/>
    </properties>
   </object>
-  <object id="133" gid="1769" x="288" y="576" width="32" height="32">
+  <object id="137" gid="1769" x="288" y="576" width="32" height="32">
    <properties>
-    <property name="level" value="Prueba"/>
+    <property name="level" value="Nivel1"/>
    </properties>
   </object>
-  <object id="131" gid="1769" x="288" y="544" width="32" height="32">
+  <object id="138" gid="1769" x="288" y="544" width="32" height="32">
    <properties>
-    <property name="level" value="Prueba"/>
+    <property name="level" value="Nivel1"/>
    </properties>
   </object>
  </objectgroup>

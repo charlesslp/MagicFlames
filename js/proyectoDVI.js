@@ -17,7 +17,7 @@ var game = function() {
    .controls().touch().enableSound();
 
    //Cargamos recursos y lo necesario para el menu del titulo
-   var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, '+
+   var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
    'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg';
 
   Q.load( recursos , function(){
@@ -31,7 +31,7 @@ var game = function() {
     Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   	 //Cargamos el contenido del TMX
-  	Q.loadTMX("level.tmx, Prueba.tmx, Fuego.tmx, Portales.tmx", function() {
+  	Q.loadTMX("level.tmx, Prueba.tmx, Fuego.tmx, Portales.tmx, nivel1.tmx", function() {
   		Q.stageScene("startGame");
   	});
 
@@ -768,6 +768,7 @@ var magia = Q.Sprite.extend("Magic", {
 
   Q.state.set("texto_mana", 100);
   Q.state.set("texto_vida", 100);
+  Q.state.set("nivel_ant", "portales");
 });
 
   function cambiarNivel(nivel){
@@ -793,10 +794,32 @@ var magia = Q.Sprite.extend("Magic", {
     stage.add("viewport");
 
     Q.state.set("texto_conversacion", "");
-    var player = stage.insert(new heroe({ x: 300, y: 220 }));
+
+    if(Q.state.get("nivel_ant") === "nivel1")
+      var player = stage.insert(new heroe({ x: 335, y: 490 }));
+    else
+      var player = stage.insert(new heroe({ x: 300, y: 220 }));
+
     stage.follow(player);
 
-    //stage.insert(new portal({ x: 192, y: 256, level: "Prueba", abierto:true }));
+
+    Q.state.set("nivel_ant", "portales");
+
+
+  });
+
+
+  //Nivel de los portales
+  Q.scene("Nivel1", function(stage) {
+    Q.stageTMX("nivel1.tmx", stage);
+    stage.add("viewport");
+
+    Q.state.set("texto_conversacion", "");
+    var player = stage.insert(new heroe({ x: 416, y: 165 }));
+    stage.follow(player);
+
+
+    Q.state.set("nivel_ant", "nivel1");
 
   });
 
