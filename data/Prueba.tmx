@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="116">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="118">
  <tileset firstgid="1" name="Player" tilewidth="32" tileheight="32" tilecount="12" columns="3">
   <image source="../images/character.png" width="96" height="128"/>
   <tile id="0">
@@ -31,6 +31,37 @@
   <tile id="0">
    <properties>
     <property name="Class" value="Murcielago"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="110" name="portales" tilewidth="40" tileheight="68" tilecount="20" columns="5">
+  <image source="../images/portales.png" width="200" height="272"/>
+  <tile id="4">
+   <properties>
+    <property name="Class" value="Portal"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="Class" value="portal"/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="Class" value="portal"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="Class" value="portal"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="130" name="personaje" tilewidth="32" tileheight="32" tilecount="12" columns="3">
+  <image source="../images/mago.png" width="96" height="128"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="Personaje"/>
    </properties>
   </tile>
  </tileset>
@@ -10041,6 +10072,16 @@
    <tile gid="30"/>
   </data>
  </layer>
+ <objectgroup name="portales">
+  <object id="116" gid="114" x="192" y="192" width="40" height="68">
+   <properties>
+    <property name="abierto" type="bool" value="true"/>
+    <property name="level" value="mago"/>
+    <property name="tipo" value="red"/>
+   </properties>
+  </object>
+  <object id="117" gid="130" x="96" y="224" width="32" height="32"/>
+ </objectgroup>
  <objectgroup name="Enemigos">
   <object id="112" gid="94" x="416" y="192" width="32" height="32">
    <properties>

@@ -3,6 +3,7 @@
 	"jarron":{"sx":128,"sy":32,"tileW":32,"tileH":32,"frames":4},
 	"cofre":{"sx":128,"sy":0,"tileW":32,"tileH":32,"frames":4},
 	"portal":{"sx":128,"sy":0,"tileW":32,"tileH":32,"frames":4},
+	"nada":{"sx":-32,"sy":0,"tileW":32,"tileH":32,"frames":1},
 	"fuego":{"sx":128,"sy":96,"tileW":32,"tileH":32,"frames":10},
 	"agua":{"sx":192,"sy":96,"tileW":32,"tileH":32,"frames":10},
 	"viento":{"sx":224,"sy":96,"tileW":32,"tileH":32,"frames":10},

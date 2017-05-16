@@ -239,10 +239,6 @@ var selector = Q.Sprite.extend("Selector", {
       else if(collision.obj.isA("Personaje")){
         collision.obj.hablar(this.p.direction);
       }
-      else if(collision.obj.isA("Portal")){
-        if(collision.obj.p.abierto === "true")
-          cambiarNivel(collision.obj.p.level);
-      }
 
       this.destroy();
     });
@@ -529,6 +525,34 @@ var magia = Q.Sprite.extend("Magic", {
             this.play("move_"+p.tipo);
           else
             this.play("closed_"+p.tipo);
+
+          this.on("bump.bottom", function(collision){
+
+	        if(collision.obj.isA("Player")){
+	        	if(this.p.abierto === "true")
+          			cambiarNivel(this.p.level);
+	        }
+	      });
+        }
+
+      });
+
+
+
+
+
+      //Salida
+      var salida = Q.Sprite.extend("Salida",{
+         init: function(p) {
+          this._super(p, {sheet: "nada", gravity:0});
+          this.add('2d, animation');
+
+           this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
+
+	        if(collision.obj.isA("Player")){
+          		cambiarNivel(this.p.level);
+	        }
+	      });
         }
 
       });
@@ -760,11 +784,6 @@ var magia = Q.Sprite.extend("Magic", {
     Q.state.set("texto_conversacion", "");
 	  var player = stage.insert(new heroe({ x: 300, y: 220 }));
 	  stage.follow(player);
-
-    stage.insert(new portal({ x: 200, y: 220, level: "mago", abierto:"true", tipo:"red"}));
-    stage.insert(new portal({ x: 200, y: 350, level: "fuego", abierto:"true", tipo:"red"}));
-    stage.insert(new portal({ x: 250, y: 350, level: "fuego", abierto:"false", tipo:"red"}));
-    stage.insert(new personaje({x:150, y:220}));
 
   });
 

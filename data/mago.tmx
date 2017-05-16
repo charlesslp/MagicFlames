@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="30" tilewidth="32" tileheight="32" nextobjectid="127">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="30" tilewidth="32" tileheight="32" nextobjectid="134">
  <tileset firstgid="1" name="Player" tilewidth="32" tileheight="32" tilecount="12" columns="3">
   <image source="../images/character.png" width="96" height="128"/>
   <tile id="0">
@@ -28,6 +28,11 @@
  </tileset>
  <tileset firstgid="94" name="galeria" tilewidth="32" tileheight="32" tilecount="4416" columns="8">
   <image source="../images/galeria.png" width="256" height="17664"/>
+  <tile id="1675">
+   <properties>
+    <property name="Class" value="Salida"/>
+   </properties>
+  </tile>
  </tileset>
  <tileset firstgid="4510" name="portales" tilewidth="40" tileheight="68" tilecount="20" columns="5">
   <image source="../images/portales.png" width="200" height="272"/>
@@ -1482,6 +1487,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="1344"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1516,6 +1522,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="1344"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1550,6 +1557,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="1344"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1584,6 +1592,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="1344"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1618,6 +1627,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="1344"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1652,6 +1662,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
+   <tile gid="1344"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1686,13 +1697,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
+   <tile gid="1344"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -2650,7 +2655,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="1243"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -2685,7 +2690,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="1251"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -2720,7 +2725,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
-   <tile gid="1259"/>
+   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -3265,6 +3270,33 @@
    </properties>
   </object>
  </objectgroup>
+ <objectgroup name="salida">
+  <object id="130" gid="1769" x="352" y="544" width="32" height="32">
+   <properties>
+    <property name="level" value="Prueba"/>
+   </properties>
+  </object>
+  <object id="132" gid="1769" x="352" y="576" width="32" height="32">
+   <properties>
+    <property name="level" value="Prueba"/>
+   </properties>
+  </object>
+  <object id="129" gid="1769" x="320" y="576" width="32" height="32">
+   <properties>
+    <property name="level" value="Prueba"/>
+   </properties>
+  </object>
+  <object id="133" gid="1769" x="288" y="576" width="32" height="32">
+   <properties>
+    <property name="level" value="Prueba"/>
+   </properties>
+  </object>
+  <object id="131" gid="1769" x="288" y="544" width="32" height="32">
+   <properties>
+    <property name="level" value="Prueba"/>
+   </properties>
+  </object>
+ </objectgroup>
  <layer name="Paredes sin colision" width="35" height="30">
   <properties>
    <property name="type" value="0"/>
@@ -3700,7 +3732,7 @@
    <tile gid="1258"/>
    <tile gid="1258"/>
    <tile gid="1258"/>
-   <tile gid="1258"/>
+   <tile gid="0"/>
    <tile gid="1258"/>
    <tile gid="1258"/>
    <tile gid="1258"/>
@@ -4792,6 +4824,10 @@
    <tile gid="1243"/>
    <tile gid="1243"/>
    <tile gid="1243"/>
+   <tile gid="0"/>
+   <tile gid="1243"/>
+   <tile gid="1243"/>
+   <tile gid="1243"/>
    <tile gid="1243"/>
    <tile gid="1243"/>
    <tile gid="1243"/>
@@ -4799,10 +4835,6 @@
    <tile gid="1243"/>
    <tile gid="1243"/>
    <tile gid="0"/>
-   <tile gid="1243"/>
-   <tile gid="1243"/>
-   <tile gid="1243"/>
-   <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -4827,13 +4859,13 @@
    <tile gid="1251"/>
    <tile gid="1251"/>
    <tile gid="1251"/>
-   <tile gid="1251"/>
-   <tile gid="1251"/>
-   <tile gid="1251"/>
-   <tile gid="1251"/>
-   <tile gid="1251"/>
-   <tile gid="1251"/>
    <tile gid="0"/>
+   <tile gid="1251"/>
+   <tile gid="1251"/>
+   <tile gid="1251"/>
+   <tile gid="1251"/>
+   <tile gid="1251"/>
+   <tile gid="1251"/>
    <tile gid="1251"/>
    <tile gid="1251"/>
    <tile gid="1251"/>
@@ -4862,13 +4894,13 @@
    <tile gid="1259"/>
    <tile gid="1259"/>
    <tile gid="1259"/>
-   <tile gid="1259"/>
-   <tile gid="1259"/>
-   <tile gid="1259"/>
-   <tile gid="1259"/>
-   <tile gid="1259"/>
-   <tile gid="1259"/>
    <tile gid="0"/>
+   <tile gid="1259"/>
+   <tile gid="1259"/>
+   <tile gid="1259"/>
+   <tile gid="1259"/>
+   <tile gid="1259"/>
+   <tile gid="1259"/>
    <tile gid="1259"/>
    <tile gid="1259"/>
    <tile gid="1259"/>
