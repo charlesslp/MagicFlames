@@ -9,7 +9,7 @@ Alumnos:
 var game = function() {
 
 //Cargamos el modulo de quintus, con los modilos necesarios
-  var Q = window.Q = Quintus({ audioSupported: [ 'mp3' ] })
+  var Q = window.Q = Quintus({ audioSupported: [ 'ogg','mp3' ] })
    .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI, TMX, Audio")
    // Maximize permite maximizar el tamaño al de la pantalla
    .setup({ maximize: false, width:420, height:420 })
@@ -17,7 +17,8 @@ var game = function() {
    .controls().touch().enableSound();
 
    //Cargamos recursos y lo necesario para el menu del titulo
-   var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, Intro.png, mago.png, mago.json, murcielago.png, murcielago.json';
+   var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, '+
+   'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg';
 
   Q.load( recursos , function(){
 
@@ -26,14 +27,23 @@ var game = function() {
     Q.compileSheets("mago.png", "mago.json");
     Q.compileSheets("mi_seleccion.png", "mi_seleccion.json");
     Q.compileSheets("murcielago.png", "murcielago.json");
+    Q.compileSheets("portales.png", "portales.json");
     Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   	 //Cargamos el contenido del TMX
-  	Q.loadTMX("level.tmx, Prueba.tmx", function() {
+  	Q.loadTMX("level.tmx, Prueba.tmx, Fuego.tmx, Mago.tmx", function() {
   		Q.stageScene("startGame");
   	});
 
   });
+
+
+
+  //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  //PERSONAJES
+  //PERSONAJES
+  //PERSONAJES
+  //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
    //Animaciones del heroe
    Q.animations('PlayerAnimation', {
@@ -64,7 +74,6 @@ var game = function() {
           // grab the entity's properties for easy reference
           var p = this.entity.p;
 
-          if(!this.entity.hablando){
         		//Movimiento arriba
             if(Q.inputs['up'] && !Q.inputs['down'] && !Q.inputs['right'] && !Q.inputs['left']){
               p.vy = -p.speed;
@@ -115,8 +124,6 @@ var game = function() {
                           Q.inputs['up']    ? 'up' :
                           Q.inputs['down']  ? 'down' : p.direction;
         }
-
-        }
   });
 
   //Sprite del heroe del juego
@@ -126,6 +133,9 @@ var game = function() {
 			this.add('2d, basicControls, animation');
 		},
 		step: function(dt) {
+
+		if(Q.state.get("texto_mana") < 100)
+			Q.state.inc("texto_mana", dt*5);
 
   		//se mueve ejecuta la animacion de andar
         if(this.p.direction === "down" && Q.inputs['down'] && !this.p.parado)
@@ -157,39 +167,52 @@ var game = function() {
           this.play("stop_right");
 
         if(Q.inputs['a'] && !this.p.lanzado){
-          this.stage.insert(new magia({tipo: "fuego", direction: this.p.direction, x: this.p.x, y: this.p.y}));
-          this.p.lanzado = true;
+        	if(Q.state.get("texto_mana") >= 10){
+        		  Q.state.dec("texto_mana", 10);
+          		this.stage.insert(new magia({tipo: "fuego", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 10}));
+          		this.p.lanzado = true;
+          	}
         }
         if(Q.inputs['s'] && !this.p.lanzado){
-          this.stage.insert(new magia({tipo: "agua", direction: this.p.direction, x: this.p.x, y: this.p.y}));
-          this.p.lanzado = true;
+
+        	if(Q.state.get("texto_mana") >= 20){
+        		Q.state.dec("texto_mana", 20);
+          		this.stage.insert(new magia({tipo: "agua", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 20}));
+          		this.p.lanzado = true;
+          	}
         }
         if(Q.inputs['d'] && !this.p.lanzado){
-          this.stage.insert(new magia({tipo: "tierra", direction: this.p.direction, x: this.p.x, y: this.p.y}));
-          this.p.lanzado = true;
+        	if(Q.state.get("texto_mana") >= 30){
+        		Q.state.dec("texto_mana", 30);
+          		this.stage.insert(new magia({tipo: "tierra", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 30}));
+          		this.p.lanzado = true;
+          	}
         }
         if(Q.inputs['f'] && !this.p.lanzado){
-          this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x, y: this.p.y}));
-          this.p.lanzado = true;
+        	if(Q.state.get("texto_mana") >= 50){
+        		Q.state.dec("texto_mana", 50);
+          		this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 50}));
+          		this.p.lanzado = true;
+          	}
         }
 
 
 
   //Selector
         if(this.p.direction === "down" && Q.inputs['fire'] && !this.p.lanzado){
-          this.stage.insert(new selector({x: this.p.x, y: this.p.y+32}));
+          this.stage.insert(new selector({x: this.p.x, y: this.p.y+32, direction: this.p.direction}));
           this.p.lanzado = true;
         }
   			else if(this.p.direction === "up" && Q.inputs['fire'] && !this.p.lanzado){
-          this.stage.insert(new selector({x: this.p.x, y: this.p.y-32}));
+          this.stage.insert(new selector({x: this.p.x, y: this.p.y-32, direction: this.p.direction}));
           this.p.lanzado = true;
         }
   			else if(this.p.direction === "left" && Q.inputs['fire'] && !this.p.lanzado){
-          this.stage.insert(new selector({x: this.p.x-32, y: this.p.y}));
+          this.stage.insert(new selector({x: this.p.x-32, y: this.p.y, direction: this.p.direction}));
           this.p.lanzado = true;
         }
   			else if(this.p.direction === "right" && Q.inputs['fire'] && !this.p.lanzado){
-          this.stage.insert(new selector({x: this.p.x+32, y: this.p.y}));
+          this.stage.insert(new selector({x: this.p.x+32, y: this.p.y, direction: this.p.direction}));
           this.p.lanzado = true;
         }
 //FIn
@@ -202,7 +225,7 @@ var game = function() {
 
 var selector = Q.Sprite.extend("Selector", {
   init: function(p){
-    this._super(p, { w:32, h:32, sensor:true, gravity: 0});
+    this._super(p, { w:32, h:32, sensor:true, gravity: 0, direction: "down"});
     this.add('2d, animation');
 
     this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
@@ -214,13 +237,86 @@ var selector = Q.Sprite.extend("Selector", {
         }
       }
       else if(collision.obj.isA("Personaje")){
-        collision.obj.hablar();
+        collision.obj.hablar(this.p.direction);
+      }
+      else if(collision.obj.isA("Portal")){
+        if(collision.obj.p.abierto === "true")
+          cambiarNivel(collision.obj.p.level);
       }
 
       this.destroy();
     });
   }
 });
+
+
+
+
+
+
+
+
+
+//Animaciones de peronaje
+  Q.animations('CharacterAnimation', {
+    walk_down:{frames: [0, 1, 2], rate: 1/4},
+    walk_left: {frames: [3, 4, 5], rate: 1/4},
+    walk_right: {frames: [6, 7, 8], rate: 1/4},
+    walk_up: {frames: [9, 10, 11], rate: 1/4},
+    stop_down:{frames: [1], loop : false},
+    stop_left:{frames: [4], loop : false},
+    stop_right:{frames: [7], loop : false},
+    stop_up:{frames: [10], loop : false},
+    habla:{frames:[1], loop:false, trigger: "hablar"}
+   });
+
+    //Sprite de un jarron
+    var personaje = Q.Sprite.extend("Personaje",{
+      init: function(p) {
+        //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
+        this._super(p, { sprite: "CharacterAnimation", sheet: "character_walk_down", gravity:0});
+        this.add('2d, animation');
+
+        this.p.conversacion = [];
+
+        this.p.conversacion[0] = "En mis tiempos esto era otra cosa";
+        this.p.conversacion[1] = "Los chavales de hoy en día";
+        this.p.conversacion[2] = "no os despegais de los pergaminos...";
+        this.play("stop_down");
+
+        this.hablar = function(direction){
+          
+          switch(direction){
+            case "down": this.play("stop_up"); break;
+            case "up": this.play("stop_down"); break;
+            case "right": this.play("stop_left"); break;
+            case "left": this.play("stop_right"); break;
+          }
+          
+          Q.state.set("texto_conversacion", this.p.conversacion);
+        }
+      },
+      step: function(dt) {
+          this.play("stop_down");
+      }
+
+    });
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN PERSONAJES
+//FIN PERSONAJES
+//FIN PERSONAJES
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//MAGIA
+//MAGIA
+//MAGIA
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -241,8 +337,8 @@ var magia = Q.Sprite.extend("Magic", {
 
     this._super(p, { sprite:"MagicAnimation", speed: 250, sheet: p.tipo, gravity: 0, sensor:true});
     this.add('2d, animation');
-
-    var margen = 32;
+     Q.audio.play("magia.ogg");
+    var margen = 34;
     if(this.p.direction === 'up'){
       this.p.vy = -this.p.speed;
       this.p.vx = 0;
@@ -266,28 +362,55 @@ var magia = Q.Sprite.extend("Magic", {
     }
 
     this.play(this.p.tipo);
-  },
 
-  //Controlara que al chocarse con un objeto sea destruida la magia
-  step: function(dt) {
 
     this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
-
+        
+        
         if(collision.obj.isA("Hierba")){
-          this.destroy();
-          collision.obj.play("destruir_hierba");
+          if(!collision.obj.colision_hierba){
+            this.colision_hierba = true;
+            collision.obj.play("destruir_hierba");
+          }
+          else{
+            this.colision_hierba = false;
+          }
         } else if(collision.obj.isA("Jarron")){
-          this.destroy();
+          Q.audio.play("Jarron_roto.ogg");
           collision.obj.play("destruir_jarron");
         } else if(collision.obj.isA("Murcielago")){
-          this.destroy();
-          collision.obj.destroy();
-        } else{
-          this.destroy();
+          collision.obj.hit(this.p.potencia);
         }
+
+        this.destroy();
     });
   }
 });
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN MAGIA
+//FIN MAGIA
+//FIN MAGIA
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//OBJETOS
+//OBJETOS
+//OBJETOS
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
 
 //Hierba
   Q.animations('miHierba', {
@@ -300,7 +423,7 @@ var magia = Q.Sprite.extend("Magic", {
 			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
       this._super(p, { sprite: "miHierba", sheet: "hierba", gravity:0});
       this.add('2d, animation');
-      var colision_hierba = false;
+      this.colision_hierba = false;
 
       this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
 
@@ -321,6 +444,10 @@ var magia = Q.Sprite.extend("Magic", {
 		}
 	});
 
+
+
+
+
   //Jarron
     Q.animations('miJarron', {
       destruir_jarron: {frames: [1,2,3], rate: 1/5, loop:false, trigger: "destruir"}
@@ -332,11 +459,12 @@ var magia = Q.Sprite.extend("Magic", {
   			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
         this._super(p, { sprite: "miJarron", sheet: "jarron", gravity:0});
         this.add('2d, animation');
-        var colision_jarron = false;
+        this.colision_jarron = false;
 
         this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
 
           if(collision.obj.isA("Magic") && !colision_jarron){
+            Q.audio.play("Jarron_roto.ogg");
             colision_jarron = true;
             this.play("destruir_jarron");
           }
@@ -350,6 +478,9 @@ var magia = Q.Sprite.extend("Magic", {
         });
       }
   	});
+
+
+
 
 
     //Cofre
@@ -373,41 +504,226 @@ var magia = Q.Sprite.extend("Magic", {
         }
       });
 
-    //Animaciones de peronaje
-      Q.animations('CharacterAnimation', {
-        walk_down:{frames: [0, 1, 2], rate: 1/4},
-        walk_left: {frames: [3, 4, 5], rate: 1/4},
-        walk_right: {frames: [6, 7, 8], rate: 1/4},
-        walk_up: {frames: [9, 10, 11], rate: 1/4},
-        stop_down:{frames: [1], loop : false},
-        stop_left:{frames: [4], loop : false},
-        stop_right:{frames: [7], loop : false},
-        stop_up:{frames: [10], loop : false},
-        habla:{frames:[1], loop:false, trigger: "hablar"}
-       });
 
-        //Sprite de un jarron
-        var personaje = Q.Sprite.extend("Personaje",{
-          init: function(p) {
-            //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
-            this._super(p, { sprite: "CharacterAnimation", sheet: "character_walk_down", gravity:0});
-            this.add('2d, animation');
 
-            this.p.conversacion = "En mis tiempos esto era otra cosa";
-            this.play("stop_down");
+      Q.animations('portalAnimacion', {
+        move_red: {frames: [0,1,2,3], rate: 2/5},
+        closed_red: {frames: [4], loop: false},
+        move_yellow: {frames: [5,6,7,8], rate: 2/5},
+        closed_yellow: {frames: [9], loop: false},
+        move_green: {frames: [10,11,12,13], rate: 2/5},
+        closed_green: {frames: [14], loop: false},
+        move_blue: {frames: [15,16,17,18], rate: 2/5},
+        closed_blue: {frames: [19], loop: false}
+      });
 
-            this.hablar = function(conv){
-                Q.state.set("texto_conversacion", this.p.conversacion, false);
-                console.log("Has hablado conmigo: "+this.p.conversacion);
+      //Portal
+      var portal = Q.Sprite.extend("Portal",{
+         init: function(p) {
+          this._super(p, { sprite: "portalAnimacion", sheet: "portales", gravity:0});
+          this.add('2d, animation');
 
-            }
 
-            this.on("hablar", function(){
-                //Conversar
-                console.log("Has hablado conmigo: "+this.p.conversacion);
-            });
+
+          if(p.abierto === "true")
+            this.play("move_"+p.tipo);
+          else
+            this.play("closed_"+p.tipo);
+        }
+
+      });
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN OBJETOS
+//FIN OBJETOS
+//FIN OBJETOS
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//ENEMIGOS
+//ENEMIGOS
+//ENEMIGOS
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+  Q.component("defaultEnemy", {
+    added: function(){
+      var entity = this.entity;
+
+      entity.play("enemy_walk_down");
+
+      entity.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
+
+        if(!this.hitted){
+          if(collision.obj.isA("Player")){
+
+          	Q.state.dec("texto_vida", 10);
+
+          	if(Q.state.get("texto_vida") <= 0)
+          		collision.obj.destroy();
+          	else{
+
+          		switch(collision.obj.p.direction){
+          			case "up": collision.obj.p.y = collision.obj.p.y+35; break;
+          			case "down": collision.obj.p.y = collision.obj.p.y-35; break;
+          			case "right": collision.obj.p.x = collision.obj.p.x-35; break;
+          			case "left": collision.obj.p.x = collision.obj.p.x+35; break;
+          		}
+
+          		
+          	}
           }
-        });
+
+          entity.p.velY = -entity.p.velY;
+          entity.p.velX = -entity.p.velX;
+
+          entity.p.vy = entity.p.velY;
+          entity.p.vx = entity.p.velX;
+        }
+
+      });
+    }
+  });
+
+
+
+  Q.animations('murcielagoAnimation', {
+      enemy_walk_down: {frames: [0, 1, 2, 3], rate: 1/4},
+      enemy_walk_up:{frames: [4, 5, 6, 7], rate: 1/4},
+      enemy_walk_right: {frames: [8, 9, 10, 11], rate: 1/4},
+      enemy_walk_left: {frames: [12, 13, 14, 15], rate: 1/4},
+      enemy_hit: {frames: [0, -1, 1, -1, 2, -1, 3, -1, 0], loop:false, rate: 1/7, trigger: "seguir"}
+  });
+
+  var murcielago = Q.Sprite.extend("Murcielago",{
+    init: function(p){
+      this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: p.velX, vy: p.velY, gravity: 0, vida: 30});
+      this.add('2d, animation, defaultEnemy');
+
+      this.hitted = false;
+
+      this.hit = function(potencia){
+        if(!this.hitted && this.p.vida > 1){
+          this.hitted = true;
+          this.p.vida-=potencia;
+          this.p.vx = 0;
+          this.p.vy = 0;
+          this.play("enemy_hit");
+        }
+      }
+      this.on("seguir",function() {
+        this.hitted = false;
+        if(this.p.vida <= 0){
+          this.destroy();
+          Q.audio.play("monster_die.ogg");
+        }
+        this.p.vx = this.p.velX;
+        this.p.vy = this.p.velY;
+      });
+    },
+    step: function(dt){
+
+      if(this.p.vy > 0)
+        this.play("enemy_walk_down");
+      else if(this.p.vy < 0)
+        this.play("enemy_walk_up");
+      else if(this.p.vx < 0)
+        this.play("enemy_walk_left");
+      else if(this.p.vx > 0)
+        this.play("enemy_walk_right");
+    }
+  });
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN ENEMIGOS
+//FIN ENEMIGOS
+//FIN ENEMIGOS
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//CONVERSACIÓN
+//CONVERSACIÓN
+//CONVERSACIÓN
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+  //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
+  Q.UI.Text.extend("Conversacion",{
+    init: function(p) {
+      this.keydown = false;
+      this.conversacion;
+      this.i = 0;
+      this._super(p,{
+        label: Q.state.get("texto_conversacion"),
+        color: "white",
+        size: 12,
+        x: 0,
+        y: 0
+      });
+
+      Q.state.on("change.texto_conversacion",this,"update_conv");
+    },
+    update_conv: function(conversacion) {
+
+        if(conversacion !== this.i)
+        	this.conversacion = conversacion;
+
+        this.p.label = this.conversacion[this.i];
+        Q.stage(0).pause();
+        this.keydown = true;
+        this.i++;
+
+    },
+    step: function(dt) {
+
+
+	    if(Q.stage(0).paused){
+	      if(!Q.inputs['fire'])
+	        this.keydown = false;
+
+	    	if(!this.keydown && Q.inputs['fire']){
+	    		if(!this.conversacion[this.i]){
+	    			this.i = 0;
+	    			this.conversacion = [];
+	    			this.conversacion[0] = "";
+			        Q.state.set("texto_conversacion", this.conversacion);
+			        this.i = 0;
+			        Q.stage(0).unpause();
+			    }
+			    else {
+			        Q.state.set("texto_conversacion", this.i);
+			    }
+	    	}
+	    }
+    }
+  });
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN CONVERSACIÓN
+//FIN CONVERSACIÓN
+//FIN CONVERSACIÓN
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//JUEGO
+//JUEGO
+//JUEGO
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 
 
@@ -421,120 +737,181 @@ var magia = Q.Sprite.extend("Magic", {
 	}));
 	var button = container.insert(new Q.UI.Button({x: -Q.width/2, y: -Q.height/2, asset: "Intro.png", keyActionName: "fire"}));
 	button.on("click", function(){
-		Q.clearStages();
-		Q.stageScene(Q.state.get("level"));
-    Q.stageScene('HUD', 2);
+	cambiarNivel(Q.state.get("level"));
   });
 	container.fit(20);
+
+
+  Q.state.set("texto_mana", 100);
+  Q.state.set("texto_vida", 100);
 });
+
+  function cambiarNivel(nivel){
+        Q.clearStages();
+        Q.stageScene(nivel);
+        Q.stageScene('HUD', 2);
+  }
 
 	//Nivel de prueba en el que tendremos todos los objetos y poderes
   Q.scene("Prueba", function(stage) {
 	  Q.stageTMX("Prueba.tmx", stage);
 	  stage.add("viewport");
-    
-    stage.insert(new murcielago({x: 300, y: 260}));
 
-    Q.state.set("texto_conversacion", "", true);
+    Q.state.set("texto_conversacion", "");
 	  var player = stage.insert(new heroe({ x: 300, y: 220 }));
 	  stage.follow(player);
 
-    //stage.insert(new cofre({ x: 200, y: 220 }));
-    stage.insert(new personaje({x:200, y:220}));
+    stage.insert(new portal({ x: 200, y: 220, level: "mago", abierto:"true", tipo:"red"}));
+    stage.insert(new portal({ x: 200, y: 350, level: "fuego", abierto:"true", tipo:"red"}));
+    stage.insert(new portal({ x: 250, y: 350, level: "fuego", abierto:"false", tipo:"red"}));
+    stage.insert(new personaje({x:150, y:220}));
 
   });
+
+  //Nivel de mago
+  Q.scene("mago", function(stage) {
+    Q.stageTMX("Mago.tmx", stage);
+    stage.add("viewport");
+
+    Q.state.set("texto_conversacion", "");
+    var player = stage.insert(new heroe({ x: 300, y: 220 }));
+    stage.follow(player);
+
+    //stage.insert(new portal({ x: 192, y: 256, level: "Prueba", abierto:true }));
+
+  });
+
+
+  //Nivel de fuego
+  Q.scene("fuego", function(stage) {
+    Q.stageTMX("Fuego.tmx", stage);
+    stage.add("viewport");
+
+    Q.state.set("texto_conversacion", "");
+    var player = stage.insert(new heroe({ x: 300, y: 220 }));
+    stage.follow(player);
+
+    stage.insert(new portal({ x: 200, y: 220, level: "Prueba", abierto:"true", tipo:"red"}));
+
+  });
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN JUEGO
+//FIN JUEGO
+//FIN JUEGO
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//HUD
+//HUD
+//HUD
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
   Q.scene('HUD',function(stage) {
 
     var container = stage.insert(new Q.UI.Container({
-      x: 100,
-      y: Q.height-50,
+      x: 0,
+      y: 0,
       w: Q.width,
-      h: 50,
-      fill: "black1",
-      border: 5,
-      shadow: 10,
+      h: Q.height,
+      fill: "rgba(0,0,0,0.5)",
+      border: 1,
+      shadow: 0,
       shadowColor: "rgba(0,0,0,0.5)"
     }));
 
     container.insert(new Q.Conversacion({
-        x: container.p.x,
-        y: -20,
+        x: Q.width/2,
+        y: Q.height-50,
 
     }));
 
-    container.fit(20);
+    container.insert(new Q.Vidas({
+        x: 50,
+        y: 40,
+
+    }));
+
+    container.fit(10);
+
+
+    var container2 = stage.insert(new Q.UI.Container({
+      x: 0,
+      y: 0,
+      w: Q.width,
+      h: Q.height,
+      fill: "rgba(0,0,0,0.5)",
+      border: 1,
+      shadow: 0,
+      shadowColor: "rgba(0,0,0,0.5)"
+    }));
+
+    container2.insert(new Q.Mana({
+        x: Q.width-50,
+        y: 40,
+
+    }));
+
+    container2.fit(10);
   });
 
 
+
+
+
   //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
-  Q.UI.Text.extend("Conversacion",{
+  Q.UI.Text.extend("Vidas",{
     init: function(p) {
-      this.keydown = false;
+
       this._super(p,{
-        label: Q.state.get("texto_conversacion"),
-        color: "white",
+        label: "Vidas: " + Q.state.get("texto_vida"),
+        color: "red",
         size: 12,
         x: 0,
         y: 0
       });
 
-      Q.state.on("change.texto_conversacion",this,"update_conv");
+      Q.state.on("change.texto_vida",this,"update_vidas");
     },
-    update_conv: function(texto, reset) {
-      if(!reset){
-        this.p.label = texto;
-        Q.stage(0).pause();
-        this.keydown = true;
-      }
-    },
-    step: function(dt) {
-
-      if(!Q.inputs['fire'])
-        this.keydown = false;
-
-    	if(!this.keydown && Q.inputs['fire']){
-        Q.state.set("texto_conversacion", "", true);
-        Q.stage(0).unpause();
-    	}
+    update_vidas: function(vidas) {
+        this.p.label = "Vidas: " + vidas;
     }
   });
 
-  Q.component("defaultEnemy", {
-    added: function(){
-      var entity = this.entity;
-      entity.play("enemy_walk_down");
 
-      entity.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
-        if(collision.obj.isA("Player")){
-          collision.obj.destroy();
-        }
+
+  //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
+  Q.UI.Text.extend("Mana",{
+    init: function(p) {
+
+      this._super(p,{
+        label: "Maná: " + Q.state.get("texto_mana").toFixed(0),
+        color: "red",
+        size: 12,
+        x: 0,
+        y: 0
       });
-    } 
-  });
 
-  Q.animations('murcielagoAnimation', {
-      enemy_walk_down: {frames: [0, 1, 2, 3], rate: 1/4},
-      enemy_walk_up:{frames: [4, 5, 6, 7], rate: 1/4},
-      enemy_walk_right: {frames: [8, 9, 10, 11], rate: 1/4},
-      enemy_walk_left: {frames: [12, 13, 14, 15], rate: 1/4}
-  });
-
-  var murcielago = Q.Sprite.extend("Murcielago",{
-    init: function(p){
-      this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: 0, vy: 0, gravity: 0, direccion: "down"});
-      this.add('2d, animation, defaultEnemy');
+      Q.state.on("change.texto_mana",this,"update_mana");
     },
-    step: function(){
-      if(this.p.direction === "down")
-        this.play("enemy_walk_down");
-      else if(this.p.direction === "up")
-        this.play("enemy_walk_up");
-      else if(this.p.direction === "left")
-        this.play("enemy_walk_left");
-      else if(this.p.direction === "right")
-        this.play("enemy_walk_right");
+    update_mana: function(mana) {
+        this.p.label = "Maná: " + mana.toFixed();
     }
   });
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN HUD
+//FIN HUD
+//FIN HUD
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 
 }
