@@ -18,7 +18,7 @@ var game = function() {
 
    //Cargamos recursos y lo necesario para el menu del titulo
    var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json,'+
-   'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg';
+   'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg';
 
   Q.load( recursos , function(){
 
@@ -27,6 +27,7 @@ var game = function() {
     Q.compileSheets("mago.png", "mago.json");
     Q.compileSheets("mi_seleccion.png", "mi_seleccion.json");
     Q.compileSheets("murcielago.png", "murcielago.json");
+    Q.compileSheets("portales.png", "portales.json");
     Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   	 //Cargamos el contenido del TMX
@@ -167,8 +168,8 @@ var game = function() {
 
         if(Q.inputs['a'] && !this.p.lanzado){
         	if(Q.state.get("texto_mana") >= 10){
-        		Q.state.dec("texto_mana", 10);
-          		this.stage.insert(new magia({tipo: "fuego", direction: this.p.direction, x: this.p.x, y: this.p.y}));
+        		  Q.state.dec("texto_mana", 10);
+          		this.stage.insert(new magia({tipo: "fuego", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 10}));
           		this.p.lanzado = true;
           	}
         }
@@ -176,21 +177,21 @@ var game = function() {
 
         	if(Q.state.get("texto_mana") >= 20){
         		Q.state.dec("texto_mana", 20);
-          		this.stage.insert(new magia({tipo: "agua", direction: this.p.direction, x: this.p.x, y: this.p.y}));
+          		this.stage.insert(new magia({tipo: "agua", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 20}));
           		this.p.lanzado = true;
           	}
         }
         if(Q.inputs['d'] && !this.p.lanzado){
         	if(Q.state.get("texto_mana") >= 30){
         		Q.state.dec("texto_mana", 30);
-          		this.stage.insert(new magia({tipo: "tierra", direction: this.p.direction, x: this.p.x, y: this.p.y}));
+          		this.stage.insert(new magia({tipo: "tierra", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 30}));
           		this.p.lanzado = true;
           	}
         }
         if(Q.inputs['f'] && !this.p.lanzado){
         	if(Q.state.get("texto_mana") >= 50){
         		Q.state.dec("texto_mana", 50);
-          		this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x, y: this.p.y}));
+          		this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 50}));
           		this.p.lanzado = true;
           	}
         }
@@ -199,19 +200,19 @@ var game = function() {
 
   //Selector
         if(this.p.direction === "down" && Q.inputs['fire'] && !this.p.lanzado){
-          this.stage.insert(new selector({x: this.p.x, y: this.p.y+32}));
+          this.stage.insert(new selector({x: this.p.x, y: this.p.y+32, direction: this.p.direction}));
           this.p.lanzado = true;
         }
   			else if(this.p.direction === "up" && Q.inputs['fire'] && !this.p.lanzado){
-          this.stage.insert(new selector({x: this.p.x, y: this.p.y-32}));
+          this.stage.insert(new selector({x: this.p.x, y: this.p.y-32, direction: this.p.direction}));
           this.p.lanzado = true;
         }
   			else if(this.p.direction === "left" && Q.inputs['fire'] && !this.p.lanzado){
-          this.stage.insert(new selector({x: this.p.x-32, y: this.p.y}));
+          this.stage.insert(new selector({x: this.p.x-32, y: this.p.y, direction: this.p.direction}));
           this.p.lanzado = true;
         }
   			else if(this.p.direction === "right" && Q.inputs['fire'] && !this.p.lanzado){
-          this.stage.insert(new selector({x: this.p.x+32, y: this.p.y}));
+          this.stage.insert(new selector({x: this.p.x+32, y: this.p.y, direction: this.p.direction}));
           this.p.lanzado = true;
         }
 //FIn
@@ -224,7 +225,7 @@ var game = function() {
 
 var selector = Q.Sprite.extend("Selector", {
   init: function(p){
-    this._super(p, { w:32, h:32, sensor:true, gravity: 0});
+    this._super(p, { w:32, h:32, sensor:true, gravity: 0, direction: "down"});
     this.add('2d, animation');
 
     this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
@@ -236,7 +237,7 @@ var selector = Q.Sprite.extend("Selector", {
         }
       }
       else if(collision.obj.isA("Personaje")){
-        collision.obj.hablar();
+        collision.obj.hablar(this.p.direction);
       }
       else if(collision.obj.isA("Portal")){
         if(collision.obj.p.abierto)
@@ -283,12 +284,22 @@ var selector = Q.Sprite.extend("Selector", {
         this.p.conversacion[2] = "no os despegais de los pergaminos...";
         this.play("stop_down");
 
-        this.hablar = function(conv){
-            Q.state.set("texto_conversacion", this.p.conversacion);
-            console.log("Has hablado conmigo: "+this.p.conversacion);
-
+        this.hablar = function(direction){
+          
+          switch(direction){
+            case "down": this.play("stop_up"); break;
+            case "up": this.play("stop_down"); break;
+            case "right": this.play("stop_left"); break;
+            case "left": this.play("stop_right"); break;
+          }
+          
+          Q.state.set("texto_conversacion", this.p.conversacion);
         }
+      },
+      step: function(dt) {
+          this.play("stop_down");
       }
+
     });
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -351,27 +362,28 @@ var magia = Q.Sprite.extend("Magic", {
     }
 
     this.play(this.p.tipo);
-  },
 
-  //Controlara que al chocarse con un objeto sea destruida la magia
-  step: function(dt) {
 
     this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
-
+        
+        
         if(collision.obj.isA("Hierba")){
-          this.destroy();
-          collision.obj.play("destruir_hierba");
+          if(!collision.obj.colision_hierba){
+            this.colision_hierba = true;
+            collision.obj.play("destruir_hierba");
+          }
+          else{
+            this.colision_hierba = false;
+          }
         } else if(collision.obj.isA("Jarron")){
           Q.audio.play("Jarron_roto.ogg");
-          this.destroy();
           collision.obj.play("destruir_jarron");
         } else if(collision.obj.isA("Murcielago")){
           Q.audio.play("monster_die.ogg");
-          this.destroy();
-          collision.obj.destroy();
-        } else{
-          this.destroy();
+          collision.obj.hit(this.p.potencia);
         }
+
+        this.destroy();
     });
   }
 });
@@ -412,7 +424,7 @@ var magia = Q.Sprite.extend("Magic", {
 			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
       this._super(p, { sprite: "miHierba", sheet: "hierba", gravity:0});
       this.add('2d, animation');
-      var colision_hierba = false;
+      this.colision_hierba = false;
 
       this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
 
@@ -448,11 +460,12 @@ var magia = Q.Sprite.extend("Magic", {
   			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
         this._super(p, { sprite: "miJarron", sheet: "jarron", gravity:0});
         this.add('2d, animation');
-        var colision_jarron = false;
+        this.colision_jarron = false;
 
         this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
 
           if(collision.obj.isA("Magic") && !colision_jarron){
+            Q.audio.play("Jarron_roto.ogg");
             colision_jarron = true;
             this.play("destruir_jarron");
           }
@@ -492,12 +505,22 @@ var magia = Q.Sprite.extend("Magic", {
         }
       });
 
+
+      Q.animations('portalAnimacion', {
+        move: {frames: [0,1,2,3], rate: 2/5},
+        closed: {frames: [4], loop: false}
+      });
+
       //Portal
       var portal = Q.Sprite.extend("Portal",{
          init: function(p) {
-
-          this._super(p, { sprite: "CofreAnimacion", sheet: "cofre", gravity:0});
+          this._super(p, { sprite: "portalAnimacion", sheet: "portales", gravity:0});
           this.add('2d, animation');
+
+          if(p.abierto)
+            this.play("move");
+          else
+            this.play("closed");
         }
 
       });
@@ -525,30 +548,33 @@ var magia = Q.Sprite.extend("Magic", {
       entity.play("enemy_walk_down");
 
       entity.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
-        if(collision.obj.isA("Player")){
 
-        	Q.state.dec("texto_vida", 10);
+        if(!this.hitted){
+          if(collision.obj.isA("Player")){
 
-        	if(Q.state.get("texto_vida") <= 0)
-        		collision.obj.destroy();
-        	else{
+          	Q.state.dec("texto_vida", 10);
 
-        		switch(collision.obj.p.direction){
-        			case "up": collision.obj.p.y = collision.obj.p.y+35; break;
-        			case "down": collision.obj.p.y = collision.obj.p.y-35; break;
-        			case "right": collision.obj.p.x = collision.obj.p.x-35; break;
-        			case "left": collision.obj.p.x = collision.obj.p.x+35; break;
-        		}
+          	if(Q.state.get("texto_vida") <= 0)
+          		collision.obj.destroy();
+          	else{
 
-        		
-        	}
+          		switch(collision.obj.p.direction){
+          			case "up": collision.obj.p.y = collision.obj.p.y+35; break;
+          			case "down": collision.obj.p.y = collision.obj.p.y-35; break;
+          			case "right": collision.obj.p.x = collision.obj.p.x-35; break;
+          			case "left": collision.obj.p.x = collision.obj.p.x+35; break;
+          		}
+
+          		
+          	}
+          }
+
+          entity.p.velY = -entity.p.velY;
+          entity.p.velX = -entity.p.velX;
+
+          entity.p.vy = entity.p.velY;
+          entity.p.vx = entity.p.velX;
         }
-
-        entity.p.velY = -entity.p.velY;
-        entity.p.velX = -entity.p.velX;
-
-        entity.p.vy = entity.p.velY;
-        entity.p.vx = entity.p.velX;
 
       });
     }
@@ -560,36 +586,45 @@ var magia = Q.Sprite.extend("Magic", {
       enemy_walk_down: {frames: [0, 1, 2, 3], rate: 1/4},
       enemy_walk_up:{frames: [4, 5, 6, 7], rate: 1/4},
       enemy_walk_right: {frames: [8, 9, 10, 11], rate: 1/4},
-      enemy_walk_left: {frames: [12, 13, 14, 15], rate: 1/4}
+      enemy_walk_left: {frames: [12, 13, 14, 15], rate: 1/4},
+      enemy_hit: {frames: [0, -1, 1, -1, 2, -1, 3, -1, 0], loop:false, rate: 1/7, trigger: "seguir"}
   });
 
   var murcielago = Q.Sprite.extend("Murcielago",{
     init: function(p){
-      this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: p.velX, vy: p.velY, gravity: 0});
+      this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: p.velX, vy: p.velY, gravity: 0, vida: 30});
       this.add('2d, animation, defaultEnemy');
+
+      this.hitted = false;
+
+      this.hit = function(potencia){
+        if(!this.hitted){
+          this.hitted = true;
+          this.p.vida-=potencia;
+          this.p.vx = 0;
+          this.p.vy = 0;
+          this.play("enemy_hit");
+        }
+      }
+      this.on("seguir",function() {
+        this.hitted = false;
+        if(this.p.vida <= 0){
+          this.destroy();
+        }
+        this.p.vx = this.p.velX;
+        this.p.vy = this.p.velY;
+      });
     },
     step: function(dt){
 
       if(this.p.vy > 0)
         this.play("enemy_walk_down");
-      else if(this.p.vy < 0){
+      else if(this.p.vy < 0)
         this.play("enemy_walk_up");
-      }
       else if(this.p.vx < 0)
         this.play("enemy_walk_left");
       else if(this.p.vx > 0)
         this.play("enemy_walk_right");
-
-      /*
-      if(this.p.direction === "down")
-        this.play("enemy_walk_down");
-      else if(this.p.direction === "up")
-        this.play("enemy_walk_up");
-      else if(this.p.direction === "left")
-        this.play("enemy_walk_left");
-      else if(this.p.direction === "right")
-        this.play("enemy_walk_right");
-      */
     }
   });
 
