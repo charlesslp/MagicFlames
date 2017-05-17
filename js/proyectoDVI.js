@@ -953,7 +953,7 @@ var magia = Q.Sprite.extend("Magic", {
   Q.state.set("nivel_ant", "portales");
   Q.state.set("texto_monedas", 0);
   Q.state.set("cofres_abiertos", []);
-  Q.audio.play("looperman_opening.ogg", volume:1);
+  Q.audio.play("looperman_opening.ogg");
 });
 
   function cambiarNivel(nivel){
