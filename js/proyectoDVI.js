@@ -9,7 +9,7 @@ Alumnos:
 var game = function() {
 
 //Cargamos el modulo de quintus, con los modilos necesarios
-  var Q = window.Q = Quintus({ audioSupported: [ 'ogg','mp3' ] })
+  var Q = window.Q = Quintus({ audioSupported: [ 'ogg','wav','mp3' ] })
    .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI, TMX, Audio")
    // Maximize permite maximizar el tamaño al de la pantalla
    .setup({ maximize: false, width:420, height:420 })
@@ -18,7 +18,7 @@ var game = function() {
 
    //Cargamos recursos y lo necesario para el menu del titulo
    var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
-   'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg';
+   'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg';
 
   Q.load( recursos , function(){
 
@@ -305,6 +305,7 @@ var selector = Q.Sprite.extend("Selector", {
 
       if(collision.obj.isA("Cofre")){
         if(!collision.obj.p.abierto){
+          Q.audio.play("chest_openning.ogg");
           collision.obj.play("abrir_cofre");
         }
       }
@@ -783,8 +784,9 @@ var magia = Q.Sprite.extend("Magic", {
       this.on("seguir",function() {
         this.hitted = false;
         if(this.p.vida <= 0){
-          this.destroy();
           Q.audio.play("monster_die.ogg");
+          this.destroy();
+
         }
       });
     },
