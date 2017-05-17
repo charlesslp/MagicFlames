@@ -54,12 +54,20 @@ var game = function() {
     	stop_down:{frames: [1], loop : false},
     	stop_left:{frames: [4], loop : false},
     	stop_right:{frames: [7], loop : false},
-    	stop_up:{frames: [10], loop : false}
+    	stop_up:{frames: [10], loop : false},
+    	walk_down_hitted:{frames: [-1, 0, -1, 1, -1, 2], rate: 1/4},
+    	walk_left_hitted: {frames: [-1, 3, -1, 4, -1, 5], rate: 1/4},
+    	walk_right_hitted: {frames: [-1, 6, -1, 7, -1, 8], rate: 1/4},
+    	walk_up_hitted: {frames: [-1, 9, -1, 10, -1, 11], rate: 1/4},
+    	stop_down_hitted:{frames: [-1, 1], rate: 1/4},
+    	stop_left_hitted:{frames: [-1, 4], rate: 1/4},
+    	stop_right_hitted:{frames: [-1, 7], rate: 1/4},
+    	stop_up_hitted:{frames: [-1, 10], rate: 1/4},
     });
    //Componente que usara el heroe para poder moverse por el escenario
    Q.component("basicControls", {
 
-        defaults: { speed: 100, direction: 'down'},
+        defaults: { speed: 100, direction: 'down', hitted: false},
 
         added: function() {
           var p = this.entity.p;
@@ -74,49 +82,50 @@ var game = function() {
           // grab the entity's properties for easy reference
           var p = this.entity.p;
 
-        		//Movimiento arriba
-            if(Q.inputs['up'] && !Q.inputs['down'] && !Q.inputs['right'] && !Q.inputs['left']){
-              p.vy = -p.speed;
-              p.vx = 0;
-              //Movimiento derecha
-            } else if(Q.inputs['right'] && !Q.inputs['left'] && !Q.inputs['up'] && !Q.inputs['down']){
-              p.vx = p.speed;
-              p.vy = 0;
-              //Movimiento abajo
-            } else if(Q.inputs['down'] && !Q.inputs['up'] && !Q.inputs['right'] && !Q.inputs['left']){
-              p.vy = p.speed;
-              p.vx = 0;
-              //Movimiento izquierda
-            } else if(Q.inputs['left'] && !Q.inputs['right'] && !Q.inputs['up'] && !Q.inputs['down']){
-              p.vx = -p.speed;
-              p.vy = 0;
-              //Movimiento diagonal arriba izquierda
-              } else if(Q.inputs['up'] && Q.inputs['left']){
-                  p.vx = -p.speed;
-                  p.vy = -p.speed;
-              //Movimiento diagonal abajo izquierda
-              } else if(Q.inputs['down'] && Q.inputs['left']){
-                  p.vx = -p.speed;
-                  p.vy = p.speed;
-              //Movimiento diagonal arriba derecha
-              } else if(Q.inputs['up'] && Q.inputs['right']){
-                  p.vx = p.speed;
-                  p.vy = -p.speed;
-              //Movimiento diagonal abajo derecha
-              } else if(Q.inputs['down'] && Q.inputs['right']){
-                  p.vx = p.speed;
-                  p.vy = p.speed;
-              //Movimiento nulo
-              } else {
-              p.vx = 0;
-              p.vy = 0;
-            }
 
-              if((Q.inputs['down'] && Q.inputs['up']) || (Q.inputs['left'] && Q.inputs['right'])){
-                  p.parado = true;
-              } else{
-                  p.parado = false;
-              }
+				//Movimiento arriba
+			if(Q.inputs['up'] && !Q.inputs['down'] && !Q.inputs['right'] && !Q.inputs['left']){
+			  p.vy = -p.speed;
+			  p.vx = 0;
+			  //Movimiento derecha
+			} else if(Q.inputs['right'] && !Q.inputs['left'] && !Q.inputs['up'] && !Q.inputs['down']){
+			  p.vx = p.speed;
+			  p.vy = 0;
+			  //Movimiento abajo
+			} else if(Q.inputs['down'] && !Q.inputs['up'] && !Q.inputs['right'] && !Q.inputs['left']){
+			  p.vy = p.speed;
+			  p.vx = 0;
+			  //Movimiento izquierda
+			} else if(Q.inputs['left'] && !Q.inputs['right'] && !Q.inputs['up'] && !Q.inputs['down']){
+			  p.vx = -p.speed;
+			  p.vy = 0;
+			  //Movimiento diagonal arriba izquierda
+			  } else if(Q.inputs['up'] && Q.inputs['left']){
+			      p.vx = -p.speed;
+			      p.vy = -p.speed;
+			  //Movimiento diagonal abajo izquierda
+			  } else if(Q.inputs['down'] && Q.inputs['left']){
+			      p.vx = -p.speed;
+			      p.vy = p.speed;
+			  //Movimiento diagonal arriba derecha
+			  } else if(Q.inputs['up'] && Q.inputs['right']){
+			      p.vx = p.speed;
+			      p.vy = -p.speed;
+			  //Movimiento diagonal abajo derecha
+			  } else if(Q.inputs['down'] && Q.inputs['right']){
+			      p.vx = p.speed;
+			      p.vy = p.speed;
+			  //Movimiento nulo
+			  } else {
+			  p.vx = 0;
+			  p.vy = 0;
+			}
+
+			  if((Q.inputs['down'] && Q.inputs['up']) || (Q.inputs['left'] && Q.inputs['right'])){
+			      p.parado = true;
+			  } else{
+			      p.parado = false;
+			  }
 
             // grab a direction from the input
             p.direction = Q.inputs['left']  ? 'left' :
@@ -131,40 +140,103 @@ var game = function() {
 		init: function(p) {
 			this._super(p, {sprite:"PlayerAnimation", sheet: "walk_down", gravity :0, parado: false, lanzado: false});
 			this.add('2d, basicControls, animation');
+
+			this.on("seguir",function() {
+			this.p.hitted = false;
+			});
+
+
+			this.time = 0;
 		},
 		step: function(dt) {
 
 		if(Q.state.get("texto_mana") < 100)
 			Q.state.inc("texto_mana", dt*5);
 
-  		//se mueve ejecuta la animacion de andar
-        if(this.p.direction === "down" && Q.inputs['down'] && !this.p.parado)
-          this.play("walk_down");
-        else if(this.p.direction === "up" && Q.inputs['up'] && !this.p.parado)
-          this.play("walk_up");
-        else if(this.p.direction === "left" && Q.inputs['left'] && !this.p.parado)
-          this.play("walk_left");
-        else if(this.p.direction === "right" && Q.inputs['right'] && !this.p.parado)
-          this.play("walk_right");
+		if(this.p.hitted){
+			this.time += dt;
+			if(this.time > 2){
+				this.time = 0;
+				this.p.hitted = false;
+			}
+		}
+
+  		  //se mueve ejecuta la animacion de andar
+        if(this.p.direction === "down" && Q.inputs['down'] && !this.p.parado){
+          if(this.p.hitted)
+          	this.play("walk_down_hitted");
+          else
+          	this.play("walk_down");
+        }
+        else if(this.p.direction === "up" && Q.inputs['up'] && !this.p.parado){
+          if(this.p.hitted)
+          	this.play("walk_up_hitted");
+          else
+          	this.play("walk_up");
+        }
+        else if(this.p.direction === "left" && Q.inputs['left'] && !this.p.parado){
+          if(this.p.hitted)
+          	this.play("walk_left_hitted");
+          else
+          	this.play("walk_left");
+        }
+        else if(this.p.direction === "right" && Q.inputs['right'] && !this.p.parado){
+          if(this.p.hitted)
+          	this.play("walk_right_hitted");
+          else
+          	this.play("walk_right");
+        }
 
         //No se mueve
-        else if(this.p.direction === "down" && !Q.inputs['down'] && !this.p.parado)
-          this.play("stop_down");
-        else if(this.p.direction === "up" && !Q.inputs['up'] && !this.p.parado)
-          this.play("stop_up");
-        else if(this.p.direction === "left" && !Q.inputs['left'] && !this.p.parado)
-          this.play("stop_left");
-        else if(this.p.direction === "right" && !Q.inputs['right'] && !this.p.parado)
-          this.play("stop_right");
+        else if(this.p.direction === "down" && !Q.inputs['down'] && !this.p.parado){
+          if(this.p.hitted)
+          	this.play("stop_down_hitted");
+          else
+          	this.play("stop_down");
+        }
+        else if(this.p.direction === "up" && !Q.inputs['up'] && !this.p.parado){
+          if(this.p.hitted)
+          	this.play("stop_up_hitted");
+          else
+          	this.play("stop_up");
+        }
+        else if(this.p.direction === "left" && !Q.inputs['left'] && !this.p.parado){
+          if(this.p.hitted)
+          	this.play("stop_left_hitted");
+          else
+          	this.play("stop_left");
+        }
+        else if(this.p.direction === "right" && !Q.inputs['right'] && !this.p.parado){
+          if(this.p.hitted)
+          	this.play("stop_right_hitted");
+          else
+          	this.play("stop_right");
+        }
 
-        else if(this.p.direction === "down" && this.p.parado)
-          this.play("stop_down");
-        else if(this.p.direction === "up" && this.p.parado)
-          this.play("stop_up");
-        else if(this.p.direction === "left" && this.p.parado)
-          this.play("stop_left");
-        else if(this.p.direction === "right" && this.p.parado)
-          this.play("stop_right");
+        else if(this.p.direction === "down" && this.p.parado){
+          if(this.p.hitted)
+          	this.play("stop_down_hitted");
+          else
+          	this.play("stop_down");
+        }
+        else if(this.p.direction === "up" && this.p.parado){
+          if(this.p.hitted)
+          	this.play("stop_up_hitted");
+          else
+          	this.play("stop_up");
+        }
+        else if(this.p.direction === "left" && this.p.parado){
+          if(this.p.hitted)
+          	this.play("stop_left_hitted");
+          else
+          	this.play("stop_left");
+        }
+        else if(this.p.direction === "right" && this.p.parado){
+          if(this.p.hitted)
+          	this.play("stop_right_hitted");
+          else
+          	this.play("stop_right");
+        }
 
         if(Q.inputs['a'] && !this.p.lanzado){
         	if(Q.state.get("texto_mana") >= 10){
@@ -233,7 +305,6 @@ var selector = Q.Sprite.extend("Selector", {
       if(collision.obj.isA("Cofre")){
         if(!collision.obj.p.abierto){
           collision.obj.play("abrir_cofre");
-          collision.obj.p.abierto = true;
         }
       }
       else if(collision.obj.isA("Personaje")){
@@ -376,6 +447,9 @@ var magia = Q.Sprite.extend("Magic", {
           collision.obj.play("destruir_jarron");
         } else if(collision.obj.isA("Murcielago")){
           collision.obj.hit(this.p.potencia);
+        } else if(collision.obj.isA("ObstaculoFuego")){
+          if(this.p.tipo === "agua")
+            collision.obj.destroy();
         }
 
         this.destroy();
@@ -502,6 +576,55 @@ var magia = Q.Sprite.extend("Magic", {
 
 
 
+      //Fuego
+      Q.animations('FuegoAnimacion', {
+        move: {frames: [0,-9], rate: 1/5}
+      });
+
+      //Sprite de un jarron
+      var obstaculoFuego = Q.Sprite.extend("ObstaculoFuego",{
+        init: function(p) {
+          //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
+          this._super(p, { sprite: "FuegoAnimacion", sheet: "obstaculoFuego", gravity:0});
+          this.add('2d, animation');
+          this.play("move");
+
+
+          this.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
+
+              if(collision.obj.isA("Player")){
+
+                if(!collision.obj.p.hitted){
+                  Q.state.dec("texto_vida", 5);
+
+                  if(Q.state.get("texto_vida") <= 0)
+                    collision.obj.destroy();
+                  else{
+
+                    collision.obj.p.hitted = true;
+
+                    switch(collision.obj.p.direction){
+                      case "up": collision.obj.p.vy = 50; break;
+                      case "down": collision.obj.p.vy = -50; break;
+                      case "right": collision.obj.p.vx = -50; break;
+                      case "left": collision.obj.p.vx = 50; break;
+                    }
+
+                    collision.obj.play("hitted");
+
+                  }
+                }
+              }
+
+          });
+
+        }
+      });
+
+
+
+
+
       Q.animations('portalAnimacion', {
         move_red: {frames: [0,1,2,3], rate: 2/5},
         closed_red: {frames: [4], loop: false},
@@ -584,28 +707,31 @@ var magia = Q.Sprite.extend("Magic", {
         if(!this.hitted){
           if(collision.obj.isA("Player")){
 
-          	Q.state.dec("texto_vida", 10);
+            if(!collision.obj.p.hitted){
+	            Q.state.dec("texto_vida", 10);
 
-          	if(Q.state.get("texto_vida") <= 0)
-          		collision.obj.destroy();
-          	else{
+	            if(Q.state.get("texto_vida") <= 0)
+	              collision.obj.destroy();
+	            else{
+                    collision.obj.p.hitted = true;
 
-          		switch(collision.obj.p.direction){
-          			case "up": collision.obj.p.y = collision.obj.p.y+35; break;
-          			case "down": collision.obj.p.y = collision.obj.p.y-35; break;
-          			case "right": collision.obj.p.x = collision.obj.p.x-35; break;
-          			case "left": collision.obj.p.x = collision.obj.p.x+35; break;
-          		}
+                    switch(collision.obj.p.direction){
+                      case "up": collision.obj.p.vy = 50; break;
+                      case "down": collision.obj.p.vy = -50; break;
+                      case "right": collision.obj.p.vx = -50; break;
+                      case "left": collision.obj.p.vx = 50; break;
+                    }
 
-          		
-          	}
+                    collision.obj.play("hitted");
+	            }
+	        }
           }
 
-          entity.p.velY = -entity.p.velY;
+          /*entity.p.velY = -entity.p.velY;
           entity.p.velX = -entity.p.velX;
 
           entity.p.vy = entity.p.velY;
-          entity.p.vx = entity.p.velX;
+          entity.p.vx = entity.p.velX;*/
         }
 
       });
@@ -644,19 +770,57 @@ var magia = Q.Sprite.extend("Magic", {
           this.destroy();
           Q.audio.play("monster_die.ogg");
         }
-        this.p.vx = this.p.velX;
-        this.p.vy = this.p.velY;
       });
     },
     step: function(dt){
 
-      if(this.p.vy > 0)
+      var heroe = Q("Player").first();
+      var rango = 200
+
+      var xyHeroe = heroe.p.x + heroe.p.y;
+      var xyBicho = this.p.x + this.p.y;
+
+      if(Math.abs(xyHeroe - xyBicho) < rango && !this.hitted){
+        if(heroe.p.x > this.p.x){
+          this.p.vx = this.p.velX;
+          if(heroe.p.y > this.p.y){
+            this.p.vy = this.p.velY;
+          } else if(heroe.p.y < this.p.y){
+            this.p.vy = -this.p.velY;
+          } else{
+            this.p.vy = 0;
+          }
+        } else if (heroe.p.x < this.p.x){
+          this.p.vx = -this.p.velX;
+          if(heroe.p.y > this.p.y){
+            this.p.vy = this.p.velY;
+          } else if(heroe.p.y < this.p.y){
+            this.p.vy = -this.p.velY;
+          } else{
+            this.p.vy = 0;
+          }
+        } else{
+          this.p.vx = 0;
+          if(heroe.p.y > this.p.y){
+            this.p.vy = this.p.velY;
+          } else if(heroe.p.y < this.p.y){
+            this.p.vy = -this.p.velY;
+          } else{
+            this.p.vy = 0;
+          }
+        }
+      } else{
+        this.p.vy = 0;
+        this.p.vx = 0;
+      }
+
+      if(this.p.vy > 0 && Math.abs(heroe.p.x - this.p.x) < 4)
         this.play("enemy_walk_down");
-      else if(this.p.vy < 0)
+      else if(this.p.vy < 0 && Math.abs(heroe.p.x - this.p.x) < 4)
         this.play("enemy_walk_up");
-      else if(this.p.vx < 0)
+      else if(this.p.vx < 0 && Math.abs(heroe.p.y - this.p.y) < 4)
         this.play("enemy_walk_left");
-      else if(this.p.vx > 0)
+      else if(this.p.vx > 0 && Math.abs(heroe.p.y - this.p.y) < 4)
         this.play("enemy_walk_right");
     }
   });
@@ -747,14 +911,14 @@ var magia = Q.Sprite.extend("Magic", {
 //JUEGO
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+  
 
 
 
 
 	Q.scene("startGame", function(stage){
 		//Tendremos en el estado el nivel en el que se encuentra el personaje aparte de la vida, mana, etc..
-	Q.state.reset({ level:"portales"});
+	Q.state.reset({ level:"Nivel1"});
 
 	var container = stage.insert(new Q.UI.Container({
 		x: Q.width, y: Q.height, fill: "rgba(0,0,0,0.5)", w: 480, h: 480
@@ -795,14 +959,19 @@ var magia = Q.Sprite.extend("Magic", {
 
     Q.state.set("texto_conversacion", "");
 
-    if(Q.state.get("nivel_ant") === "nivel1")
-      var player = stage.insert(new heroe({ x: 335, y: 490 }));
-    else
-      var player = stage.insert(new heroe({ x: 300, y: 220 }));
-
-    stage.follow(player);
+    var player = Q("Player").at(0);
 
 
+    if(Q.state.get("nivel_ant") === "nivel1"){
+      player.p.x = 335;
+      player.p.y = 490;
+    }
+    else{
+      player.p.x = 300;
+      player.p.y = 220;
+    }
+
+    stage.follow(Q("Player").at(0));
     Q.state.set("nivel_ant", "portales");
 
 
@@ -817,7 +986,6 @@ var magia = Q.Sprite.extend("Magic", {
     Q.state.set("texto_conversacion", "");
     var player = stage.insert(new heroe({ x: 416, y: 165 }));
     stage.follow(player);
-
 
     Q.state.set("nivel_ant", "nivel1");
 
