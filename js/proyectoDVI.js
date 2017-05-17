@@ -353,14 +353,14 @@ var selector = Q.Sprite.extend("Selector", {
         this.play("stop_down");
 
         this.hablar = function(direction){
-          
+
           switch(direction){
             case "down": this.play("stop_up"); break;
             case "up": this.play("stop_down"); break;
             case "right": this.play("stop_left"); break;
             case "left": this.play("stop_right"); break;
           }
-          
+
           Q.state.set("texto_conversacion", this.p.conversacion);
         }
       },
@@ -433,8 +433,8 @@ var magia = Q.Sprite.extend("Magic", {
 
 
     this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
-        
-        
+
+
         if(collision.obj.isA("Hierba")){
           if(!collision.obj.colision_hierba){
             this.colision_hierba = true;
@@ -555,25 +555,42 @@ var magia = Q.Sprite.extend("Magic", {
 
 
     //Cofre
-      Q.animations('CofreAnimacion', {
-        abrir_cofre: {frames: [1,2,3], rate: 1/5, loop:false, trigger: "abrir"}
-      });
+    Q.animations('CofreAnimacion', {
+    abrir_cofre: {frames: [1,2,3], rate: 1/5, loop:false, trigger: "abrir"},
+    cofre_abierto_inicialmente: {frames: [3], loop:false, trigger: "abierto_inicialmente"}
+  });
 
-      //Sprite de un jarron
-      var cofre = Q.Sprite.extend("Cofre",{
-        init: function(p) {
-          //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
-          this._super(p, { sprite: "CofreAnimacion", sheet: "cofre", gravity:0});
-          this.add('2d, animation');
+  //Sprite de un jarron
+  var cofre = Q.Sprite.extend("Cofre",{
+    init: function(p) {
+      //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
+      this._super(p, { sprite: "CofreAnimacion", sheet: "cofre", gravity:0});
+      this.add('2d, animation');
 
-          this.p.abierto = false;
+      this.p.abierto = false;
 
-          this.on("abrir", function(){
-              //Aqui sumaria una serie de monedas o mana
-              console.log("Me da moneditas");
-          });
+      //Este abre el cofre cuando colisiona con el selector del personaje, y lo añade a la lista de cofres abiertos
+      this.on("abrir", function(){
+
+        if(!this.p.abierto){
+          //Aqui sumaria una serie de monedas o mana
+          this.p.abierto = true;
+          //Añadimos el id del cofre abierto a la lista de cofres abiertos
+          var cofres_abiertos_aux = Q.state.get("cofres_abiertos");
+          cofres_abiertos_aux[cofres_abiertos_aux.length] = this.p.identificador;
+          Q.state.set("cofres_abiertos", cofres_abiertos_aux);
+          //console.log(cofres_abiertos_aux);
+          //console.log(this);
         }
       });
+
+      //Este deja el cofre abierto segun se inicia el nivel, para no repetir cofres
+      this.on("abierto_inicialmente", function(){
+        this.p.abierto = true;
+        console.log("El cofre " + this.p.identificador + "esta abierto");
+      });
+    }
+  });
 
 
 
@@ -909,7 +926,7 @@ var magia = Q.Sprite.extend("Magic", {
 //JUEGO
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  
+
 
 
 
@@ -931,12 +948,33 @@ var magia = Q.Sprite.extend("Magic", {
   Q.state.set("texto_mana", 100);
   Q.state.set("texto_vida", 100);
   Q.state.set("nivel_ant", "portales");
+  Q.state.set("cofres_abiertos", []);
 });
 
   function cambiarNivel(nivel){
         Q.clearStages();
         Q.stageScene(nivel);
         Q.stageScene('HUD', 2);
+
+        //Abrimos todos los cofres del nivel
+        var cofres_abiertos_aux = Q.state.get("cofres_abiertos");
+
+        //console.log(Q("Cofre").at(1));
+
+        for(var i = 0; i < Q("Cofre").length; i++){
+
+          var id_aux = Q("Cofre").at(i).p.identificador;
+
+          var posicion = cofres_abiertos_aux.indexOf(id_aux); //Posicion dentro del array de cofres abiertos
+
+          if( posicion != -1){ //Es decir, si existe en la lista de abiertos
+            console.log("cofre " + id_aux + " por abrir. Esta en la posicion "+posicion+" de la lista de cofres abiertos");
+            Q("Cofre").at(i).play("cofre_abierto_inicialmente");
+
+            console.log("El cofre identificado es: "+Q("Cofre").at(i).p.identificador);
+            //Q("Cofre").at(posicion).play("cofre_abierto_inicialmente");
+          }
+        }
   }
 
 	//Nivel de prueba en el que tendremos todos los objetos y poderes
@@ -964,7 +1002,7 @@ var magia = Q.Sprite.extend("Magic", {
 
     switch(Q.state.get("nivel_ant")){
     	case "nivel1": n = 1; break;
-    	case "Prueba": n = 2; break;    	
+    	case "Prueba": n = 2; break;
     }
     console.log(n);
     player = Q("Player").at(n);
