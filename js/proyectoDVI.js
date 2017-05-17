@@ -573,15 +573,16 @@ var magia = Q.Sprite.extend("Magic", {
       this.on("abrir", function(){
 
         if(!this.p.abierto){
-          //Aqui sumaria una serie de monedas o mana
+          Q.state.inc("texto_monedas", 10);
           this.p.abierto = true;
           //Añadimos el id del cofre abierto a la lista de cofres abiertos
           var cofres_abiertos_aux = Q.state.get("cofres_abiertos");
           cofres_abiertos_aux[cofres_abiertos_aux.length] = this.p.identificador;
           Q.state.set("cofres_abiertos", cofres_abiertos_aux);
-          //console.log(cofres_abiertos_aux);
+          console.log(cofres_abiertos_aux);
           //console.log(this);
         }
+
       });
 
       //Este deja el cofre abierto segun se inicia el nivel, para no repetir cofres
@@ -948,6 +949,7 @@ var magia = Q.Sprite.extend("Magic", {
   Q.state.set("texto_mana", 100);
   Q.state.set("texto_vida", 100);
   Q.state.set("nivel_ant", "portales");
+  Q.state.set("texto_monedas", 0);
   Q.state.set("cofres_abiertos", []);
 });
 
@@ -968,10 +970,10 @@ var magia = Q.Sprite.extend("Magic", {
           var posicion = cofres_abiertos_aux.indexOf(id_aux); //Posicion dentro del array de cofres abiertos
 
           if( posicion != -1){ //Es decir, si existe en la lista de abiertos
-            console.log("cofre " + id_aux + " por abrir. Esta en la posicion "+posicion+" de la lista de cofres abiertos");
+            //console.log("cofre " + id_aux + " por abrir. Esta en la posicion "+posicion+" de la lista de cofres abiertos");
             Q("Cofre").at(i).play("cofre_abierto_inicialmente");
-
-            console.log("El cofre identificado es: "+Q("Cofre").at(i).p.identificador);
+            Q("Cofre").at(i).p.abierto = true;
+            //console.log("El cofre identificado es: "+Q("Cofre").at(i).p.identificador);
             //Q("Cofre").at(posicion).play("cofre_abierto_inicialmente");
           }
         }
@@ -1111,7 +1113,13 @@ var magia = Q.Sprite.extend("Magic", {
 
     }));
 
+    container2.insert(new Q.Monedas({
+        x: Q.width-50,
+        y: 60,
+    }));
+
     container2.fit(10);
+
   });
 
 
@@ -1155,6 +1163,25 @@ var magia = Q.Sprite.extend("Magic", {
     },
     update_mana: function(mana) {
         this.p.label = "Maná: " + mana.toFixed();
+    }
+  });
+
+  //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
+  Q.UI.Text.extend("Monedas",{
+    init: function(p) {
+
+      this._super(p,{
+        label: "Monedas: " + Q.state.get("texto_monedas").toFixed(0),
+        color: "red",
+        size: 12,
+        x: 0,
+        y: 0
+      });
+
+      Q.state.on("change.texto_monedas",this,"update_monedas");
+    },
+    update_monedas: function(monedas) {
+        this.p.label = "Monedas: " + monedas.toFixed();
     }
   });
 
