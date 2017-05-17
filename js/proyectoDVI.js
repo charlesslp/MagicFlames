@@ -62,7 +62,7 @@ var game = function() {
     	stop_down_hitted:{frames: [-1, 1], rate: 1/4},
     	stop_left_hitted:{frames: [-1, 4], rate: 1/4},
     	stop_right_hitted:{frames: [-1, 7], rate: 1/4},
-    	stop_up_hitted:{frames: [-1, 10], rate: 1/4},
+    	stop_up_hitted:{frames: [-1, 10], rate: 1/4}
     });
    //Componente que usara el heroe para poder moverse por el escenario
    Q.component("basicControls", {
@@ -160,6 +160,7 @@ var game = function() {
 				this.p.hitted = false;
 			}
 		}
+
 
   		  //se mueve ejecuta la animacion de andar
         if(this.p.direction === "down" && Q.inputs['down'] && !this.p.parado){
@@ -610,8 +611,6 @@ var magia = Q.Sprite.extend("Magic", {
                       case "left": collision.obj.p.vx = 50; break;
                     }
 
-                    collision.obj.play("hitted");
-
                   }
                 }
               }
@@ -722,7 +721,6 @@ var magia = Q.Sprite.extend("Magic", {
                       case "left": collision.obj.p.vx = 50; break;
                     }
 
-                    collision.obj.play("hitted");
 	            }
 	        }
           }
@@ -918,7 +916,7 @@ var magia = Q.Sprite.extend("Magic", {
 
 	Q.scene("startGame", function(stage){
 		//Tendremos en el estado el nivel en el que se encuentra el personaje aparte de la vida, mana, etc..
-	Q.state.reset({ level:"Nivel1"});
+	Q.state.reset({ level:"portales"});
 
 	var container = stage.insert(new Q.UI.Container({
 		x: Q.width, y: Q.height, fill: "rgba(0,0,0,0.5)", w: 480, h: 480
@@ -950,6 +948,9 @@ var magia = Q.Sprite.extend("Magic", {
 	  var player = stage.insert(new heroe({ x: 300, y: 220 }));
 	  stage.follow(player);
 
+
+    Q.state.set("nivel_ant", "Prueba");
+
   });
 
   //Nivel de los portales
@@ -959,19 +960,22 @@ var magia = Q.Sprite.extend("Magic", {
 
     Q.state.set("texto_conversacion", "");
 
-    var player = Q("Player").at(0);
+    var player, n = 0;
 
-
-    if(Q.state.get("nivel_ant") === "nivel1"){
-      player.p.x = 335;
-      player.p.y = 490;
+    switch(Q.state.get("nivel_ant")){
+    	case "nivel1": n = 1; break;
+    	case "Prueba": n = 2; break;    	
     }
-    else{
-      player.p.x = 300;
-      player.p.y = 220;
+    console.log(n);
+    player = Q("Player").at(n);
+
+
+    for (var i = 0; i <= 5; i++) {
+    	if(n !== i)
+    		Q("Player").at(i).destroy();
     }
 
-    stage.follow(Q("Player").at(0));
+    stage.follow(player);
     Q.state.set("nivel_ant", "portales");
 
 
@@ -983,10 +987,12 @@ var magia = Q.Sprite.extend("Magic", {
     Q.stageTMX("nivel1.tmx", stage);
     stage.add("viewport");
 
-    Q.state.set("texto_conversacion", "");
-    var player = stage.insert(new heroe({ x: 416, y: 165 }));
-    stage.follow(player);
 
+    var player = Q("Player").at(0);
+
+    stage.follow(Q("Player").at(0));
+
+    Q.state.set("texto_conversacion", "");
     Q.state.set("nivel_ant", "nivel1");
 
   });

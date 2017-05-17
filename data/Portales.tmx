@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="30" tilewidth="32" tileheight="32" nextobjectid="139">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="30" tilewidth="32" tileheight="32" nextobjectid="145">
  <tileset firstgid="1" name="Player" tilewidth="32" tileheight="32" tilecount="12" columns="3">
   <image source="../images/character.png" width="96" height="128"/>
   <tile id="0">
@@ -3239,7 +3239,14 @@
  <objectgroup name="Personajes">
   <object id="126" gid="4530" x="192" y="256" width="32" height="32"/>
  </objectgroup>
- <objectgroup name="heroe"/>
+ <objectgroup name="heroe">
+  <object id="139" gid="1" x="224" y="352" width="32" height="32"/>
+  <object id="140" gid="1" x="320" y="544" width="32" height="32"/>
+  <object id="141" gid="1" x="96" y="128" width="32" height="32"/>
+  <object id="142" gid="1" x="224" y="128" width="32" height="32"/>
+  <object id="143" gid="1" x="352" y="128" width="32" height="32"/>
+  <object id="144" gid="1" x="480" y="128" width="32" height="32"/>
+ </objectgroup>
  <objectgroup name="portales">
   <object id="124" gid="4514" x="512" y="96" width="40" height="68">
    <properties>
