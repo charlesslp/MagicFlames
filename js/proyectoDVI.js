@@ -311,6 +311,27 @@ var selector = Q.Sprite.extend("Selector", {
         }
       }
       else if(collision.obj.isA("Personaje")){
+
+        var HUD = Q("HUD");
+
+            var container3 = HUD.stage.insert(new Q.UI.Container({
+              x: 0,
+              y: 0,
+              w: Q.width,
+              h: Q.height,
+              fill: "rgba(0,0,0,0.5)",
+              border: 1,
+              shadow: 0,
+              shadowColor: "rgba(0,0,0,0.5)"
+            }));
+
+            container3.insert(new Q.Conversacion({
+              x: Q.width/2,
+              y: Q.height-50,
+            }));
+
+            container3.fit(10);
+
         collision.obj.hablar(this.p.direction);
       }
 
@@ -911,8 +932,8 @@ var magia = Q.Sprite.extend("Magic", {
 			        Q.stage(0).unpause();
 			    }
 			    else {
-			        Q.state.set("texto_conversacion", this.i);
-			    }
+            Q.state.set("texto_conversacion", this.i);
+          }
 	    	}
 	    }
     }
@@ -1091,15 +1112,9 @@ var magia = Q.Sprite.extend("Magic", {
       shadowColor: "rgba(0,0,0,0.5)"
     }));
 
-    container.insert(new Q.Conversacion({
-        x: Q.width/2,
-        y: Q.height-50,
-
-    }));
-
     container.insert(new Q.Vidas({
         x: 50,
-        y: 40,
+        y: 40
 
     }));
 
@@ -1129,7 +1144,6 @@ var magia = Q.Sprite.extend("Magic", {
     }));
 
     container2.fit(10);
-
   });
 
 
