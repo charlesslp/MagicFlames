@@ -18,7 +18,8 @@ var game = function() {
 
    //Cargamos recursos y lo necesario para el menu del titulo
    var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
-   'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg';
+   'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
+   'break_grass.ogg';
 
   Q.load( recursos , function(){
 
@@ -439,6 +440,7 @@ var magia = Q.Sprite.extend("Magic", {
         if(collision.obj.isA("Hierba")){
           if(!collision.obj.colision_hierba){
             this.colision_hierba = true;
+            Q.audio.play("break_grass.ogg");
             collision.obj.play("destruir_hierba");
           }
           else{
@@ -522,7 +524,7 @@ var magia = Q.Sprite.extend("Magic", {
 
   //Jarron
     Q.animations('miJarron', {
-      destruir_jarron: {frames: [1,2,3], rate: 1/5, loop:false, trigger: "destruir"}
+      destruir_jarron: {frames: [1,2,3], rate: 1/3, loop:false, trigger: "destruir"}
     });
 
     //Sprite de un jarron
