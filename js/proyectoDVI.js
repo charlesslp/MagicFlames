@@ -725,7 +725,7 @@ var magia = Q.Sprite.extend("Magic", {
 
       entity.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
 
-        if(!this.hitted){
+        if(!this.p.hitted){
           if(collision.obj.isA("Player")){
 
             if(!collision.obj.p.hitted){
@@ -735,27 +735,92 @@ var magia = Q.Sprite.extend("Magic", {
 	              collision.obj.destroy();
 	            else{
                     collision.obj.p.hitted = true;
-
-                    switch(collision.obj.p.direction){
-                      case "up": collision.obj.p.vy = 50; break;
-                      case "down": collision.obj.p.vy = -50; break;
-                      case "right": collision.obj.p.vx = -50; break;
-                      case "left": collision.obj.p.vx = 50; break;
-                    }
-
 	            }
-	        }
+	          }
           }
-
-          /*entity.p.velY = -entity.p.velY;
-          entity.p.velX = -entity.p.velX;
-
-          entity.p.vy = entity.p.velY;
-          entity.p.vx = entity.p.velX;*/
         }
 
       });
-    }
+
+      
+    },
+
+    extend:{
+
+      step: function(dt){
+
+        var heroe = Q("Player").first();
+        var rango = 200;
+
+        var xyHeroe = heroe.p.x + heroe.p.y;
+        var xyBicho = this.p.x + this.p.y;
+
+        if(Math.abs(xyHeroe - xyBicho) < rango && !this.p.hitted){
+          if(heroe.p.x > this.p.x){
+            this.p.vx = this.p.velX;
+            if(heroe.p.y > this.p.y){
+              this.p.vy = this.p.velY;
+            } else if(heroe.p.y < this.p.y){
+              this.p.vy = -this.p.velY;
+            } else{
+              this.p.vy = 0;
+            }
+          } else if (heroe.p.x < this.p.x){
+            this.p.vx = -this.p.velX;
+            if(heroe.p.y > this.p.y){
+              this.p.vy = this.p.velY;
+            } else if(heroe.p.y < this.p.y){
+              this.p.vy = -this.p.velY;
+            } else{
+              this.p.vy = 0;
+            }
+          } else{
+            this.p.vx = 0;
+            if(heroe.p.y > this.p.y){
+              this.p.vy = this.p.velY;
+            } else if(heroe.p.y < this.p.y){
+              this.p.vy = -this.p.velY;
+            } else{
+              this.p.vy = 0;
+            }
+          }
+        } else{
+          this.p.vy = 0;
+          this.p.vx = 0;
+        }
+
+        if(this.p.vy > 0 && (Math.abs(heroe.p.x - this.p.x) < 4 || this.p.golpeado)){
+          this.p.golpeado = false;
+          this.play("enemy_walk_down");
+        } else if(this.p.vy < 0 && (Math.abs(heroe.p.x - this.p.x) < 4 || this.p.golpeado)){
+          this.p.golpeado = false;
+          this.p.golpeado = false;this.play("enemy_walk_up");
+        } else if(this.p.vx < 0 && (Math.abs(heroe.p.y - this.p.y) < 4 || this.p.golpeado)){
+          this.p.golpeado = false;
+          this.play("enemy_walk_left");
+        } else if(this.p.vx > 0 && (Math.abs(heroe.p.y - this.p.y) < 4 || this.p.golpeado)){
+          this.p.golpeado = false;
+          this.play("enemy_walk_right");
+        }
+      }, hit: function(potencia){
+
+        this.p.vida-=potencia;
+        this.p.vx = 0;
+        this.p.vy = 0;
+
+        if(!this.p.hitted && this.p.vida > 1){
+          this.p.golpeado = true;
+          this.p.hitted = true;
+          this.play("enemy_hit");
+        }
+        else if(this.p.vida <=0){
+          this.p.golpeado = true;
+          this.p.hitted = true;
+          Q.audio.play("monster_die.ogg");
+          this.play("enemy_die");
+        }
+      }
+    }    
   });
 
 
@@ -771,84 +836,15 @@ var magia = Q.Sprite.extend("Magic", {
 
   var murcielago = Q.Sprite.extend("Murcielago",{
     init: function(p){
-      this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: p.velX, vy: p.velY, gravity: 0, vida: 30});
-      this.add('2d, animation, defaultEnemy');
-
-      this.hitted = false;
-
-      this.hit = function(potencia){
-
-        this.p.vida-=potencia;
-        this.p.vx = 0;
-        this.p.vy = 0;
-
-        if(!this.hitted && this.p.vida > 1){
-          this.hitted = true;
-          this.play("enemy_hit");
-        }
-        else if(this.p.vida <=0){
-          this.hitted = true;
-          Q.audio.play("monster_die.ogg");
-          this.play("enemy_die");
-        }
-      }
+      this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: p.velX, vy: p.velY, gravity: 0, vida: 30, golpeado:false, hitted:false});
+      this.add('2d, animation, defaultEnemy'); 
+    
       this.on("seguir",function() {
-        this.hitted = false;
+        this.p.hitted = false;
       });
       this.on("destroy",function() {
         this.destroy();
       });
-    },
-    step: function(dt){
-
-      var heroe = Q("Player").first();
-      var rango = 200;
-
-      var xyHeroe = heroe.p.x + heroe.p.y;
-      var xyBicho = this.p.x + this.p.y;
-
-      if(Math.abs(xyHeroe - xyBicho) < rango && !this.hitted){
-        if(heroe.p.x > this.p.x){
-          this.p.vx = this.p.velX;
-          if(heroe.p.y > this.p.y){
-            this.p.vy = this.p.velY;
-          } else if(heroe.p.y < this.p.y){
-            this.p.vy = -this.p.velY;
-          } else{
-            this.p.vy = 0;
-          }
-        } else if (heroe.p.x < this.p.x){
-          this.p.vx = -this.p.velX;
-          if(heroe.p.y > this.p.y){
-            this.p.vy = this.p.velY;
-          } else if(heroe.p.y < this.p.y){
-            this.p.vy = -this.p.velY;
-          } else{
-            this.p.vy = 0;
-          }
-        } else{
-          this.p.vx = 0;
-          if(heroe.p.y > this.p.y){
-            this.p.vy = this.p.velY;
-          } else if(heroe.p.y < this.p.y){
-            this.p.vy = -this.p.velY;
-          } else{
-            this.p.vy = 0;
-          }
-        }
-      } else{
-        this.p.vy = 0;
-        this.p.vx = 0;
-      }
-
-      if(this.p.vy > 0 && Math.abs(heroe.p.x - this.p.x) < 4)
-        this.play("enemy_walk_down");
-      else if(this.p.vy < 0 && Math.abs(heroe.p.x - this.p.x) < 4)
-        this.play("enemy_walk_up");
-      else if(this.p.vx < 0 && Math.abs(heroe.p.y - this.p.y) < 4)
-        this.play("enemy_walk_left");
-      else if(this.p.vx > 0 && Math.abs(heroe.p.y - this.p.y) < 4)
-        this.play("enemy_walk_right");
     }
   });
 
