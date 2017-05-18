@@ -1057,7 +1057,7 @@ var magia = Q.Sprite.extend("Magic", {
 	  stage.add("viewport");
 
     Q.state.set("texto_conversacion", "");
-	  var player = stage.insert(new heroe({ x: 1568, y: 768 }));
+    var player = Q("Player").at(0);
 	  stage.follow(player);
 
     console.log("nivel fuego");
