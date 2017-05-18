@@ -19,7 +19,7 @@ var game = function() {
    //Cargamos recursos y lo necesario para el menu del titulo
    var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
    'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
-   'break_grass.ogg';
+   'break_grass.ogg, turn_off_fire.ogg';
 
   Q.load( recursos , function(){
 
@@ -453,6 +453,7 @@ var magia = Q.Sprite.extend("Magic", {
           collision.obj.hit(this.p.potencia);
         } else if(collision.obj.isA("ObstaculoFuego")){
           if(this.p.tipo === "agua")
+            Q.audio.play("turn_off_fire.ogg");
             collision.obj.destroy();
         }
 
