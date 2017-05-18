@@ -32,7 +32,7 @@ var game = function() {
     Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   	 //Cargamos el contenido del TMX
-  	Q.loadTMX("level.tmx, Prueba.tmx, Fuego.tmx, Portales.tmx, nivel1.tmx", function() {
+  	Q.loadTMX("level.tmx, nivel_fuego.tmx, Fuego.tmx, Portales.tmx, nivel1.tmx", function() {
   		Q.stageScene("startGame");
   	});
 
@@ -992,19 +992,6 @@ var magia = Q.Sprite.extend("Magic", {
         }
   }
 
-	//Nivel de prueba en el que tendremos todos los objetos y poderes
-  Q.scene("Prueba", function(stage) {
-	  Q.stageTMX("Prueba.tmx", stage);
-	  stage.add("viewport");
-
-    Q.state.set("texto_conversacion", "");
-	  var player = stage.insert(new heroe({ x: 300, y: 220 }));
-	  stage.follow(player);
-
-
-    Q.state.set("nivel_ant", "Prueba");
-
-  });
 
   //Nivel de los portales
   Q.scene("portales", function(stage) {
@@ -1017,7 +1004,7 @@ var magia = Q.Sprite.extend("Magic", {
 
     switch(Q.state.get("nivel_ant")){
     	case "nivel1": n = 1; break;
-    	case "Prueba": n = 2; break;
+    	case "NivelFuego": n = 2; break;
     }
     console.log(n);
     player = Q("Player").at(n);
@@ -1060,10 +1047,24 @@ var magia = Q.Sprite.extend("Magic", {
     var player = stage.insert(new heroe({ x: 300, y: 220 }));
     stage.follow(player);
 
-    stage.insert(new portal({ x: 200, y: 220, level: "Prueba", abierto:"true", tipo:"red"}));
+    stage.insert(new portal({ x: 200, y: 220, level: "NivelFuego", abierto:"true", tipo:"red"}));
 
   });
 
+  //Nivel de fuego en el que tendremos todos los objetos y el poder del fuego
+  Q.scene("NivelFuego", function(stage) {
+	  Q.stageTMX("nivel_fuego.tmx", stage);
+	  stage.add("viewport");
+
+    Q.state.set("texto_conversacion", "");
+	  var player = stage.insert(new heroe({ x: 1568, y: 768 }));
+	  stage.follow(player);
+
+    console.log("nivel fuego");
+
+    Q.state.set("nivel_ant", "NivelFuego");
+
+  });
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
