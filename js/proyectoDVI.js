@@ -19,7 +19,7 @@ var game = function() {
    //Cargamos recursos y lo necesario para el menu del titulo
    var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
    'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
-   'break_grass.ogg, turn_off_fire.ogg';
+   'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json';
 
   Q.load( recursos , function(){
 
@@ -28,6 +28,7 @@ var game = function() {
     Q.compileSheets("mago.png", "mago.json");
     Q.compileSheets("mi_seleccion.png", "mi_seleccion.json");
     Q.compileSheets("murcielago.png", "murcielago.json");
+    Q.compileSheets("bones.png", "esqueleto.json");
     Q.compileSheets("portales.png", "portales.json");
     Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
@@ -311,28 +312,10 @@ var selector = Q.Sprite.extend("Selector", {
         }
       }
       else if(collision.obj.isA("Personaje")){
-
-        var HUD = Q("HUD");
-
-            var container3 = HUD.stage.insert(new Q.UI.Container({
-              x: 0,
-              y: 0,
-              w: Q.width,
-              h: Q.height,
-              fill: "rgba(0,0,0,0.5)",
-              border: 1,
-              shadow: 0,
-              shadowColor: "rgba(0,0,0,0.5)"
-            }));
-
-            container3.insert(new Q.Conversacion({
-              x: Q.width/2,
-              y: Q.height-50,
-            }));
-
-            container3.fit(10);
-
         collision.obj.hablar(this.p.direction);
+      }
+      else if(collision.obj.isA("Llama")){
+        collision.obj.coger_llama();
       }
 
       this.destroy();
@@ -470,12 +453,13 @@ var magia = Q.Sprite.extend("Magic", {
         } else if(collision.obj.isA("Jarron")){
           Q.audio.play("Jarron_roto.ogg");
           collision.obj.play("destruir_jarron");
-        } else if(collision.obj.isA("Murcielago")){
+        } else if(collision.obj.isA("Murcielago") || collision.obj.isA("Esqueleto")){
           collision.obj.hit(this.p.potencia);
         } else if(collision.obj.isA("ObstaculoFuego")){
-          if(this.p.tipo === "agua")
+          if(this.p.tipo === "agua"){
             Q.audio.play("turn_off_fire.ogg");
             collision.obj.destroy();
+          }
         }
 
         this.destroy();
@@ -641,8 +625,11 @@ var magia = Q.Sprite.extend("Magic", {
                 if(!collision.obj.p.hitted){
                   Q.state.dec("texto_vida", 5);
 
-                  if(Q.state.get("texto_vida") <= 0)
-                    collision.obj.destroy();
+                  if(Q.state.get("texto_vida") <= 0){
+  					Q.state.set("nivel_ant", "portales");
+                  	Q.state.set("texto_vida", 100);
+                  	cambiarNivel("portales");
+                  }
                   else{
 
                     collision.obj.p.hitted = true;
@@ -662,6 +649,50 @@ var magia = Q.Sprite.extend("Magic", {
 
         }
       });
+
+
+    Q.animations('llama_animation', {
+      move: {frames: [0,1,2], rate: 1/5},
+      apagar_fuego: {frames: [18], loop: false},
+      apagar_agua: {frames: [27], loop: false},
+      apagar_tierra: {frames: [9], loop: false},
+      apagar_viento: {frames: [36], loop: false}
+    });
+
+    //Sprite de un jarron
+  	var llama = Q.Sprite.extend("Llama",{
+  		init: function(p) {
+  			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
+        this._super(p, { sprite: "llama_animation", sheet: "llama_"+p.tipo, cogido: false, gravity:0});
+        this.add('2d, animation');
+        this.play("move");
+        this.coger_llama = function(){
+        	if(!this.p.cogido){
+        		this.p.cogido = true;
+	        	console.log("te da el poder de "+this.p.tipo);
+	        	this.play("apagar_"+this.p.tipo);
+	        }
+        }
+
+      }
+  	});
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//FIN OBJETOS
+//FIN OBJETOS
+//FIN OBJETOS
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//PORTALES
+//PORTALES
+//PORTALES
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -725,9 +756,9 @@ var magia = Q.Sprite.extend("Magic", {
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//FIN OBJETOS
-//FIN OBJETOS
-//FIN OBJETOS
+//FIN PORTALES
+//FIN PORTALES
+//FIN PORTALES
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -752,8 +783,11 @@ var magia = Q.Sprite.extend("Magic", {
             if(!collision.obj.p.hitted){
 	            Q.state.dec("texto_vida", 10);
 
-	            if(Q.state.get("texto_vida") <= 0)
-	              collision.obj.destroy();
+	            if(Q.state.get("texto_vida") <= 0){
+  					Q.state.set("nivel_ant", "portales");
+                  	Q.state.set("texto_vida", 100);
+                  	cambiarNivel("portales");
+	            }
 	            else{
                     collision.obj.p.hitted = true;
 	            }
@@ -851,13 +885,39 @@ var magia = Q.Sprite.extend("Magic", {
       enemy_walk_up:{frames: [4, 5, 6, 7], rate: 1/4},
       enemy_walk_right: {frames: [8, 9, 10, 11], rate: 1/4},
       enemy_walk_left: {frames: [12, 13, 14, 15], rate: 1/4},
-      enemy_hit: {frames: [0, -1, 1, -1, 2, -1, 3, -1, 0], loop:false, rate: 1/7, trigger: "seguir"},
-      enemy_die: {frames: [0, -1, 1, -1, 2, -1, 3, -1, 0], loop:false, rate: 1/3, trigger: "destroy"}
+      enemy_hit: {frames: [1, -1, 1, -1, 1, -1, 1, -1, 1], loop:false, rate: 1/6, trigger: "seguir"},
+      enemy_die: {frames: [1, -1, 1, -1, 1, -1, 1, -1, 1], loop:false, rate: 1/6, trigger: "destroy"}
   });
 
   var murcielago = Q.Sprite.extend("Murcielago",{
     init: function(p){
       this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: p.velX, vy: p.velY, gravity: 0, vida: 30, golpeado:false, hitted:false});
+      this.add('2d, animation, defaultEnemy'); 
+    
+      this.on("seguir",function() {
+        this.p.hitted = false;
+      });
+      this.on("destroy",function() {
+        this.destroy();
+      });
+    }
+  });
+
+
+
+
+  Q.animations('esqueletoAnimation', {
+      enemy_walk_down: {frames: [0, 1, 2], rate: 1/4},
+      enemy_walk_up:{frames: [9, 10, 11], rate: 1/4},
+      enemy_walk_right: {frames: [6, 7, 8], rate: 1/4},
+      enemy_walk_left: {frames: [3, 4, 5], rate: 1/4},
+      enemy_hit: {frames: [1, -1, 1, -1, 1, -1, 1, -1, 1], loop:false, rate: 1/6, trigger: "seguir"},
+      enemy_die: {frames: [1, -1, 1, -1, 1, -1, 1, -1, 1], loop:false, rate: 1/6, trigger: "destroy"}
+  });
+
+  var esqueleto = Q.Sprite.extend("Esqueleto",{
+    init: function(p){
+      this._super(p, {sprite: "esqueletoAnimation", sheet: "skeleton_walk_down", vx: p.velX, vy: p.velY, gravity: 0, vida: 20, golpeado:false, hitted:false});
       this.add('2d, animation, defaultEnemy'); 
     
       this.on("seguir",function() {
@@ -932,8 +992,8 @@ var magia = Q.Sprite.extend("Magic", {
 			        Q.stage(0).unpause();
 			    }
 			    else {
-            Q.state.set("texto_conversacion", this.i);
-          }
+			        Q.state.set("texto_conversacion", this.i);
+			    }
 	    	}
 	    }
     }
@@ -1032,6 +1092,11 @@ var magia = Q.Sprite.extend("Magic", {
     		Q("Player").at(i).destroy();
     }
 
+    stage.insert(new llama({x:300, y:300, tipo:"fuego"}));
+    stage.insert(new llama({x:330, y:300, tipo:"agua"}));
+    stage.insert(new llama({x:360, y:300, tipo:"tierra"}));
+    stage.insert(new llama({x:390, y:300, tipo:"viento"}));
+
     stage.follow(player);
     Q.state.set("nivel_ant", "portales");
 
@@ -1112,9 +1177,15 @@ var magia = Q.Sprite.extend("Magic", {
       shadowColor: "rgba(0,0,0,0.5)"
     }));
 
+    container.insert(new Q.Conversacion({
+        x: Q.width/2,
+        y: Q.height-50,
+
+    }));
+
     container.insert(new Q.Vidas({
         x: 50,
-        y: 40
+        y: 40,
 
     }));
 
@@ -1144,6 +1215,7 @@ var magia = Q.Sprite.extend("Magic", {
     }));
 
     container2.fit(10);
+
   });
 
 
