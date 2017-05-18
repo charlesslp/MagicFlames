@@ -762,7 +762,8 @@ var magia = Q.Sprite.extend("Magic", {
       enemy_walk_up:{frames: [4, 5, 6, 7], rate: 1/4},
       enemy_walk_right: {frames: [8, 9, 10, 11], rate: 1/4},
       enemy_walk_left: {frames: [12, 13, 14, 15], rate: 1/4},
-      enemy_hit: {frames: [0, -1, 1, -1, 2, -1, 3, -1, 0], loop:false, rate: 1/7, trigger: "seguir"}
+      enemy_hit: {frames: [0, -1, 1, -1, 2, -1, 3, -1, 0], loop:false, rate: 1/7, trigger: "seguir"},
+      enemy_die: {frames: [0, -1, 1, -1, 2, -1, 3, -1, 0], loop:false, rate: 1/3, trigger: "destroy"}
   });
 
   var murcielago = Q.Sprite.extend("Murcielago",{
@@ -773,27 +774,32 @@ var magia = Q.Sprite.extend("Magic", {
       this.hitted = false;
 
       this.hit = function(potencia){
+
+        this.p.vida-=potencia;
+        this.p.vx = 0;
+        this.p.vy = 0;
+
         if(!this.hitted && this.p.vida > 1){
           this.hitted = true;
-          this.p.vida-=potencia;
-          this.p.vx = 0;
-          this.p.vy = 0;
           this.play("enemy_hit");
+        }
+        else if(this.p.vida <=0){
+          this.hitted = true;
+          Q.audio.play("monster_die.ogg");
+          this.play("enemy_die");
         }
       }
       this.on("seguir",function() {
         this.hitted = false;
-        if(this.p.vida <= 0){
-          Q.audio.play("monster_die.ogg");
-          this.destroy();
-
-        }
+      });
+      this.on("destroy",function() {
+        this.destroy();
       });
     },
     step: function(dt){
 
       var heroe = Q("Player").first();
-      var rango = 200
+      var rango = 200;
 
       var xyHeroe = heroe.p.x + heroe.p.y;
       var xyBicho = this.p.x + this.p.y;
@@ -953,7 +959,8 @@ var magia = Q.Sprite.extend("Magic", {
   Q.state.set("nivel_ant", "portales");
   Q.state.set("texto_monedas", 0);
   Q.state.set("cofres_abiertos", []);
-  Q.audio.play("looperman_opening.ogg");
+  //Q.audio.play("looperman_opening.ogg", {loop:true});
+
 });
 
   function cambiarNivel(nivel){
