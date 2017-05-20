@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="90" height="50" tilewidth="32" tileheight="32" nextobjectid="1191">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="90" height="50" tilewidth="32" tileheight="32" nextobjectid="1192">
  <tileset firstgid="1" name="Player" tilewidth="32" tileheight="32" tilecount="12" columns="3">
   <image source="../images/character.png" width="96" height="128"/>
   <tile id="0">
@@ -10,6 +10,11 @@
  </tileset>
  <tileset firstgid="13" name="Mi_seleccion" tilewidth="32" tileheight="32" tilecount="81" columns="9">
   <image source="../images/Mi_seleccion.png" width="288" height="288"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="Llama"/>
+   </properties>
+  </tile>
   <tile id="4">
    <properties>
     <property name="Class" value="Cofre"/>
@@ -9103,6 +9108,13 @@
    <tile gid="0"/>
   </data>
  </layer>
+ <objectgroup name="llama">
+  <object id="1191" gid="13" x="2432" y="864" width="32" height="32">
+   <properties>
+    <property name="tipo" value="0"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup name="hierba">
   <object id="1054" gid="35" x="512" y="1024" width="32" height="32"/>
   <object id="1055" gid="35" x="544" y="1024" width="32" height="32"/>

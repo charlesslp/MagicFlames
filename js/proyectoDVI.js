@@ -6,6 +6,23 @@ Alumnos:
   - Pablo Martín Atienza
 */
 
+var conversacionMago = [
+  ["Hola chaval, por fin te encuentro, escucha\ncorremos un gran peligro.","Hay rumores de que un malvado hechicero\nse está poniendo to tocho\npara conquistar Softwareland.", "Mi deber es proteger este reino\nde los pringaos que creen que\npueden conquistarlo.",
+  "Pero antes necesito las llamas\nde los elementos para poder frenarle.", "\n¿Que me dices?¿Me echas una mano?", "Tras cada portal se encuentran\nlas llamas que debes traerme", "Como soy to majo, te voy a dar\nel poder del fuego de primeras",
+  "Con él podrás quemar cosas y dañar\na los enemigos que te encuentres", "o dañar a quien quieras, no es mi problema", "y te voy a abrir el portal rojo para que puedas\ntraerme la llama del desierto.", "Cuando lo hagas, ven a verme\ny te doy el siguiente poder."],
+  ["¿Aun sigues aqui?", "¡Vete a por la llama!\n¡¡¡El tiempo corre!!!"],
+  ["¡¡Gracias!!", "Toma, aquí tienes el poder del agua,\nahora podrás apagar el fuego\nque se cruce en tu camino.", "También puedes usarlo para dañar\na tus enemigos, ya que es más poderoso\nque el fuego.", "O puedes empapar a tus amigas y hacer\nun concurso de camisetas mojadas",
+  "Por cierto, avisame si decides\nhacer eso último.","Ahora te abriré el portal azul para que\nme traigas la llama del mar.", "\nBuena suerte."],
+  ["Tío, que más quieres, no mucha gente\npuede apagar el fuego con magia.", "Cualquier bombero estaría\nenvidioso de ti", "\n¡Pero ahora traeme la siguiente llama!"],
+  ["¡¡Gracias majo!!\n¡Eso si que es una cosa bien hecha!", "No como los dibujos de mi nieto...\nBueno el caso, aqui tienes el\npoder de la tierra.", "Con él podrás romper piedras\ne incluso rocas.","Ya queda poco, traeme la\nllama del bosque y te daré\nel siguiente poder"],
+  ["Mirate, con 3 poderes ya.\nLos chavales de hoy en día\ncreceis tan rápido..."],
+  ["¡Genial!\n¡Ya solo queda uno!", "Toma el poder del viento,\ncon él podras mover algunos\nobjetos de gran peso", "Y levantar las faldas a las chicas\nsin que se enteren... Aunque yo no hago\neso, ¿eh? ¡Lo juro!", "Ahora traeme la llama del cielo,\nes la última llama.","Te prometo que cuando me la traigas\nte daré el poder más chulo de todos..."],
+  ["¿Que pasa?¿No te fias de mi?\nTu traeme la llama chico", "\nQuien te has creido para cuestionarme..."],
+  ["Jajaja...", "JAJAJAJAJA", "¡¡POR FIN!!\n¡¡¡EL PODER DE LOS ELEMENTOS POR FIN ES MIO!!!", "Ahora podré hacer lo que me de la gana\nsin nadie que me lo impida.", "Lo primero que haré será quemar un par de aldeas.", "Después comeré un poco", "Un sandwich con crema de cacahuete,\nque esa mierda esta super rica",
+  "Luego iré al baño, que no me suelen\nsentar muy bien esos sandwiches.", "Y después... ¿Después que iba a hacer yo?", "¡Ah si, conquistar Softwareland!\nMaldito alzheimer...", "Gracias por hacerme el trabajo chaval,\nahora hazte a un lado, tengo un mundo que conquistar..."]
+]
+
+
 var game = function() {
 
 //Cargamos el modulo de quintus, con los modilos necesarios
@@ -33,7 +50,7 @@ var game = function() {
     Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   	 //Cargamos el contenido del TMX
-  	Q.loadTMX("level.tmx, nivel_fuego.tmx, Fuego.tmx, Portales.tmx, nivel1.tmx", function() {
+  	Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx", function() {
   		Q.stageScene("startGame");
   	});
 
@@ -242,7 +259,7 @@ var game = function() {
         }
 
         if(Q.inputs['a'] && !this.p.lanzado){
-        	if(Q.state.get("texto_mana") >= 10){
+        	if(Q.state.get("texto_mana") >= 10 && Q.state.get("poderes_conseguidos") > 0){
         		  Q.state.dec("texto_mana", 10);
           		this.stage.insert(new magia({tipo: "fuego", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 10}));
           		this.p.lanzado = true;
@@ -250,21 +267,21 @@ var game = function() {
         }
         if(Q.inputs['s'] && !this.p.lanzado){
 
-        	if(Q.state.get("texto_mana") >= 20){
+        	if(Q.state.get("texto_mana") >= 20 && Q.state.get("poderes_conseguidos") > 1){
         		Q.state.dec("texto_mana", 20);
           		this.stage.insert(new magia({tipo: "agua", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 20}));
           		this.p.lanzado = true;
           	}
         }
         if(Q.inputs['d'] && !this.p.lanzado){
-        	if(Q.state.get("texto_mana") >= 30){
+        	if(Q.state.get("texto_mana") >= 30 && Q.state.get("poderes_conseguidos") > 2){
         		Q.state.dec("texto_mana", 30);
           		this.stage.insert(new magia({tipo: "tierra", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 30}));
           		this.p.lanzado = true;
           	}
         }
         if(Q.inputs['f'] && !this.p.lanzado){
-        	if(Q.state.get("texto_mana") >= 50){
+        	if(Q.state.get("texto_mana") >= 50 && Q.state.get("poderes_conseguidos") > 3){
         		Q.state.dec("texto_mana", 50);
           		this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 50}));
           		this.p.lanzado = true;
@@ -302,23 +319,28 @@ var selector = Q.Sprite.extend("Selector", {
   init: function(p){
     this._super(p, { w:32, h:32, sensor:true, gravity: 0, direction: "down"});
     this.add('2d, animation');
+    this.tocado = false;
 
     this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
 
-      if(collision.obj.isA("Cofre")){
-        if(!collision.obj.p.abierto){
-          Q.audio.play("chest_openning.ogg");
-          collision.obj.play("abrir_cofre");
-        }
-      }
-      else if(collision.obj.isA("Personaje")){
-        collision.obj.hablar(this.p.direction);
-      }
-      else if(collision.obj.isA("Llama")){
-        collision.obj.coger_llama();
-      }
+      if(!this.tocado){
+        this.tocado = true;
 
-      this.destroy();
+        if(collision.obj.isA("Cofre")){
+          if(!collision.obj.p.abierto){
+            Q.audio.play("chest_openning.ogg");
+            collision.obj.play("abrir_cofre");
+          }
+        }
+        else if(collision.obj.isA("Personaje")){
+          collision.obj.hablar(this.p.direction);
+        }
+        else if(collision.obj.isA("Llama")){
+          collision.obj.coger_llama();
+        }
+
+      }
+        this.destroy();
     });
   }
 });
@@ -340,8 +362,7 @@ var selector = Q.Sprite.extend("Selector", {
     stop_down:{frames: [1], loop : false},
     stop_left:{frames: [4], loop : false},
     stop_right:{frames: [7], loop : false},
-    stop_up:{frames: [10], loop : false},
-    habla:{frames:[1], loop:false, trigger: "hablar"}
+    stop_up:{frames: [10], loop : false}
    });
 
     //Sprite de un jarron
@@ -352,10 +373,6 @@ var selector = Q.Sprite.extend("Selector", {
         this.add('2d, animation');
 
         this.p.conversacion = [];
-
-        this.p.conversacion[0] = "En mis tiempos esto era otra cosa";
-        this.p.conversacion[1] = "Los chavales de hoy en día";
-        this.p.conversacion[2] = "no os despegais de los pergaminos...";
         this.play("stop_down");
 
         this.hablar = function(direction){
@@ -367,7 +384,45 @@ var selector = Q.Sprite.extend("Selector", {
             case "left": this.play("stop_right"); break;
           }
 
+          var n = Q.state.get("num_conversacion");
+
+          switch(n){
+            case 0: Q.state.inc("num_conversacion", 1); Q.state.inc("poderes_conseguidos", 1); break;
+            case 1: if(Q.state.get("llamas_conseguidas") > 0){
+
+              n = 2;
+              Q.state.inc("num_conversacion", 2);
+              Q.state.inc("poderes_conseguidos", 1);
+
+            }
+            break;
+            case 3: if(Q.state.get("llamas_conseguidas") > 1){
+
+              n = 4;
+              Q.state.inc("num_conversacion", 2);
+              Q.state.inc("poderes_conseguidos", 1);
+            }
+            break;
+            case 5: if(Q.state.get("llamas_conseguidas") > 2){
+
+              n = 6;
+              Q.state.inc("num_conversacion", 2);
+              Q.state.inc("poderes_conseguidos", 1);
+            }
+            break;
+            case 7: if(Q.state.get("llamas_conseguidas") > 3){
+
+              n = 8;
+              Q.state.inc("num_conversacion", 2);
+              Q.state.inc("poderes_conseguidos", 1);
+            }
+            break;
+          }
+
+          this.p.conversacion = conversacionMago[n];
+
           Q.state.set("texto_conversacion", this.p.conversacion);
+
         }
       },
       step: function(dt) {
@@ -588,8 +643,6 @@ var magia = Q.Sprite.extend("Magic", {
           var cofres_abiertos_aux = Q.state.get("cofres_abiertos");
           cofres_abiertos_aux[cofres_abiertos_aux.length] = this.p.identificador;
           Q.state.set("cofres_abiertos", cofres_abiertos_aux);
-          console.log(cofres_abiertos_aux);
-          //console.log(this);
         }
 
       });
@@ -597,7 +650,6 @@ var magia = Q.Sprite.extend("Magic", {
       //Este deja el cofre abierto segun se inicia el nivel, para no repetir cofres
       this.on("abierto_inicialmente", function(){
         this.p.abierto = true;
-        console.log("El cofre " + this.p.identificador + "esta abierto");
       });
     }
   });
@@ -653,10 +705,10 @@ var magia = Q.Sprite.extend("Magic", {
 
     Q.animations('llama_animation', {
       move: {frames: [0,1,2], rate: 1/5},
-      apagar_fuego: {frames: [18], loop: false},
-      apagar_agua: {frames: [27], loop: false},
-      apagar_tierra: {frames: [9], loop: false},
-      apagar_viento: {frames: [36], loop: false}
+      apagar_0: {frames: [18], loop: false},
+      apagar_1: {frames: [27], loop: false},
+      apagar_2: {frames: [9], loop: false},
+      apagar_3: {frames: [36], loop: false}
     });
 
     //Sprite de un jarron
@@ -665,11 +717,23 @@ var magia = Q.Sprite.extend("Magic", {
   			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
         this._super(p, { sprite: "llama_animation", sheet: "llama_"+p.tipo, cogido: false, gravity:0});
         this.add('2d, animation');
-        this.play("move");
+
+        if(Q.state.get("llamas_conseguidas") > p.tipo ){
+          this.p.cogido = true;
+          this.play("apagar_"+this.p.tipo);
+        }
+        else
+          this.play("move");
+
         this.coger_llama = function(){
         	if(!this.p.cogido){
         		this.p.cogido = true;
-	        	console.log("te da el poder de "+this.p.tipo);
+
+            if(Q.state.get("llamas_conseguidas") === this.p.tipo){
+              Q.state.inc("llamas_conseguidas", 1);
+            }
+
+	        	console.log("te da el poder de "+this.p.tipo+" " +Q.state.get("llamas_conseguidas"));
 	        	this.play("apagar_"+this.p.tipo);
 	        }
         }
@@ -699,14 +763,14 @@ var magia = Q.Sprite.extend("Magic", {
 
 
       Q.animations('portalAnimacion', {
-        move_red: {frames: [0,1,2,3], rate: 2/5},
-        closed_red: {frames: [4], loop: false},
-        move_yellow: {frames: [5,6,7,8], rate: 2/5},
-        closed_yellow: {frames: [9], loop: false},
-        move_green: {frames: [10,11,12,13], rate: 2/5},
-        closed_green: {frames: [14], loop: false},
-        move_blue: {frames: [15,16,17,18], rate: 2/5},
-        closed_blue: {frames: [19], loop: false}
+        move_0: {frames: [0,1,2,3], rate: 2/5},
+        closed_0: {frames: [4], loop: false},
+        move_1: {frames: [15,16,17,18], rate: 2/5},
+        closed_1: {frames: [19], loop: false},
+        move_2: {frames: [10,11,12,13], rate: 2/5},
+        closed_2: {frames: [14], loop: false},
+        move_3: {frames: [5,6,7,8], rate: 2/5},
+        closed_3: {frames: [9], loop: false}
       });
 
       //Portal
@@ -717,18 +781,24 @@ var magia = Q.Sprite.extend("Magic", {
 
 
 
-          if(p.abierto === "true")
-            this.play("move_"+p.tipo);
-          else
-            this.play("closed_"+p.tipo);
-
           this.on("bump.bottom", function(collision){
 
-	        if(collision.obj.isA("Player")){
-	        	if(this.p.abierto === "true")
-          			cambiarNivel(this.p.level);
-	        }
-	      });
+  	        if(collision.obj.isA("Player")){
+  	        	if(this.p.abierto === "true")
+            			cambiarNivel(this.p.level);
+  	        }
+  	      });
+        },
+        step: function(dt){
+
+          if(Q.state.get("poderes_conseguidos") > this.p.tipo)
+            this.p.abierto = "true";
+
+
+          if(this.p.abierto === "true")
+            this.play("move_"+this.p.tipo);
+          else
+            this.play("closed_"+this.p.tipo);
         }
 
       });
@@ -987,9 +1057,9 @@ var magia = Q.Sprite.extend("Magic", {
 	    			this.i = 0;
 	    			this.conversacion = [];
 	    			this.conversacion[0] = "";
-			        Q.state.set("texto_conversacion", this.conversacion);
-			        this.i = 0;
-			        Q.stage(0).unpause();
+		        Q.state.set("texto_conversacion", this.conversacion);
+		        this.i = 0;
+		        Q.stage(0).unpause();
 			    }
 			    else {
 			        Q.state.set("texto_conversacion", this.i);
@@ -1039,6 +1109,9 @@ var magia = Q.Sprite.extend("Magic", {
   Q.state.set("nivel_ant", "portales");
   Q.state.set("texto_monedas", 0);
   Q.state.set("cofres_abiertos", []);
+  Q.state.set("llamas_conseguidas", 0);
+  Q.state.set("poderes_conseguidos", 0);
+  Q.state.set("num_conversacion", 0);
   //Q.audio.play("looperman_opening.ogg", {loop:true});
 
 });
@@ -1083,7 +1156,7 @@ var magia = Q.Sprite.extend("Magic", {
     	case "nivel1": n = 1; break;
     	case "NivelFuego": n = 2; break;
     }
-    console.log(n);
+
     player = Q("Player").at(n);
 
 
@@ -1092,10 +1165,10 @@ var magia = Q.Sprite.extend("Magic", {
     		Q("Player").at(i).destroy();
     }
 
-    stage.insert(new llama({x:300, y:300, tipo:"fuego"}));
-    stage.insert(new llama({x:330, y:300, tipo:"agua"}));
-    stage.insert(new llama({x:360, y:300, tipo:"tierra"}));
-    stage.insert(new llama({x:390, y:300, tipo:"viento"}));
+    stage.insert(new llama({x:300, y:200, tipo:0}));
+    stage.insert(new llama({x:350, y:200, tipo:1}));
+    stage.insert(new llama({x:400, y:200, tipo:2}));
+    stage.insert(new llama({x:450, y:200, tipo:3}));
 
     stage.follow(player);
     Q.state.set("nivel_ant", "portales");
@@ -1119,20 +1192,6 @@ var magia = Q.Sprite.extend("Magic", {
 
   });
 
-
-  //Nivel de fuego
-  Q.scene("fuego", function(stage) {
-    Q.stageTMX("Fuego.tmx", stage);
-    stage.add("viewport");
-
-    Q.state.set("texto_conversacion", "");
-    var player = stage.insert(new heroe({ x: 300, y: 220 }));
-    stage.follow(player);
-
-    stage.insert(new portal({ x: 200, y: 220, level: "NivelFuego", abierto:"true", tipo:"red"}));
-
-  });
-
   //Nivel de fuego en el que tendremos todos los objetos y el poder del fuego
   Q.scene("NivelFuego", function(stage) {
 	  Q.stageTMX("nivel_fuego.tmx", stage);
@@ -1142,7 +1201,6 @@ var magia = Q.Sprite.extend("Magic", {
     var player = Q("Player").at(0);
 	  stage.follow(player);
 
-    console.log("nivel fuego");
 
     Q.state.set("nivel_ant", "NivelFuego");
 
@@ -1178,8 +1236,8 @@ var magia = Q.Sprite.extend("Magic", {
     }));
 
     container.insert(new Q.Conversacion({
-        x: Q.width/2,
-        y: Q.height-50,
+        x: Q.width/2+50,
+        y: Q.height-80,
 
     }));
 

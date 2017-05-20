@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="30" tilewidth="32" tileheight="32" nextobjectid="145">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="30" tilewidth="32" tileheight="32" nextobjectid="146">
  <tileset firstgid="1" name="Player" tilewidth="32" tileheight="32" tilecount="12" columns="3">
   <image source="../images/character.png" width="96" height="128"/>
   <tile id="0">
@@ -3237,7 +3237,7 @@
   </data>
  </layer>
  <objectgroup name="Personajes">
-  <object id="126" gid="4530" x="192" y="256" width="32" height="32"/>
+  <object id="126" gid="4530" x="96" y="352" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="heroe">
   <object id="139" gid="1" x="224" y="352" width="32" height="32"/>
@@ -3248,32 +3248,32 @@
   <object id="144" gid="1" x="480" y="128" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="portales">
-  <object id="124" gid="4514" x="512" y="96" width="40" height="68">
+  <object id="122" gid="4514" x="128" y="96" width="40" height="68">
    <properties>
     <property name="abierto" type="bool" value="false"/>
-    <property name="level" value="fuego"/>
-    <property name="tipo" value="blue"/>
-   </properties>
-  </object>
-  <object id="123" gid="4514" x="384" y="96" width="40" height="68">
-   <properties>
-    <property name="abierto" type="bool" value="false"/>
-    <property name="level" value="fuego"/>
-    <property name="tipo" value="green"/>
+    <property name="level" value="NivelFuego"/>
+    <property name="tipo" value="0"/>
    </properties>
   </object>
   <object id="119" gid="4514" x="256" y="96" width="40" height="68">
    <properties>
     <property name="abierto" type="bool" value="false"/>
-    <property name="level" value="fuego"/>
-    <property name="tipo" value="yellow"/>
+    <property name="level" value="Prueba"/>
+    <property name="tipo" value="1"/>
    </properties>
   </object>
-  <object id="122" gid="4514" x="128" y="96" width="40" height="68">
+  <object id="123" gid="4514" x="384" y="96" width="40" height="68">
    <properties>
-    <property name="abierto" type="bool" value="true"/>
-    <property name="level" value="NivelFuego"/>
-    <property name="tipo" value="red"/>
+    <property name="abierto" type="bool" value="false"/>
+    <property name="level" value="Prueba"/>
+    <property name="tipo" value="2"/>
+   </properties>
+  </object>
+  <object id="124" gid="4514" x="512" y="96" width="40" height="68">
+   <properties>
+    <property name="abierto" type="bool" value="false"/>
+    <property name="level" value="Prueba"/>
+    <property name="tipo" value="3"/>
    </properties>
   </object>
  </objectgroup>
