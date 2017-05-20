@@ -3258,21 +3258,21 @@
   <object id="119" gid="4514" x="256" y="96" width="40" height="68">
    <properties>
     <property name="abierto" type="bool" value="false"/>
-    <property name="level" value="Prueba"/>
+    <property name="level" value="Nivel1"/>
     <property name="tipo" value="1"/>
    </properties>
   </object>
   <object id="123" gid="4514" x="384" y="96" width="40" height="68">
    <properties>
     <property name="abierto" type="bool" value="false"/>
-    <property name="level" value="Prueba"/>
+    <property name="level" value="Nivel1"/>
     <property name="tipo" value="2"/>
    </properties>
   </object>
   <object id="124" gid="4514" x="512" y="96" width="40" height="68">
    <properties>
     <property name="abierto" type="bool" value="false"/>
-    <property name="level" value="Prueba"/>
+    <property name="level" value="Nivel1"/>
     <property name="tipo" value="3"/>
    </properties>
   </object>

@@ -9174,14 +9174,14 @@
    <properties>
     <property name="abierto" type="bool" value="true"/>
     <property name="level" value="portales"/>
-    <property name="tipo" value="red"/>
+    <property name="tipo" value="0"/>
    </properties>
   </object>
   <object id="1050" gid="114" x="2560" y="864" width="40" height="68">
    <properties>
     <property name="abierto" type="bool" value="true"/>
     <property name="level" value="portales"/>
-    <property name="tipo" value="red"/>
+    <property name="tipo" value="0"/>
    </properties>
   </object>
  </objectgroup>

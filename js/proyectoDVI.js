@@ -7,7 +7,7 @@ Alumnos:
 */
 
 var conversacionMago = [
-  ["Hola chaval, por fin te encuentro, escucha\ncorremos un gran peligro.","Hay rumores de que un malvado hechicero\nse está poniendo to tocho\npara conquistar Softwareland.", "Mi deber es proteger este reino\nde los pringaos que creen que\npueden conquistarlo.",
+  ["Hola chaval, por fin te encuentro, escucha\ncorremos un gran peligro.","Hay rumores de que un malvado hechicero\nse está poniendo to tocho para\nconquistar Softwareland.", "Mi deber es proteger este reino\nde los pringaos que creen que\npueden conquistarlo.",
   "Pero antes necesito las llamas\nde los elementos para poder frenarle.", "\n¿Que me dices?¿Me echas una mano?", "Tras cada portal se encuentran\nlas llamas que debes traerme", "Como soy to majo, te voy a dar\nel poder del fuego de primeras",
   "Con él podrás quemar cosas y dañar\na los enemigos que te encuentres", "o dañar a quien quieras, no es mi problema", "y te voy a abrir el portal rojo para que puedas\ntraerme la llama del desierto.", "Cuando lo hagas, ven a verme\ny te doy el siguiente poder."],
   ["¿Aun sigues aqui?", "¡Vete a por la llama!\n¡¡¡El tiempo corre!!!"],
@@ -18,8 +18,8 @@ var conversacionMago = [
   ["Mirate, con 3 poderes ya.\nLos chavales de hoy en día\ncreceis tan rápido..."],
   ["¡Genial!\n¡Ya solo queda uno!", "Toma el poder del viento,\ncon él podras mover algunos\nobjetos de gran peso", "Y levantar las faldas a las chicas\nsin que se enteren... Aunque yo no hago\neso, ¿eh? ¡Lo juro!", "Ahora traeme la llama del cielo,\nes la última llama.","Te prometo que cuando me la traigas\nte daré el poder más chulo de todos..."],
   ["¿Que pasa?¿No te fias de mi?\nTu traeme la llama chico", "\nQuien te has creido para cuestionarme..."],
-  ["Jajaja...", "JAJAJAJAJA", "¡¡POR FIN!!\n¡¡¡EL PODER DE LOS ELEMENTOS POR FIN ES MIO!!!", "Ahora podré hacer lo que me de la gana\nsin nadie que me lo impida.", "Lo primero que haré será quemar un par de aldeas.", "Después comeré un poco", "Un sandwich con crema de cacahuete,\nque esa mierda esta super rica",
-  "Luego iré al baño, que no me suelen\nsentar muy bien esos sandwiches.", "Y después... ¿Después que iba a hacer yo?", "¡Ah si, conquistar Softwareland!\nMaldito alzheimer...", "Gracias por hacerme el trabajo chaval,\nahora hazte a un lado, tengo un mundo que conquistar..."]
+  ["Jajaja...", "JAJAJAJAJA", "¡¡POR FIN!!\n¡¡¡EL PODER DE LOS ELEMENTOS POR FIN\nES MIO!!!", "Ahora podré hacer lo que me de la gana\nsin nadie que me lo impida.", "Lo primero que haré será\nquemar un par de aldeas.", "Después comeré un poco", "Un sandwich con crema de cacahuete,\nque esa mierda esta super rica",
+  "Luego iré al baño, que no me suelen\nsentar muy bien esos sandwiches.", "\nY después... ¿Después que iba a hacer yo?", "¡Ah si, conquistar Softwareland!\nMaldito alzheimer...", "Gracias por hacerme el trabajo chaval,\nahora hazte a un lado, tengo un mundo\nque conquistar..."]
 ]
 
 
