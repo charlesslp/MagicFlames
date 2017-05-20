@@ -36,7 +36,7 @@ var game = function() {
    //Cargamos recursos y lo necesario para el menu del titulo
    var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
    'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
-   'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json';
+   'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png';
 
   Q.load( recursos , function(){
 
@@ -333,6 +333,7 @@ var selector = Q.Sprite.extend("Selector", {
           }
         }
         else if(collision.obj.isA("Personaje")){
+          crearHUDConversacion("magoface.png");
           collision.obj.hablar(this.p.direction);
         }
         else if(collision.obj.isA("Llama")){
@@ -1019,14 +1020,15 @@ var magia = Q.Sprite.extend("Magic", {
 
 
   //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
-  Q.UI.Text.extend("Conversacion",{
+   Q.UI.Text.extend("Conversacion",{
     init: function(p) {
       this.keydown = false;
       this.conversacion;
       this.i = 0;
+      
       this._super(p,{
         label: Q.state.get("texto_conversacion"),
-        color: "white",
+        color: "black",
         size: 12,
         x: 0,
         y: 0
@@ -1057,9 +1059,10 @@ var magia = Q.Sprite.extend("Magic", {
 	    			this.i = 0;
 	    			this.conversacion = [];
 	    			this.conversacion[0] = "";
-		        Q.state.set("texto_conversacion", this.conversacion);
-		        this.i = 0;
-		        Q.stage(0).unpause();
+			        Q.state.set("texto_conversacion", this.conversacion);
+			        this.i = 0;
+			        Q.stage(0).unpause();
+              eliminarHUDConversacion();
 			    }
 			    else {
 			        Q.state.set("texto_conversacion", this.i);
@@ -1068,6 +1071,7 @@ var magia = Q.Sprite.extend("Magic", {
 	    }
     }
   });
+
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //FIN CONVERSACIÓN
@@ -1119,6 +1123,7 @@ var magia = Q.Sprite.extend("Magic", {
   function cambiarNivel(nivel){
         Q.clearStages();
         Q.stageScene(nivel);
+        Q.stageScene('Pergamino', 1);
         Q.stageScene('HUD', 2);
 
         //Abrimos todos los cofres del nivel
@@ -1222,7 +1227,8 @@ var magia = Q.Sprite.extend("Magic", {
 
 
 
-  Q.scene('HUD',function(stage) {
+ Q.scene('HUD',function(stage) {
+
 
     var container = stage.insert(new Q.UI.Container({
       x: 0,
@@ -1233,12 +1239,6 @@ var magia = Q.Sprite.extend("Magic", {
       border: 1,
       shadow: 0,
       shadowColor: "rgba(0,0,0,0.5)"
-    }));
-
-    container.insert(new Q.Conversacion({
-        x: Q.width/2+50,
-        y: Q.height-80,
-
     }));
 
     container.insert(new Q.Vidas({
@@ -1274,7 +1274,48 @@ var magia = Q.Sprite.extend("Magic", {
 
     container2.fit(10);
 
+    var container3 = stage.insert(new Q.UI.Container({
+      x: 0,
+      y: 0,
+      w: Q.width,
+      h: Q.height
+    }));
+    container3.insert(new Q.Conversacion({
+        x: Q.width/2 +30,
+        y: Q.height-70,
+
+    }));
+
   });
+
+Q.scene('Pergamino',function(stage) {
+
+});
+function crearHUDConversacion(face){
+  var container4 = Q.stage(1).insert(new Q.UI.Container({
+      x: 0,
+      y: 0,
+      w: Q.width,
+      h: Q.height
+    }));
+    container4.insert(new Q.UI.Button({
+      x: Q.width/2, 
+      y: Q.height+25, 
+      asset: "Pergamino.png"
+    }));
+    container4.insert(new Q.UI.Button({
+      x: 50, 
+      y: Q.height-50, 
+      asset: face
+    }));
+
+    
+  }
+  function eliminarHUDConversacion(){
+    Q.clearStage(1);
+    Q.stageScene('pergamino', 1);
+  }
+
 
 
 
