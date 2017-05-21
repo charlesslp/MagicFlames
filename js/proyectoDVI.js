@@ -283,8 +283,8 @@ var game = function() {
           	}
         }
         if(Q.inputs['f'] && !this.p.lanzado){
-        	if(Q.state.get("texto_mana") >= 50 && Q.state.get("poderes_conseguidos") > 3){
-        		Q.state.dec("texto_mana", 50);
+        	if(Q.state.get("texto_mana") >= 40 && Q.state.get("poderes_conseguidos") > 3){
+        		Q.state.dec("texto_mana", 40);
           		this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 50}));
           		this.p.lanzado = true;
           	}
