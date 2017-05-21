@@ -9,17 +9,17 @@ Alumnos:
 var conversacionMago = [
   ["Hola chaval, por fin te encuentro, escucha\ncorremos un gran peligro.","Hay rumores de que un malvado hechicero\nse está poniendo to tocho para\nconquistar Softwareland.", "Mi deber es proteger este reino\nde los pringaos que creen que\npueden conquistarlo.",
   "Pero antes necesito las llamas\nde los elementos para poder frenarle.", "\n¿Que me dices?¿Me echas una mano?", "Tras cada portal se encuentran\nlas llamas que debes traerme", "Como soy to majo, te voy a dar\nel poder del fuego de primeras",
-  "Con él podrás quemar cosas y dañar\na los enemigos que te encuentres", "o dañar a quien quieras, no es mi problema", "y te voy a abrir el portal rojo para que puedas\ntraerme la llama del desierto.", "Cuando lo hagas, ven a verme\ny te doy el siguiente poder."],
-  ["¿Aun sigues aqui?", "¡Vete a por la llama!\n¡¡¡El tiempo corre!!!"],
-  ["¡¡Gracias!!", "Toma, aquí tienes el poder del agua,\nahora podrás apagar el fuego\nque se cruce en tu camino.", "También puedes usarlo para dañar\na tus enemigos, ya que es más poderoso\nque el fuego.", "O puedes empapar a tus amigas y hacer\nun concurso de camisetas mojadas",
+  "Con él podrás quemar cosas y dañar\na los enemigos que te encuentres", "\no dañar a quien quieras, no es mi problema", "y te voy a abrir el portal rojo para que\npuedas traerme la llama del desierto.", "Cuando lo hagas, ven a verme\ny te doy el siguiente poder."],
+  ["\n¿Aun sigues aqui?", "¡Vete a por la llama!\n¡¡¡El tiempo corre!!!"],
+  ["¡¡Gracias!!", "Toma, aquí tienes el poder del agua,\nahora podrás apagar el fuego\nque se cruce en tu camino.", "También puedes usarlo para dañar\na tus enemigos, ya que es más\npoderoso que el fuego.", "O puedes empapar a tus amigas y hacer\nun concurso de camisetas mojadas.",
   "Por cierto, avisame si decides\nhacer eso último.","Ahora te abriré el portal azul para que\nme traigas la llama del mar.", "\nBuena suerte."],
   ["Tío, que más quieres, no mucha gente\npuede apagar el fuego con magia.", "Cualquier bombero estaría\nenvidioso de ti", "\n¡Pero ahora traeme la siguiente llama!"],
   ["¡¡Gracias majo!!\n¡Eso si que es una cosa bien hecha!", "No como los dibujos de mi nieto...\nBueno el caso, aqui tienes el\npoder de la tierra.", "Con él podrás romper piedras\ne incluso rocas.","Ya queda poco, traeme la\nllama del bosque y te daré\nel siguiente poder"],
   ["Mirate, con 3 poderes ya.\nLos chavales de hoy en día\ncreceis tan rápido..."],
-  ["¡Genial!\n¡Ya solo queda uno!", "Toma el poder del viento,\ncon él podras mover algunos\nobjetos de gran peso", "Y levantar las faldas a las chicas\nsin que se enteren... Aunque yo no hago\neso, ¿eh? ¡Lo juro!", "Ahora traeme la llama del cielo,\nes la última llama.","Te prometo que cuando me la traigas\nte daré el poder más chulo de todos..."],
+  ["¡Genial!\n¡Ya solo queda uno!", "Toma el poder del viento,\ncon él podras mover algunos\nobjetos de gran peso", "Y levantar las faldas a las chicas\nsin que se enteren... Aunque yo no\nhago eso, ¿eh? ¡Lo juro!", "Ahora traeme la llama del cielo,\nes la última llama.","Te prometo que cuando me la traigas\nte daré el poder más chulo de todos..."],
   ["¿Que pasa?¿No te fias de mi?\nTu traeme la llama chico", "\nQuien te has creido para cuestionarme..."],
-  ["Jajaja...", "JAJAJAJAJA", "¡¡POR FIN!!\n¡¡¡EL PODER DE LOS ELEMENTOS POR FIN\nES MIO!!!", "Ahora podré hacer lo que me de la gana\nsin nadie que me lo impida.", "Lo primero que haré será\nquemar un par de aldeas.", "Después comeré un poco", "Un sandwich con crema de cacahuete,\nque esa mierda esta super rica",
-  "Luego iré al baño, que no me suelen\nsentar muy bien esos sandwiches.", "\nY después... ¿Después que iba a hacer yo?", "¡Ah si, conquistar Softwareland!\nMaldito alzheimer...", "Gracias por hacerme el trabajo chaval,\nahora hazte a un lado, tengo un mundo\nque conquistar..."]
+  ["\nJajaja...", "\nJAJAJAJAJA", "¡¡POR FIN!!\n¡¡¡EL PODER DE LOS ELEMENTOS\nPOR FIN ES MIO!!!", "Ahora podré hacer lo que me de la gana\nsin nadie que me lo impida.", "Lo primero que haré será\nquemar un par de aldeas.", "\nDespués comeré un poco", "Un sandwich con crema de cacahuete,\nque esa mierda esta super rica",
+  "Luego iré al baño, que no me suelen\nsentar muy bien esos sandwiches.", "Y después... Despues.......\n¿Después que iba a hacer yo?", "¡Ah si, conquistar Softwareland!\nMaldito alzheimer...", "Gracias por hacerme el trabajo chaval,\nahora hazte a un lado, tengo un mundo\nque conquistar..."]
 ]
 
 
@@ -375,6 +375,7 @@ var selector = Q.Sprite.extend("Selector", {
 
         this.p.conversacion = [];
         this.play("stop_down");
+        this.malvado = false;
 
         this.hablar = function(direction){
 
@@ -424,10 +425,14 @@ var selector = Q.Sprite.extend("Selector", {
 
           Q.state.set("texto_conversacion", this.p.conversacion);
 
+          if(n === 8)
+            this.malvado = true;
         }
       },
       step: function(dt) {
           this.play("stop_down");
+          if(this.malvado)
+            this.destroy();
       }
 
     });
@@ -498,24 +503,33 @@ var magia = Q.Sprite.extend("Magic", {
 
 
         if(collision.obj.isA("Hierba")){
-          if(!collision.obj.colision_hierba){
-            this.colision_hierba = true;
-            Q.audio.play("break_grass.ogg");
+
+            collision.obj.sonido();
             collision.obj.play("destruir_hierba");
-          }
-          else{
-            this.colision_hierba = false;
-          }
+
         } else if(collision.obj.isA("Jarron")){
-          Q.audio.play("Jarron_roto.ogg");
+
+          collision.obj.sonido();
           collision.obj.play("destruir_jarron");
+
+        } else if(collision.obj.isA("Roca")){
+
+          if(this.p.tipo === "tierra"){
+            collision.obj.sonido();
+            collision.obj.play("destruir_roca");
+          }
+
         } else if(collision.obj.isA("Murcielago") || collision.obj.isA("Esqueleto")){
+
           collision.obj.hit(this.p.potencia);
+
         } else if(collision.obj.isA("ObstaculoFuego")){
+
           if(this.p.tipo === "agua"){
             Q.audio.play("turn_off_fire.ogg");
             collision.obj.destroy();
           }
+
         }
 
         this.destroy();
@@ -545,9 +559,6 @@ var magia = Q.Sprite.extend("Magic", {
 
 
 
-
-
-
 //Hierba
   Q.animations('miHierba', {
     destruir_hierba: {frames: [1], rate: 9/15, loop:false, trigger: "destruir"}
@@ -561,23 +572,17 @@ var magia = Q.Sprite.extend("Magic", {
       this.add('2d, animation');
       this.colision_hierba = false;
 
-      this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
-
-        if(collision.obj.isA("Magic") && !colision_hierba){
-          colision_hierba = true;
-          this.play("destruir_hierba");
+      this.sonido = function(){
+        if(!this.colision_hierba){
+          this.colision_hierba = true;
+          Q.audio.play("break_grass.ogg");
         }
-        else{
-          colision_hierba = false;
-        }
-      });
+      }
 
       this.on("destruir", function(){
         this.destroy();
       });
-    },
-		step: function(dt) {
-		}
+    }
 	});
 
 
@@ -597,23 +602,47 @@ var magia = Q.Sprite.extend("Magic", {
         this.add('2d, animation');
         this.colision_jarron = false;
 
-        this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
-
-          if(collision.obj.isA("Magic") && !colision_jarron){
+        this.sonido = function(){
+          if(!this.colision_jarron){
+            this.colision_jarron = true;
             Q.audio.play("Jarron_roto.ogg");
-            colision_jarron = true;
-            this.play("destruir_jarron");
           }
-          else{
-            colision_jarron = false;
-          }
-        });
+        }
 
         this.on("destruir", function(){
           this.destroy();
         });
       }
   	});
+
+
+  //Jarron
+    Q.animations('miRoca', {
+      destruir_roca: {frames: [0,1,2], rate: 1/3, loop:false, trigger: "destruir"}
+    });
+
+    //Sprite de un jarron
+    var roca = Q.Sprite.extend("Roca",{
+      init: function(p) {
+        //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
+        this._super(p, { sprite: "miRoca", sheet: "roca", gravity:0});
+        this.add('2d, animation');
+        this.colision_jarron = false;
+
+        this.sonido = function(){
+          if(!this.colision_jarron){
+            this.colision_jarron = true;
+            console.log("sonido de roca");
+            //Q.audio.play("Jarron_roto.ogg");
+          }
+        }
+
+        this.on("destruir", function(){
+          this.destroy();
+        });
+      }
+    });
+
 
 
 
@@ -679,20 +708,13 @@ var magia = Q.Sprite.extend("Magic", {
                   Q.state.dec("texto_vida", 5);
 
                   if(Q.state.get("texto_vida") <= 0){
-  					Q.state.set("nivel_ant", "portales");
+  					        Q.state.set("nivel_ant", "portales");
                   	Q.state.set("texto_vida", 100);
                   	cambiarNivel("portales");
                   }
                   else{
 
                     collision.obj.p.hitted = true;
-
-                    switch(collision.obj.p.direction){
-                      case "up": collision.obj.p.vy = 50; break;
-                      case "down": collision.obj.p.vy = -50; break;
-                      case "right": collision.obj.p.vx = -50; break;
-                      case "left": collision.obj.p.vx = 50; break;
-                    }
 
                   }
                 }
@@ -704,6 +726,7 @@ var magia = Q.Sprite.extend("Magic", {
       });
 
 
+
     Q.animations('llama_animation', {
       move: {frames: [0,1,2], rate: 1/5},
       apagar_0: {frames: [18], loop: false},
@@ -712,7 +735,7 @@ var magia = Q.Sprite.extend("Magic", {
       apagar_3: {frames: [36], loop: false}
     });
 
-    //Sprite de un jarron
+    //Sprite de una llama de poder
   	var llama = Q.Sprite.extend("Llama",{
   		init: function(p) {
   			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
@@ -1170,10 +1193,15 @@ var magia = Q.Sprite.extend("Magic", {
     		Q("Player").at(i).destroy();
     }
 
+    if(Q.state.get("poderes_conseguidos") > 4){
+      Q("Personaje").at(0).destroy();
+    }
+
     stage.insert(new llama({x:300, y:200, tipo:0}));
     stage.insert(new llama({x:350, y:200, tipo:1}));
     stage.insert(new llama({x:400, y:200, tipo:2}));
     stage.insert(new llama({x:450, y:200, tipo:3}));
+
 
     stage.follow(player);
     Q.state.set("nivel_ant", "portales");
