@@ -19,7 +19,9 @@ var conversacionMago = [
   ["¡Genial!\n¡Ya solo queda uno!", "Toma el poder del viento,\ncon él podras mover algunos\nobjetos de gran peso", "Y levantar las faldas a las chicas\nsin que se enteren... Aunque yo no\nhago eso, ¿eh? ¡Lo juro!", "Ahora traeme la llama del cielo,\nes la última llama.","Te prometo que cuando me la traigas\nte daré el poder más chulo de todos..."],
   ["¿Que pasa?¿No te fias de mi?\nTu traeme la llama chico", "\nQuien te has creido para cuestionarme..."],
   ["\nJajaja...", "\nJAJAJAJAJA", "¡¡POR FIN!!\n¡¡¡EL PODER DE LOS ELEMENTOS\nPOR FIN ES MIO!!!", "Ahora podré hacer lo que me de la gana\nsin nadie que me lo impida.", "Lo primero que haré será\nquemar un par de aldeas.", "\nDespués comeré un poco", "Un sandwich con crema de cacahuete,\nque esa mierda esta super rica",
-  "Luego iré al baño, que no me suelen\nsentar muy bien esos sandwiches.", "Y después... Despues.......\n¿Después que iba a hacer yo?", "¡Ah si, conquistar Softwareland!\nMaldito alzheimer...", "Gracias por hacerme el trabajo chaval,\nahora hazte a un lado, tengo un mundo\nque conquistar..."]
+  "Luego iré al baño, que no me suelen\nsentar muy bien esos sandwiches.", "Y después... Despues.......\n¿Después que iba a hacer yo?", "¡Ah si, conquistar Softwareland!\nMaldito alzheimer...", "Gracias por hacerme el trabajo chaval,\nahora hazte a un lado, tengo un mundo\nque conquistar..."],
+  ["¡Que haces aquí!\n¿No ves que estoy ocupado?", "Gracias a las llamas que me\ntrajiste me he convertido en el mago\nmás poderoso del mundo.", "Nadie puede detenerme ahora.\nY menos un mocoso como tu.", "\nPor cierto, ¿tienes un espejo?", "Me ha desaparecido la barba de repente\ny no se que aspecto debo tener sin ella", "\n...",
+  "¿Vas a decir algo?\n¿O vas a seguir callado?", "\n...", "¡Me estás poniendo nervioso!\n¡Deja de mirarme sin hacer nada!", "\n...", "\n...........", "Veo que no lo entiendes por las buenas.\nEn ese caso, ¡¡preparate \npara sufrir mi hira!!!"],
 ]
 
 
@@ -36,7 +38,7 @@ var game = function() {
    //Cargamos recursos y lo necesario para el menu del titulo
    var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
    'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
-   'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png';
+   'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png';
 
   Q.load( recursos , function(){
 
@@ -333,7 +335,11 @@ var selector = Q.Sprite.extend("Selector", {
           }
         }
         else if(collision.obj.isA("Personaje")){
-          crearHUDConversacion("magoface.png");
+          if(Q.state.get("num_conversacion") < 9)
+            crearHUDConversacion("magoface.png");
+          else
+            crearHUDConversacion("bossface.png");
+
           collision.obj.hablar(this.p.direction);
         }
         else if(collision.obj.isA("Llama")){
@@ -370,7 +376,14 @@ var selector = Q.Sprite.extend("Selector", {
     var personaje = Q.Sprite.extend("Personaje",{
       init: function(p) {
         //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
-        this._super(p, { sprite: "CharacterAnimation", sheet: "character_walk_down", gravity:0});
+
+        var sheetPersonaje;
+        if(Q.state.get("num_conversacion") < 9)
+          sheetPersonaje = "character_walk_down";
+        else
+          sheetPersonaje = "character_gets_bad";
+
+        this._super(p, { sprite: "CharacterAnimation", sheet: sheetPersonaje, gravity:0});
         this.add('2d, animation');
 
         this.p.conversacion = [];
