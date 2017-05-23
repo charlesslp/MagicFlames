@@ -21,7 +21,7 @@ var conversacionMago = [
   ["\nJajaja...", "\nJAJAJAJAJA", "¡¡POR FIN!!\n¡¡¡EL PODER DE LOS ELEMENTOS\nPOR FIN ES MIO!!!", "Ahora podré hacer lo que me de la gana\nsin nadie que me lo impida.", "Lo primero que haré será\nquemar un par de aldeas.", "\nDespués comeré un poco", "Un sandwich con crema de cacahuete,\nque esa mierda esta super rica",
   "Luego iré al baño, que no me suelen\nsentar muy bien esos sandwiches.", "Y después... Despues.......\n¿Después que iba a hacer yo?", "¡Ah si, conquistar Softwareland!\nMaldito alzheimer...", "Gracias por hacerme el trabajo chaval,\nahora hazte a un lado, tengo un mundo\nque conquistar..."],
   ["¡Que haces aquí!\n¿No ves que estoy ocupado?", "Gracias a las llamas que me\ntrajiste me he convertido en el mago\nmás poderoso del mundo.", "Nadie puede detenerme ahora.\nY menos un mocoso como tu.", "\nPor cierto, ¿tienes un espejo?", "Me ha desaparecido la barba de repente\ny no se que aspecto debo tener sin ella", "\n...",
-  "¿Vas a decir algo?\n¿O vas a seguir callado?", "\n...", "¡Me estás poniendo nervioso!\n¡Deja de mirarme sin hacer nada!", "\n...", "\n...........", "Veo que no lo entiendes por las buenas.\nEn ese caso, ¡¡preparate \npara sufrir mi hira!!!"],
+  "¿Vas a decir algo?\n¿O vas a seguir callado?", "\n...", "¡Me estás poniendo nervioso!\n¡Deja de mirarme sin hacer nada!", "\n...", "\n...........", "Veo que no lo entiendes por las buenas.\nEn ese caso, ¡¡preparate \npara sufrir mi ira!!!"],
 ]
 
 
@@ -52,7 +52,7 @@ var game = function() {
     Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   	 //Cargamos el contenido del TMX
-  	Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx", function() {
+  	Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx", function() {
   		Q.stageScene("startGame");
   	});
 
@@ -432,6 +432,7 @@ var selector = Q.Sprite.extend("Selector", {
               Q.state.inc("poderes_conseguidos", 1);
             }
             break;
+            case 9: Q.state.inc("num_conversacion", 1); break;
           }
 
           this.p.conversacion = conversacionMago[n];
@@ -542,6 +543,11 @@ var magia = Q.Sprite.extend("Magic", {
             Q.audio.play("turn_off_fire.ogg");
             collision.obj.destroy();
           }
+
+        } else if(collision.obj.isA("Boss")){
+
+          if(collision.obj.p.tipo === this.p.tipo)
+          	collision.obj.hit(this.p.potencia);
 
         }
 
@@ -1038,6 +1044,34 @@ var magia = Q.Sprite.extend("Magic", {
 
 
 
+  Q.animations('bossAnimation', {
+    enemy_walk_down:{frames: [0, 1, 2], rate: 1/4},
+    enemy_walk_left: {frames: [3, 4, 5], rate: 1/4},
+    enemy_walk_right: {frames: [6, 7, 8], rate: 1/4},
+    enemy_walk_up: {frames: [9, 10, 11], rate: 1/4},
+	enemy_hit: {frames: [1, -1, 1, -1, 1, -1, 1, -1, 1], loop:false, rate: 1/6, trigger: "seguir"},
+	enemy_die: {frames: [1, -1, 1, -1, 1, -1, 1, -1, 1], loop:false, rate: 1/6, trigger: "destroy"}
+  });
+
+  var boss = Q.Sprite.extend("Boss",{
+    init: function(p){
+      this._super(p, {sprite: "bossAnimation", sheet: "character_gets_bad", vx: p.velX, vy: p.velY, gravity: 0, vida: 100, golpeado:false, hitted:false});
+      this.add('2d, animation, defaultEnemy'); 
+    
+      this.p.tipo = "fuego";
+
+      this.on("seguir",function() {
+        this.p.hitted = false;
+      });
+      this.on("destroy",function() {
+        this.destroy();
+        console.log("siguiente nivel");
+      });
+    }
+  });
+
+
+
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //FIN ENEMIGOS
@@ -1098,7 +1132,10 @@ var magia = Q.Sprite.extend("Magic", {
 			        Q.state.set("texto_conversacion", this.conversacion);
 			        this.i = 0;
 			        Q.stage(0).unpause();
-              eliminarHUDConversacion();
+              		eliminarHUDConversacion();
+              		if(Q.state.get("num_conversacion") === 10){
+              			cambiarNivel("nivel_final");
+              		}
 			    }
 			    else {
 			        Q.state.set("texto_conversacion", this.i);
@@ -1149,15 +1186,16 @@ var magia = Q.Sprite.extend("Magic", {
   Q.state.set("nivel_ant", "portales");
   Q.state.set("texto_monedas", 0);
   Q.state.set("cofres_abiertos", []);
-  Q.state.set("llamas_conseguidas", 0);
-  Q.state.set("poderes_conseguidos", 0);
-  Q.state.set("num_conversacion", 0);
+  Q.state.set("llamas_conseguidas", 4);
+  Q.state.set("poderes_conseguidos", 5);
+  Q.state.set("num_conversacion", 9);
   //Q.audio.play("looperman_opening.ogg", {loop:true});
 
 });
 
   function cambiarNivel(nivel){
         Q.clearStages();
+        console.log(nivel);
         Q.stageScene(nivel);
         Q.stageScene('Pergamino', 1);
         Q.stageScene('HUD', 2);
@@ -1235,6 +1273,22 @@ var magia = Q.Sprite.extend("Magic", {
 
     Q.state.set("texto_conversacion", "");
     Q.state.set("nivel_ant", "nivel1");
+
+  });
+
+
+  //Nivel de boss final
+  Q.scene("nivel_final", function(stage) {
+    Q.stageTMX("nivel_final.tmx", stage);
+    stage.add("viewport");
+
+
+    var player = Q("Player").at(0);
+
+    stage.follow(Q("Player").at(0));
+
+    Q.state.set("texto_conversacion", "");
+    Q.state.set("nivel_ant", "nivel_final");
 
   });
 
