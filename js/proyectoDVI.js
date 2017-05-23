@@ -22,6 +22,7 @@ var conversacionMago = [
   "Luego iré al baño, que no me suelen\nsentar muy bien esos sandwiches.", "Y después... Despues.......\n¿Después que iba a hacer yo?", "¡Ah si, conquistar Softwareland!\nMaldito alzheimer...", "Gracias por hacerme el trabajo chaval,\nahora hazte a un lado, tengo un mundo\nque conquistar..."],
   ["¡Que haces aquí!\n¿No ves que estoy ocupado?", "Gracias a las llamas que me\ntrajiste me he convertido en el mago\nmás poderoso del mundo.", "Nadie puede detenerme ahora.\nY menos un mocoso como tu.", "\nPor cierto, ¿tienes un espejo?", "Me ha desaparecido la barba de repente\ny no se que aspecto debo tener sin ella", "\n...",
   "¿Vas a decir algo?\n¿O vas a seguir callado?", "\n...", "¡Me estás poniendo nervioso!\n¡Deja de mirarme sin hacer nada!", "\n...", "\n...........", "Veo que no lo entiendes por las buenas.\nEn ese caso, ¡¡preparate \npara sufrir mi ira!!!"],
+  ["\n¡¿QUE?!", "\n¡¡IMPOSIBLE!!", "\n¡¡NOOOOOOOOOOOOOOOOOOOOOOO!!"]
 ]
 
 
@@ -38,13 +39,14 @@ var game = function() {
    //Cargamos recursos y lo necesario para el menu del titulo
    var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
    'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
-   'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png';
+   'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json';
 
   Q.load( recursos , function(){
 
     Q.clearStages();
   	Q.compileSheets("character.png", "character.json");
     Q.compileSheets("mago.png", "mago.json");
+    Q.compileSheets("bossFinal.png", "bossFinal.json");
     Q.compileSheets("mi_seleccion.png", "mi_seleccion.json");
     Q.compileSheets("murcielago.png", "murcielago.json");
     Q.compileSheets("bones.png", "esqueleto.json");
@@ -163,11 +165,28 @@ var game = function() {
 			this.add('2d, basicControls, animation');
 
 			this.on("seguir",function() {
-			this.p.hitted = false;
+				this.p.hitted = false;
 			});
 
-
 			this.time = 0;
+
+			this.hit = function(potencia){
+				if(!this.p.hitted){
+			      Q.state.dec("texto_vida", potencia);
+
+			      if(Q.state.get("texto_vida") <= 0){
+						        Q.state.set("nivel_ant", "portales");
+			      	Q.state.set("texto_vida", 100);
+			      	cambiarNivel("portales");
+			      }
+			      else{
+
+			        this.p.hitted = true;
+
+			      }
+			    }
+			}
+
 		},
 		step: function(dt) {
 
@@ -263,7 +282,7 @@ var game = function() {
         if(Q.inputs['a'] && !this.p.lanzado){
         	if(Q.state.get("texto_mana") >= 10 && Q.state.get("poderes_conseguidos") > 0){
         		  Q.state.dec("texto_mana", 10);
-          		this.stage.insert(new magia({tipo: "fuego", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 10}));
+          		this.stage.insert(new magia({tipo: "fuego", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 10, master: "heroe"}));
           		this.p.lanzado = true;
           	}
         }
@@ -271,21 +290,21 @@ var game = function() {
 
         	if(Q.state.get("texto_mana") >= 20 && Q.state.get("poderes_conseguidos") > 1){
         		Q.state.dec("texto_mana", 20);
-          		this.stage.insert(new magia({tipo: "agua", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 20}));
+          		this.stage.insert(new magia({tipo: "agua", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 20, master: "heroe"}));
           		this.p.lanzado = true;
           	}
         }
         if(Q.inputs['d'] && !this.p.lanzado){
         	if(Q.state.get("texto_mana") >= 30 && Q.state.get("poderes_conseguidos") > 2){
         		Q.state.dec("texto_mana", 30);
-          		this.stage.insert(new magia({tipo: "tierra", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 30}));
+          		this.stage.insert(new magia({tipo: "tierra", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 30, master: "heroe"}));
           		this.p.lanzado = true;
           	}
         }
         if(Q.inputs['f'] && !this.p.lanzado){
         	if(Q.state.get("texto_mana") >= 40 && Q.state.get("poderes_conseguidos") > 3){
         		Q.state.dec("texto_mana", 40);
-          		this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 50}));
+          		this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 50, master: "heroe"}));
           		this.p.lanzado = true;
           	}
         }
@@ -484,7 +503,10 @@ var magia = Q.Sprite.extend("Magic", {
   //tambien controlara la direccion y el sentido en el que es lanzada la magia
   init: function(p) {
 
-    this._super(p, { sprite:"MagicAnimation", speed: 250, sheet: p.tipo, gravity: 0, sensor:true});
+  	if(!p.speed)
+  		p.speed = 250;
+
+    this._super(p, { sprite:"MagicAnimation", sheet: p.tipo, gravity: 0, sensor:true});
     this.add('2d, animation');
      Q.audio.play("magia.ogg");
     var margen = 34;
@@ -546,8 +568,12 @@ var magia = Q.Sprite.extend("Magic", {
 
         } else if(collision.obj.isA("Boss")){
 
-          if(collision.obj.p.tipo === this.p.tipo)
-          	collision.obj.hit(this.p.potencia);
+          if(collision.obj.p.tipo === this.p.tipo && this.p.master === "heroe")
+          	collision.obj.hit(10);
+
+        } else if(collision.obj.isA("Player") && this.p.master === "boss"){
+
+          collision.obj.hit(5);
 
         }
 
@@ -722,21 +748,7 @@ var magia = Q.Sprite.extend("Magic", {
           this.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
 
               if(collision.obj.isA("Player")){
-
-                if(!collision.obj.p.hitted){
-                  Q.state.dec("texto_vida", 5);
-
-                  if(Q.state.get("texto_vida") <= 0){
-  					        Q.state.set("nivel_ant", "portales");
-                  	Q.state.set("texto_vida", 100);
-                  	cambiarNivel("portales");
-                  }
-                  else{
-
-                    collision.obj.p.hitted = true;
-
-                  }
-                }
+              	collision.obj.hit(5);
               }
 
           });
@@ -893,18 +905,7 @@ var magia = Q.Sprite.extend("Magic", {
         if(!this.p.hitted){
           if(collision.obj.isA("Player")){
 
-            if(!collision.obj.p.hitted){
-	            Q.state.dec("texto_vida", 10);
-
-	            if(Q.state.get("texto_vida") <= 0){
-  					Q.state.set("nivel_ant", "portales");
-                  	Q.state.set("texto_vida", 100);
-                  	cambiarNivel("portales");
-	            }
-	            else{
-                    collision.obj.p.hitted = true;
-	            }
-	          }
+            collision.obj.hit(10);
           }
         }
 
@@ -919,6 +920,9 @@ var magia = Q.Sprite.extend("Magic", {
 
         var heroe = Q("Player").first();
         var rango = 200;
+
+        if(this.p.Class === "Boss")
+        	rango = 2000;
 
         var xyHeroe = heroe.p.x + heroe.p.y;
         var xyBicho = this.p.x + this.p.y;
@@ -960,19 +964,58 @@ var magia = Q.Sprite.extend("Magic", {
         if(this.p.vy > 0 && (Math.abs(heroe.p.x - this.p.x) < 4 || this.p.golpeado)){
           this.p.golpeado = false;
           this.play("enemy_walk_down");
+          if(this.p.Class === "Boss")
+          	this.p.direction = "down";
         } else if(this.p.vy < 0 && (Math.abs(heroe.p.x - this.p.x) < 4 || this.p.golpeado)){
           this.p.golpeado = false;
           this.p.golpeado = false;this.play("enemy_walk_up");
+          if(this.p.Class === "Boss")
+          	this.p.direction = "up";
         } else if(this.p.vx < 0 && (Math.abs(heroe.p.y - this.p.y) < 4 || this.p.golpeado)){
           this.p.golpeado = false;
           this.play("enemy_walk_left");
+          if(this.p.Class === "Boss")
+          	this.p.direction = "left";
         } else if(this.p.vx > 0 && (Math.abs(heroe.p.y - this.p.y) < 4 || this.p.golpeado)){
           this.p.golpeado = false;
           this.play("enemy_walk_right");
+          if(this.p.Class === "Boss")
+          	this.p.direction = "right";
         }
+
+        if(this.p.Class === "Boss"){
+
+        	if(!this.p.matar){
+	        	this.p.tiempo += dt;
+	        	this.p.tiempoSinLanzar += dt;
+	        	if(this.p.tiempoSinLanzar > 3 && !this.p.hitted){
+	        		this.p.tiempoSinLanzar = 0;
+					this.stage.insert(new magia({tipo: this.p.tipo, direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 5, speed: 150, master: "boss"}));
+	        	}
+
+	        	if(this.p.tiempo > this.p.timesUp){
+	        		this.p.tiempo = 0;
+	        		this.p.cambiarA = Math.floor((Math.random() * 4));
+	        		this.p.timesUp = Math.floor((Math.random() * 3)) + 4;
+
+	        		switch(this.p.cambiarA){
+	        			case 0: this.p.sheet="boss_fuego"; this.p.tipo = "fuego"; break;
+	        			case 1: this.p.sheet="boss_agua"; this.p.tipo = "agua"; break;
+	        			case 2: this.p.sheet="boss_tierra"; this.p.tipo = "tierra"; break;
+	        			case 3: this.p.sheet="boss_viento"; this.p.tipo = "viento"; break;
+	        		}
+	        	}
+	        }
+	        else{
+	        	this.destroy();
+	        }
+
+        }
+
       }, hit: function(potencia){
 
-        this.p.vida-=potencia;
+      	if(!this.p.hitted)
+        	this.p.vida-=potencia;
         this.p.vx = 0;
         this.p.vy = 0;
 
@@ -1055,17 +1098,27 @@ var magia = Q.Sprite.extend("Magic", {
 
   var boss = Q.Sprite.extend("Boss",{
     init: function(p){
-      this._super(p, {sprite: "bossAnimation", sheet: "character_gets_bad", vx: p.velX, vy: p.velY, gravity: 0, vida: 100, golpeado:false, hitted:false});
+      
+      p.tipo = "fuego"; 
+      
+      this._super(p, {sprite: "bossAnimation", sheet: "boss_"+p.tipo, vx: p.velX, vy: p.velY, gravity: 0, vida: 10, golpeado:false, hitted:false});
       this.add('2d, animation, defaultEnemy'); 
     
-      this.p.tipo = "fuego";
+      this.p.tiempo = 0;
+      this.p.tiempoSinLanzar = 0;
+      this.p.direction = "down";
+	  this.p.cambiarA = Math.floor((Math.random() * 4));
+	  this.p.timesUp = Math.floor((Math.random() * 3)) + 4;
+	  this.p.matar = false;
 
       this.on("seguir",function() {
         this.p.hitted = false;
       });
       this.on("destroy",function() {
-        this.destroy();
-        console.log("siguiente nivel");
+      	crearHUDConversacion("bossface.png");
+		this.p.conversacion = conversacionMago[10];
+		Q.state.set("texto_conversacion", this.p.conversacion);
+		this.p.matar = true;
       });
     }
   });
@@ -1169,7 +1222,7 @@ var magia = Q.Sprite.extend("Magic", {
 
 	Q.scene("startGame", function(stage){
 		//Tendremos en el estado el nivel en el que se encuentra el personaje aparte de la vida, mana, etc..
-	Q.state.reset({ level:"portales"});
+	Q.state.reset({ level:"nivel_final"});
 
 	var container = stage.insert(new Q.UI.Container({
 		x: Q.width, y: Q.height, fill: "rgba(0,0,0,0.5)", w: 480, h: 480

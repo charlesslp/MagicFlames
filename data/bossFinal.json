@@ -1,0 +1,6 @@
+{
+  "boss_fuego":{"sx":0,"sy":0,"tileW":32,"tileH":32,"frames":3},
+  "boss_agua":{"sx":0,"sy":128,"tileW":32,"tileH":32,"frames":3},
+  "boss_tierra":{"sx":0,"sy":256,"tileW":32,"tileH":32,"frames":3},
+  "boss_viento":{"sx":0,"sy":384,"tileW":32,"tileH":32,"frames":3}
+}
