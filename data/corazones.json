@@ -1,0 +1,5 @@
+{
+  "corazon_lleno":{"sx":0,"sy":0,"tileW":32,"tileH":32,"frames":1},
+  "corazon_semi":{"sx":0,"sy":32,"tileW":32,"tileH":32,"frames":1},
+  "corazon_vacio":{"sx":0,"sy":64,"tileW":32,"tileH":32,"frames":1}
+}

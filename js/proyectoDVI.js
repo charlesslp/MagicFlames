@@ -655,6 +655,7 @@ var magia = Q.Sprite.extend("Magic", {
         }
 
         this.on("destruir", function(){
+          //Añadir corazon
           this.destroy();
         });
       }
@@ -911,7 +912,7 @@ var magia = Q.Sprite.extend("Magic", {
 
       });
 
-      
+
     },
 
     extend:{
@@ -1031,7 +1032,7 @@ var magia = Q.Sprite.extend("Magic", {
           this.play("enemy_die");
         }
       }
-    }    
+    }
   });
 
 
@@ -1048,8 +1049,8 @@ var magia = Q.Sprite.extend("Magic", {
   var murcielago = Q.Sprite.extend("Murcielago",{
     init: function(p){
       this._super(p, {sprite: "murcielagoAnimation", sheet: "enemy_walk_down", vx: p.velX, vy: p.velY, gravity: 0, vida: 30, golpeado:false, hitted:false});
-      this.add('2d, animation, defaultEnemy'); 
-    
+      this.add('2d, animation, defaultEnemy');
+
       this.on("seguir",function() {
         this.p.hitted = false;
       });
@@ -1074,8 +1075,8 @@ var magia = Q.Sprite.extend("Magic", {
   var esqueleto = Q.Sprite.extend("Esqueleto",{
     init: function(p){
       this._super(p, {sprite: "esqueletoAnimation", sheet: "skeleton_walk_down", vx: p.velX, vy: p.velY, gravity: 0, vida: 20, golpeado:false, hitted:false});
-      this.add('2d, animation, defaultEnemy'); 
-    
+      this.add('2d, animation, defaultEnemy');
+
       this.on("seguir",function() {
         this.p.hitted = false;
       });
@@ -1098,12 +1099,12 @@ var magia = Q.Sprite.extend("Magic", {
 
   var boss = Q.Sprite.extend("Boss",{
     init: function(p){
-      
-      p.tipo = "fuego"; 
-      
-      this._super(p, {sprite: "bossAnimation", sheet: "boss_"+p.tipo, vx: p.velX, vy: p.velY, gravity: 0, vida: 10, golpeado:false, hitted:false});
-      this.add('2d, animation, defaultEnemy'); 
-    
+
+      p.tipo = "fuego";
+
+      this._super(p, {sprite: "bossAnimation", sheet: "boss_"+p.tipo, vx: p.velX, vy: p.velY, gravity: 0, vida: 100, golpeado:false, hitted:false});
+      this.add('2d, animation, defaultEnemy');
+
       this.p.tiempo = 0;
       this.p.tiempoSinLanzar = 0;
       this.p.direction = "down";
@@ -1148,7 +1149,7 @@ var magia = Q.Sprite.extend("Magic", {
       this.keydown = false;
       this.conversacion;
       this.i = 0;
-      
+
       this._super(p,{
         label: Q.state.get("texto_conversacion"),
         color: "black",
@@ -1242,6 +1243,7 @@ var magia = Q.Sprite.extend("Magic", {
   Q.state.set("llamas_conseguidas", 4);
   Q.state.set("poderes_conseguidos", 5);
   Q.state.set("num_conversacion", 9);
+  Q.state.set("inventario", []);
   //Q.audio.play("looperman_opening.ogg", {loop:true});
 
 });
@@ -1447,17 +1449,17 @@ function crearHUDConversacion(face){
       h: Q.height
     }));
     container4.insert(new Q.UI.Button({
-      x: Q.width/2, 
-      y: Q.height+25, 
+      x: Q.width/2,
+      y: Q.height+25,
       asset: "Pergamino.png"
     }));
     container4.insert(new Q.UI.Button({
-      x: 50, 
-      y: Q.height-50, 
+      x: 50,
+      y: Q.height-50,
       asset: face
     }));
 
-    
+
   }
   function eliminarHUDConversacion(){
     Q.clearStage(1);
