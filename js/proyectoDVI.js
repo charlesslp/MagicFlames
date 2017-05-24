@@ -1243,7 +1243,7 @@ var magia = Q.Sprite.extend("Magic", {
 
 	Q.scene("startGame", function(stage){
 		//Tendremos en el estado el nivel en el que se encuentra el personaje aparte de la vida, mana, etc..
-	Q.state.reset({ level:"nivel_final"});
+	Q.state.reset({ level:"portales"});
 
 	var container = stage.insert(new Q.UI.Container({
 		x: Q.width, y: Q.height, fill: "rgba(0,0,0,0.5)", w: 480, h: 480
@@ -1274,6 +1274,7 @@ var magia = Q.Sprite.extend("Magic", {
         Q.stageScene(nivel);
         Q.stageScene('Pergamino', 1);
         Q.stageScene('HUD', 2);
+        Q.stageScene('Corazones', 3);
 
         //Abrimos todos los cofres del nivel
         var cofres_abiertos_aux = Q.state.get("cofres_abiertos");
@@ -1392,7 +1393,6 @@ var magia = Q.Sprite.extend("Magic", {
 //FIN JUEGO
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //HUD
 //HUD
@@ -1421,7 +1421,7 @@ var magia = Q.Sprite.extend("Magic", {
 
     }));
 
-    container.fit(10);
+   
 
 
     var container2 = stage.insert(new Q.UI.Container({
@@ -1462,7 +1462,26 @@ var magia = Q.Sprite.extend("Magic", {
 
   });
 
-Q.scene('Pergamino',function(stage) {
+Q.scene('Corazones',function(stage) {
+  var container4 = Q.stage(3).insert(new Q.UI.Container({
+      x: 0,
+      y: 0,
+      w: Q.width,
+      h: Q.height
+    }));
+    container4.insert(new Q.UI.Button({
+      x: 50,
+      y: 50,
+      sheet:"corazon_lleno"
+    }));
+});
+
+  function eliminarHUDCorazones(){
+    Q.clearStage(3);
+    Q.stageScene('Corazones', 3);
+  }
+
+  Q.scene('Pergamino',function(stage) {
 
 });
 function crearHUDConversacion(face){
@@ -1496,23 +1515,17 @@ function crearHUDConversacion(face){
 
 
   //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
-  Q.UI.Text.extend("Vidas",{
+  Q.UI.Button.extend("Vidas",{
     init: function(p) {
 
       this._super(p,{
-        label: "Vidas: " + Q.state.get("texto_vida"),
-        color: "red",
-        size: 12,
+        asset: "corazones.png",
         x: 0,
         y: 0
       });
 
-      Q.state.on("change.texto_vida",this,"update_vidas");
-    },
-    update_vidas: function(vidas) {
-        this.p.label = "Vidas: " + vidas;
-    }
-  });
+      
+  }});
 
 
 
@@ -1560,8 +1573,5 @@ function crearHUDConversacion(face){
 //FIN HUD
 //FIN HUD
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 
 }
