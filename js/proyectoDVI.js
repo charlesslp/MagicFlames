@@ -39,7 +39,7 @@ var game = function() {
    //Cargamos recursos y lo necesario para el menu del titulo
    var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
    'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
-   'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json';
+   'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json, corazones.png, corazones.json';
 
   Q.load( recursos , function(){
 
@@ -51,6 +51,7 @@ var game = function() {
     Q.compileSheets("murcielago.png", "murcielago.json");
     Q.compileSheets("bones.png", "esqueleto.json");
     Q.compileSheets("portales.png", "portales.json");
+    Q.compileSheets("corazones.png", "corazones.json");
     Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   	 //Cargamos el contenido del TMX
@@ -630,10 +631,6 @@ var magia = Q.Sprite.extend("Magic", {
     }
 	});
 
-
-
-
-
   //Jarron
     Q.animations('miJarron', {
       destruir_jarron: {frames: [1,2,3], rate: 1/3, loop:false, trigger: "destruir"}
@@ -655,11 +652,34 @@ var magia = Q.Sprite.extend("Magic", {
         }
 
         this.on("destruir", function(){
-          //Añadir corazon
           this.destroy();
         });
       }
   	});
+
+    //Corazon
+      Q.animations('animacion_corazon', {
+        corazon_lleno: {frames: [1], rate: 1/3, loop:false},
+        destruir_corazon: {frames: [], loop:false, trigger: "destruir"}
+      });
+
+      //Sprite de un jarron
+    	var corazon = Q.Sprite.extend("Corazon",{
+    		init: function(p) {
+    			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
+          this._super(p, { sprite: "corazon", sheet: "corazon", gravity:0});
+          this.add('2d, animation');
+
+          this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
+            if(collision.obj.isA("Player")){
+              if(Q.state.get("texto_vida") < 100){
+                Q.state.inc("texto_vida", 10);
+              }
+              this.destroy();
+            }
+          });
+        }
+    	});
 
 
   //Jarron
@@ -1344,6 +1364,10 @@ var magia = Q.Sprite.extend("Magic", {
 
     Q.state.set("texto_conversacion", "");
     Q.state.set("nivel_ant", "nivel_final");
+
+    var p = Q("Player").at(0);
+
+    stage.insert(new corazon({x:p.p.x+60, y:p.p.y+60}));
 
   });
 
