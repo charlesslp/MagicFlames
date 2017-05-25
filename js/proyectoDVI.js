@@ -36,30 +36,7 @@ var game = function() {
    // Cargamos los controles de entrada (controls y touch) para UI y activamos el sonido
    .controls().touch().enableSound();
 
-   //Cargamos recursos y lo necesario para el menu del titulo
-   var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
-   'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
-   'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json, corazones.png, corazones.json';
 
-  Q.load( recursos , function(){
-
-    Q.clearStages();
-  	Q.compileSheets("character.png", "character.json");
-    Q.compileSheets("mago.png", "mago.json");
-    Q.compileSheets("bossFinal.png", "bossFinal.json");
-    Q.compileSheets("mi_seleccion.png", "mi_seleccion.json");
-    Q.compileSheets("murcielago.png", "murcielago.json");
-    Q.compileSheets("bones.png", "esqueleto.json");
-    Q.compileSheets("portales.png", "portales.json");
-    Q.compileSheets("corazones.png", "corazones.json");
-    Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
-
-  	 //Cargamos el contenido del TMX
-  	Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx", function() {
-  		Q.stageScene("startGame");
-  	});
-
-  });
 
 
 
@@ -652,6 +629,7 @@ var magia = Q.Sprite.extend("Magic", {
         }
 
         this.on("destruir", function(){
+          Q.stage().insert(new corazon({x:this.p.x, y:this.p.y})); ///.----------------------------------------------------------------------------------------------------------
           this.destroy();
         });
       }
@@ -667,7 +645,7 @@ var magia = Q.Sprite.extend("Magic", {
     	var corazon = Q.Sprite.extend("Corazon",{
     		init: function(p) {
     			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
-          this._super(p, { sprite: "corazon", sheet: "corazon", gravity:0});
+          this._super(p, { sprite: "corazon", sheet: "corazon_lleno", gravity:0});
           this.add('2d, animation');
 
           this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
@@ -677,6 +655,10 @@ var magia = Q.Sprite.extend("Magic", {
               }
               this.destroy();
             }
+          });
+
+          this.on("destruir", function(){
+            this.destroy();
           });
         }
     	});
@@ -1368,8 +1350,6 @@ var magia = Q.Sprite.extend("Magic", {
 
     var p = Q("Player").at(0);
 
-    stage.insert(new corazon({x:p.p.x+60, y:p.p.y+60}));
-
   });
 
   //Nivel de fuego en el que tendremos todos los objetos y el poder del fuego
@@ -1421,7 +1401,7 @@ var magia = Q.Sprite.extend("Magic", {
 
     }));
 
-   
+
 
 
     var container2 = stage.insert(new Q.UI.Container({
@@ -1524,7 +1504,7 @@ function crearHUDConversacion(face){
         y: 0
       });
 
-      
+
   }});
 
 
@@ -1573,5 +1553,30 @@ function crearHUDConversacion(face){
 //FIN HUD
 //FIN HUD
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//Cargamos recursos y lo necesario para el menu del titulo
+var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
+'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
+'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json, corazones.png, corazones.json';
+
+Q.load( recursos , function(){
+
+ Q.clearStages();
+ Q.compileSheets("character.png", "character.json");
+ Q.compileSheets("mago.png", "mago.json");
+ Q.compileSheets("bossFinal.png", "bossFinal.json");
+ Q.compileSheets("mi_seleccion.png", "mi_seleccion.json");
+ Q.compileSheets("murcielago.png", "murcielago.json");
+ Q.compileSheets("bones.png", "esqueleto.json");
+ Q.compileSheets("portales.png", "portales.json");
+ Q.compileSheets("corazones.png", "corazones.json");
+ Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
+
+  //Cargamos el contenido del TMX
+ Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx", function() {
+   Q.stageScene("startGame");
+ });
+
+});
 
 }
