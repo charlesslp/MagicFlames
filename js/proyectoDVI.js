@@ -551,7 +551,7 @@ var magia = Q.Sprite.extend("Magic", {
 
         } else if(collision.obj.isA("Player") && this.p.master === "boss"){
 
-          collision.obj.hit(5);
+          collision.obj.hit(10);
 
         }
 
@@ -751,7 +751,7 @@ var magia = Q.Sprite.extend("Magic", {
           this.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
 
               if(collision.obj.isA("Player")){
-              	collision.obj.hit(5);
+              	collision.obj.hit(10);
               }
 
           });
@@ -1257,6 +1257,10 @@ var magia = Q.Sprite.extend("Magic", {
         Q.stageScene('Pergamino', 1);
         Q.stageScene('HUD', 2);
         Q.stageScene('Corazones', 3);
+         Q.state.on("change.texto_vida",function(){;
+          Q.clearStage(3);
+          Q.stageScene('Corazones', 3);
+        });
 
         //Abrimos todos los cofres del nivel
         var cofres_abiertos_aux = Q.state.get("cofres_abiertos");
@@ -1384,26 +1388,6 @@ var magia = Q.Sprite.extend("Magic", {
  Q.scene('HUD',function(stage) {
 
 
-    var container = stage.insert(new Q.UI.Container({
-      x: 0,
-      y: 0,
-      w: Q.width,
-      h: Q.height,
-      fill: "rgba(0,0,0,0.5)",
-      border: 1,
-      shadow: 0,
-      shadowColor: "rgba(0,0,0,0.5)"
-    }));
-
-    container.insert(new Q.Vidas({
-        x: 50,
-        y: 40,
-
-    }));
-
-
-
-
     var container2 = stage.insert(new Q.UI.Container({
       x: 0,
       y: 0,
@@ -1443,23 +1427,49 @@ var magia = Q.Sprite.extend("Magic", {
   });
 
 Q.scene('Corazones',function(stage) {
-  var container4 = Q.stage(3).insert(new Q.UI.Container({
+    var container4 = Q.stage(3).insert(new Q.UI.Container({
       x: 0,
       y: 0,
       w: Q.width,
       h: Q.height
     }));
-    container4.insert(new Q.UI.Button({
-      x: 50,
-      y: 50,
-      sheet:"corazon_lleno"
-    }));
-});
+          var vidas_llenas = Q.state.get("texto_vida")/20;
+          var resto = Q.state.get("texto_vida")%20;
+          var vidas_totales  =  5;
+          var vidas_vacias = vidas_totales - vidas_llenas;
+          var posicion = 0;
 
-  function eliminarHUDCorazones(){
-    Q.clearStage(3);
-    Q.stageScene('Corazones', 3);
-  }
+         
+            for(var i = 0; i < vidas_llenas; i++){
+              container4.insert(new Q.UI.Button({
+                x: posicion*32 + 32,
+                y: 32,
+                sheet:"corazon_lleno"
+              }));
+              posicion++;
+            }
+            if(resto !== 0){
+              posicion--;
+              container4.insert(new Q.UI.Button({
+                x: posicion*32 + 32,
+                y: 32,
+                sheet:"corazon_semi"
+              }));
+              posicion++;
+              vidas_vacias--;
+            }
+            for(var i = 0; i < vidas_vacias; i++){
+              container4.insert(new Q.UI.Button({
+                x: posicion*32 + 32,
+                y: 32,
+                sheet:"corazon_vacio"
+              }));
+              posicion++;
+            }
+
+  
+  
+});
 
   Q.scene('Pergamino',function(stage) {
 
@@ -1488,24 +1498,6 @@ function crearHUDConversacion(face){
     Q.clearStage(1);
     Q.stageScene('pergamino', 1);
   }
-
-
-
-
-
-
-  //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
-  Q.UI.Button.extend("Vidas",{
-    init: function(p) {
-
-      this._super(p,{
-        asset: "corazones.png",
-        x: 0,
-        y: 0
-      });
-
-
-  }});
 
 
 
