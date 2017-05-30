@@ -20101,7 +20101,7 @@
   </data>
  </layer>
  <objectgroup name="heroe">
-  <object id="242" gid="1" x="1376" y="2208" width="32" height="32"/>
+  <object id="242" gid="1" x="1376" y="160" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="hierba">
   <object id="118" gid="35" x="1440" y="192" width="32" height="32"/>

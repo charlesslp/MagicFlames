@@ -153,8 +153,11 @@ var game = function() {
 			      Q.state.dec("texto_vida", potencia);
 
 			      if(Q.state.get("texto_vida") <= 0){
-						        Q.state.set("nivel_ant", "portales");
+					Q.state.set("nivel_ant", "portales");
 			      	Q.state.set("texto_vida", 100);
+			      	if(Q.state.get("num_conversacion") === 11){
+              			Q.state.set("num_conversacion", 9);
+              		}
 			      	cambiarNivel("portales");
 			      }
 			      else{
@@ -1104,7 +1107,7 @@ var magia = Q.Sprite.extend("Magic", {
 
       p.tipo = "fuego";
 
-      this._super(p, {sprite: "bossAnimation", sheet: "boss_"+p.tipo, vx: p.velX, vy: p.velY, gravity: 0, vida: 100, golpeado:false, hitted:false});
+      this._super(p, {sprite: "bossAnimation", sheet: "boss_"+p.tipo, vx: p.velX, vy: p.velY, gravity: 0, vida: 50, golpeado:false, hitted:false});
       this.add('2d, animation, defaultEnemy');
 
       this.p.tiempo = 0;
@@ -1190,7 +1193,10 @@ var magia = Q.Sprite.extend("Magic", {
 			        Q.stage(0).unpause();
               		eliminarHUDConversacion();
               		if(Q.state.get("num_conversacion") === 10){
+              			Q.state.inc("num_conversacion", 1)
               			cambiarNivel("nivel_final");
+              		} else if(Q.state.get("num_conversacion") === 11){
+              			cambiarNivel("portales");
               		}
 			    }
 			    else {
@@ -1242,9 +1248,9 @@ var magia = Q.Sprite.extend("Magic", {
   Q.state.set("nivel_ant", "portales");
   Q.state.set("texto_monedas", 0);
   Q.state.set("cofres_abiertos", []);
-  Q.state.set("llamas_conseguidas", 4);
-  Q.state.set("poderes_conseguidos", 5);
-  Q.state.set("num_conversacion", 9);
+  Q.state.set("llamas_conseguidas", 0);
+  Q.state.set("poderes_conseguidos", 0);
+  Q.state.set("num_conversacion", 0);
   Q.state.set("inventario", []);
   //Q.audio.play("looperman_opening.ogg", {loop:true});
 
@@ -1310,10 +1316,10 @@ var magia = Q.Sprite.extend("Magic", {
       Q("Personaje").at(0).destroy();
     }
 
-    stage.insert(new llama({x:300, y:200, tipo:0}));
-    stage.insert(new llama({x:350, y:200, tipo:1}));
-    stage.insert(new llama({x:400, y:200, tipo:2}));
-    stage.insert(new llama({x:450, y:200, tipo:3}));
+    stage.insert(new llama({x:600, y:150, tipo:0}));
+    stage.insert(new llama({x:600, y:200, tipo:1}));
+    stage.insert(new llama({x:600, y:250, tipo:2}));
+    stage.insert(new llama({x:600, y:300, tipo:3}));
 
 
     stage.follow(player);
