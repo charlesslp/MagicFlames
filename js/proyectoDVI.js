@@ -694,6 +694,33 @@ var magia = Q.Sprite.extend("Magic", {
       }
     });
 
+     Q.animations('miTornado', {
+      move: {frames: [0,1,2,3,4], rate: 1/3}
+    });
+
+    
+    var tornado = Q.Sprite.extend("Tornado",{
+      init: function(p) {
+        //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
+        this._super(p, { sprite: "miTornado", sheet: "tornado", gravity:0});
+        this.add('2d, animation');
+        this.colision_jarron = false;
+        this.play("move");
+
+        this.sonido = function(){
+          if(!this.colision_jarron){
+            this.colision_jarron = true;
+            console.log("sonido de roca");
+            //Q.audio.play("Jarron_roto.ogg");
+          }
+        }
+
+        this.on("destruir", function(){
+          this.destroy();
+        });
+      }
+    });
+
 
 
 

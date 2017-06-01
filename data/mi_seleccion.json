@@ -13,5 +13,6 @@
 	"fuego":{"sx":128,"sy":96,"tileW":32,"tileH":32,"frames":10},
 	"agua":{"sx":192,"sy":96,"tileW":32,"tileH":32,"frames":10},
 	"viento":{"sx":224,"sy":96,"tileW":32,"tileH":32,"frames":10},
-	"tierra":{"sx":160,"sy":96,"tileW":32,"tileH":32,"frames":10}
+	"tierra":{"sx":160,"sy":96,"tileW":32,"tileH":32,"frames":10},
+	"tornado":{"sx":0,"sy":160,"tileW":32,"tileH":32,"frames":6}
 }
