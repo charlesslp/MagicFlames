@@ -540,6 +540,13 @@ var magia = Q.Sprite.extend("Magic", {
 
           collision.obj.hit(this.p.potencia);
 
+        } else if(collision.obj.isA("Tornado")){
+
+          if(this.p.tipo === "viento"){
+		  collision.obj.sonido();
+            collision.obj.destroy();
+          }
+
         } else if(collision.obj.isA("ObstaculoFuego")){
 
           if(this.p.tipo === "agua"){
@@ -584,31 +591,41 @@ var magia = Q.Sprite.extend("Magic", {
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+Q.component("defaultObject", {
+    added: function(){
+      var entity = this.entity;
+
+      entity.add('2d, animation');
+
+      entity.collision_objeto = false;
+
+      entity.on("destruir", function(){
+        entity.destroy();
+      });
+
+    }, extend:{
+		sonido: function(){
+	        if(!this.collision_objeto){
+	          this.collision_objeto = true;
+	          Q.audio.play("sonido_romper_" + this.p.tipo + ".ogg");
+	        }
+	      }
+    }
+});
+
 
 //Hierba
   Q.animations('miHierba', {
     destruir_hierba: {frames: [1], rate: 9/15, loop:false, trigger: "destruir"}
   });
 
-  //Sprite de un ierbajo (editado en TMX)
+  //Sprite de un hierbajo (editado en TMX)
 	var hierbajo = Q.Sprite.extend("Hierba",{
 		init: function(p) {
-			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
-      this._super(p, { sprite: "miHierba", sheet: "hierba", gravity:0});
-      this.add('2d, animation');
-      this.colision_hierba = false;
-
-      this.sonido = function(){
-        if(!this.colision_hierba){
-          this.colision_hierba = true;
-          Q.audio.play("break_grass.ogg");
-        }
-      }
-
-      this.on("destruir", function(){
-        this.destroy();
-      });
-    }
+		      this._super(p, { sprite: "miHierba", sheet: "hierba", gravity:0, tipo: "hierba"});
+		      this.add('defaultObject');
+		      
+		}
 	});
 
   //Jarron
@@ -619,23 +636,9 @@ var magia = Q.Sprite.extend("Magic", {
     //Sprite de un jarron
   	var jarron = Q.Sprite.extend("Jarron",{
   		init: function(p) {
-  			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
-        this._super(p, { sprite: "miJarron", sheet: "jarron", gravity:0});
-        this.add('2d, animation');
-        this.colision_jarron = false;
-
-        this.sonido = function(){
-          if(!this.colision_jarron){
-            this.colision_jarron = true;
-            Q.audio.play("Jarron_roto.ogg");
-          }
-        }
-
-        this.on("destruir", function(){
-          Q.stage().insert(new corazon({x:this.p.x, y:this.p.y})); ///.----------------------------------------------------------------------------------------------------------
-          this.destroy();
-        });
-      }
+        		this._super(p, { sprite: "miJarron", sheet: "jarron", gravity:0, tipo: "jarron"});
+		      this.add('defaultObject');
+      	}
   	});
 
     //Corazon
@@ -648,22 +651,18 @@ var magia = Q.Sprite.extend("Magic", {
     	var corazon = Q.Sprite.extend("Corazon",{
     		init: function(p) {
     			//this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
-          this._super(p, { sprite: "corazon", sheet: "corazon_lleno", gravity:0});
-          this.add('2d, animation');
+          	this._super(p, { sprite: "corazon", sheet: "corazon_lleno", gravity:0});
+          	this.add('2d, animation');
 
-          this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
-            if(collision.obj.isA("Player")){
-              if(Q.state.get("texto_vida") < 100){
-                Q.state.inc("texto_vida", 10);
-              }
-              this.destroy();
-            }
-          });
-
-          this.on("destruir", function(){
-            this.destroy();
-          });
-        }
+	          this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
+	            if(collision.obj.isA("Player")){
+	              if(Q.state.get("texto_vida") < 100){
+	                Q.state.inc("texto_vida", 10);
+	              }
+	              this.destroy();
+	            }
+	          });
+        	}
     	});
 
 
@@ -675,22 +674,8 @@ var magia = Q.Sprite.extend("Magic", {
     //Sprite de un jarron
     var roca = Q.Sprite.extend("Roca",{
       init: function(p) {
-        //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
-        this._super(p, { sprite: "miRoca", sheet: "roca", gravity:0});
-        this.add('2d, animation');
-        this.colision_jarron = false;
-
-        this.sonido = function(){
-          if(!this.colision_jarron){
-            this.colision_jarron = true;
-            console.log("sonido de roca");
-            //Q.audio.play("Jarron_roto.ogg");
-          }
-        }
-
-        this.on("destruir", function(){
-          this.destroy();
-        });
+        this._super(p, { sprite: "miRoca", sheet: "roca", gravity:0, tipo: "roca"});
+	   this.add('defaultObject');
       }
     });
 
@@ -701,30 +686,17 @@ var magia = Q.Sprite.extend("Magic", {
     
     var tornado = Q.Sprite.extend("Tornado",{
       init: function(p) {
-        //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
-        this._super(p, { sprite: "miTornado", sheet: "tornado", gravity:0});
-        this.add('2d, animation');
-        this.colision_jarron = false;
+        this._super(p, { sprite: "miTornado", sheet: "tornado", gravity:0, tipo: "tornado"});
+        this.add('defaultObject');
         this.play("move");
 
-        this.sonido = function(){
-          if(!this.colision_jarron){
-            this.colision_jarron = true;
-            console.log("sonido de roca");
-            //Q.audio.play("Jarron_roto.ogg");
-          }
-        }
-
-        this.on("destruir", function(){
-          this.destroy();
-        });
+        this.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
+              if(collision.obj.isA("Player")){
+              	collision.obj.hit(10);
+              }
+	   });
       }
     });
-
-
-
-
-
 
     //Cofre
     Q.animations('CofreAnimacion', {
@@ -772,11 +744,9 @@ var magia = Q.Sprite.extend("Magic", {
       //Sprite de un jarron
       var obstaculoFuego = Q.Sprite.extend("ObstaculoFuego",{
         init: function(p) {
-          //this._super(p, {sprite:"ChestAnimation", sheet: "open_chest", gravity: 0});
-          this._super(p, { sprite: "FuegoAnimacion", sheet: "obstaculoFuego", gravity:0});
-          this.add('2d, animation');
-          this.play("move");
-
+          this._super(p, { sprite: "FuegoAnimacion", sheet: "obstaculoFuego", gravity:0, tipo: "fuego"});
+		this.add('defaultObject');
+		this.play("move");
 
           this.on("bump.left, bump.right, bump.bottom, bump.top", function(collision){
 
