@@ -1,0 +1,6 @@
+{
+  "enemy_walk_down":{"sx":0,"sy":90,"tileW":45,"tileH":45,"frames":4},
+  "enemy_walk_up":{"sx":0,"sy":0,"tileW":45,"tileH":45,"frames":4},
+  "enemy_walk_right":{"sx":0,"sy":135,"tileW":45,"tileH":45,"frames":4},
+  "enemy_walk_left":{"sx":0,"sy":45,"tileW":45,"tileH":45,"frames":4}
+}

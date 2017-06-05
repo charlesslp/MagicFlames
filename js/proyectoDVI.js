@@ -536,7 +536,7 @@ var magia = Q.Sprite.extend("Magic", {
             collision.obj.play("destruir_roca");
           }
 
-        } else if(collision.obj.isA("Murcielago") || collision.obj.isA("Esqueleto")){
+        } else if(collision.obj.isA("Murcielago") || collision.obj.isA("Esqueleto")|| collision.obj.isA("Demon")){
 
           collision.obj.hit(this.p.potencia);
 
@@ -1063,6 +1063,28 @@ Q.component("defaultObject", {
   });
 
 
+  Q.animations('DemonAnimation', {
+      enemy_walk_up: {frames: [0, 1, 2, 3], rate: 1/4},
+      enemy_walk_left:{frames: [4, 5, 6, 7], rate: 1/4},
+      enemy_walk_down: {frames: [8, 9, 10, 11], rate: 1/4},
+      enemy_walk_right: {frames: [12, 13, 14, 15], rate: 1/4},
+      enemy_hit: {frames: [1, -1, 1, -1, 1, -1, 1, -1, 1], loop:false, rate: 1/6, trigger: "seguir"},
+      enemy_die: {frames: [1, -1, 1, -1, 1, -1, 1, -1, 1], loop:false, rate: 1/6, trigger: "destroy"}
+  });
+
+  var demonio  = Q.Sprite.extend("Demon",{
+    init: function(p){
+      this._super(p, {sprite: "DemonAnimation", sheet: "enemy_walk_up", vx: p.velX, vy: p.velY, gravity: 0, vida: 30, golpeado:false, hitted:false});
+      this.add('2d, animation, defaultEnemy');
+
+      this.on("seguir",function() {
+        this.p.hitted = false;
+      });
+      this.on("destroy",function() {
+        this.destroy();
+      });
+    }
+  });
 
 
   Q.animations('esqueletoAnimation', {
@@ -1299,6 +1321,7 @@ Q.component("defaultObject", {
     switch(Q.state.get("nivel_ant")){
     	case "nivel1": n = 1; break;
     	case "NivelFuego": n = 2; break;
+      case "NivelAire": n = 3; break;
     }
 
     player = Q("Player").at(n);
@@ -1370,6 +1393,19 @@ Q.component("defaultObject", {
 
 
     Q.state.set("nivel_ant", "NivelFuego");
+
+  });
+  //Nivel aire
+  Q.scene("NivelAire", function(stage) {
+    Q.stageTMX("nivel_aire.tmx", stage);
+    stage.add("viewport");
+
+    Q.state.set("texto_conversacion", "");
+    var player = Q("Player").at(0);
+    stage.follow(player);
+
+
+    Q.state.set("nivel_ant", "NivelAire");
 
   });
 
@@ -1549,10 +1585,11 @@ function crearHUDConversacion(face){
 //FIN HUD
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
 //Cargamos recursos y lo necesario para el menu del titulo
 var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
 'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
-'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json, corazones.png, corazones.json';
+'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json, corazones.png, corazones.json, Demon.png, Demon.json';
 
 Q.load( recursos , function(){
 
@@ -1562,13 +1599,14 @@ Q.load( recursos , function(){
  Q.compileSheets("bossFinal.png", "bossFinal.json");
  Q.compileSheets("mi_seleccion.png", "mi_seleccion.json");
  Q.compileSheets("murcielago.png", "murcielago.json");
+ Q.compileSheets("Demon.png", "Demon.json");
  Q.compileSheets("bones.png", "esqueleto.json");
  Q.compileSheets("portales.png", "portales.json");
  Q.compileSheets("corazones.png", "corazones.json");
  Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   //Cargamos el contenido del TMX
- Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx", function() {
+ Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx, nivel_aire.tmx", function() {
    Q.stageScene("startGame");
  });
 
