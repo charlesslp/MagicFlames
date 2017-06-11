@@ -543,14 +543,14 @@ var magia = Q.Sprite.extend("Magic", {
         } else if(collision.obj.isA("Tornado")){
 
           if(this.p.tipo === "viento"){
-		  collision.obj.sonido();
+		        collision.obj.sonido();
             collision.obj.destroy();
           }
 
         } else if(collision.obj.isA("ObstaculoFuego")){
 
           if(this.p.tipo === "agua"){
-            Q.audio.play("turn_off_fire.ogg");
+            collision.obj.sonido();
             collision.obj.destroy();
           }
 
@@ -1074,7 +1074,7 @@ Q.component("defaultObject", {
 
   var demonio  = Q.Sprite.extend("Demon",{
     init: function(p){
-      this._super(p, {sprite: "DemonAnimation", sheet: "enemy_walk_up", vx: p.velX, vy: p.velY, gravity: 0, vida: 30, golpeado:false, hitted:false});
+      this._super(p, {sprite: "DemonAnimation", sheet: "demon_walk_down", vx: p.velX, vy: p.velY, gravity: 0, vida: 30, golpeado:false, hitted:false});
       this.add('2d, animation, defaultEnemy');
 
       this.on("seguir",function() {
@@ -1267,8 +1267,8 @@ Q.component("defaultObject", {
   Q.state.set("nivel_ant", "portales");
   Q.state.set("texto_monedas", 0);
   Q.state.set("cofres_abiertos", []);
-  Q.state.set("llamas_conseguidas", 0);
-  Q.state.set("poderes_conseguidos", 0);
+  Q.state.set("llamas_conseguidas", 4);
+  Q.state.set("poderes_conseguidos", 4);
   Q.state.set("num_conversacion", 0);
   Q.state.set("inventario", []);
   //Q.audio.play("looperman_opening.ogg", {loop:true});
@@ -1320,8 +1320,9 @@ Q.component("defaultObject", {
 
     switch(Q.state.get("nivel_ant")){
     	case "nivel1": n = 1; break;
-    	case "NivelFuego": n = 2; break;
-      case "NivelAire": n = 3; break;
+      case "NivelFuego": n = 2; break;
+      case "NivelAgua": n = 3; break;
+      case "NivelAire": n = 5; break;
     }
 
     player = Q("Player").at(n);
@@ -1395,6 +1396,21 @@ Q.component("defaultObject", {
     Q.state.set("nivel_ant", "NivelFuego");
 
   });
+
+  //Nivel agua
+  Q.scene("NivelAgua", function(stage) {
+    Q.stageTMX("nivel_agua_mod.tmx", stage);
+    stage.add("viewport");
+
+    Q.state.set("texto_conversacion", "");
+    var player = Q("Player").at(0);
+    stage.follow(player);
+
+
+    Q.state.set("nivel_ant", "NivelAgua");
+
+  });
+
   //Nivel aire
   Q.scene("NivelAire", function(stage) {
     Q.stageTMX("nivel_aire.tmx", stage);
@@ -1588,8 +1604,8 @@ function crearHUDConversacion(face){
 
 //Cargamos recursos y lo necesario para el menu del titulo
 var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
-'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , Jarron_roto.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
-'break_grass.ogg, turn_off_fire.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json, corazones.png, corazones.json, Demon.png, Demon.json';
+'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , sonido_romper_jarron.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
+'sonido_romper_hierba.ogg, sonido_romper_fuego.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json, corazones.png, corazones.json, Demon_2.png, Demon.json';
 
 Q.load( recursos , function(){
 
@@ -1599,14 +1615,14 @@ Q.load( recursos , function(){
  Q.compileSheets("bossFinal.png", "bossFinal.json");
  Q.compileSheets("mi_seleccion.png", "mi_seleccion.json");
  Q.compileSheets("murcielago.png", "murcielago.json");
- Q.compileSheets("Demon.png", "Demon.json");
+ Q.compileSheets("Demon_2.png", "Demon.json");
  Q.compileSheets("bones.png", "esqueleto.json");
  Q.compileSheets("portales.png", "portales.json");
  Q.compileSheets("corazones.png", "corazones.json");
  Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   //Cargamos el contenido del TMX
- Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx, nivel_aire.tmx", function() {
+ Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx, nivel_aire.tmx, nivel_agua_mod.tmx", function() {
    Q.stageScene("startGame");
  });
 
