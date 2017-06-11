@@ -1210,6 +1210,7 @@ Q.component("defaultObject", {
 			        Q.state.set("texto_conversacion", this.conversacion);
 			        this.i = 0;
 			        Q.stage(0).unpause();
+                console.log(Q.state.get("num_conversacion"));
               		eliminarHUDConversacion();
               		if(Q.state.get("num_conversacion") === 10){
               			Q.state.inc("num_conversacion", 1)
@@ -1267,8 +1268,8 @@ Q.component("defaultObject", {
   Q.state.set("nivel_ant", "portales");
   Q.state.set("texto_monedas", 0);
   Q.state.set("cofres_abiertos", []);
-  Q.state.set("llamas_conseguidas", 4);
-  Q.state.set("poderes_conseguidos", 4);
+  Q.state.set("llamas_conseguidas", 0);
+  Q.state.set("poderes_conseguidos", 0);
   Q.state.set("num_conversacion", 0);
   Q.state.set("inventario", []);
   //Q.audio.play("looperman_opening.ogg", {loop:true});
@@ -1322,6 +1323,7 @@ Q.component("defaultObject", {
     	case "nivel1": n = 1; break;
       case "NivelFuego": n = 2; break;
       case "NivelAgua": n = 3; break;
+      case "NivelTierra": n = 4; break;
       case "NivelAire": n = 5; break;
     }
 
@@ -1359,6 +1361,14 @@ Q.component("defaultObject", {
     var player = Q("Player").at(0);
 
     stage.follow(Q("Player").at(0));
+
+    if(Q.state.get("num_conversacion") < 9){
+      Q("Personaje").at(0).destroy();
+      Q("Hierba").at(0).destroy();
+      Q("ObstaculoFuego").at(0).destroy();
+      Q("Roca").at(0).destroy();
+      Q("Tornado").at(0).destroy();
+    }
 
     Q.state.set("texto_conversacion", "");
     Q.state.set("nivel_ant", "nivel1");
@@ -1408,6 +1418,21 @@ Q.component("defaultObject", {
 
 
     Q.state.set("nivel_ant", "NivelAgua");
+
+  });
+
+
+  //Nivel agua
+  Q.scene("NivelTierra", function(stage) {
+    Q.stageTMX("nivel_tierra.tmx", stage);
+    stage.add("viewport");
+
+    Q.state.set("texto_conversacion", "");
+    var player = Q("Player").at(0);
+    stage.follow(player);
+
+
+    Q.state.set("nivel_ant", "NivelTierra");
 
   });
 
@@ -1622,7 +1647,7 @@ Q.load( recursos , function(){
  Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   //Cargamos el contenido del TMX
- Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx, nivel_aire.tmx, nivel_agua_mod.tmx", function() {
+ Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx, nivel_aire.tmx, nivel_agua_mod.tmx, nivel_tierra.tmx", function() {
    Q.stageScene("startGame");
  });
 

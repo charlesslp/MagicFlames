@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="83" height="52" tilewidth="32" tileheight="32" nextobjectid="63">
+<map version="1.0.0" orientation="orthogonal" renderorder="right-down" width="83" height="52" tilewidth="32" tileheight="32" nextobjectid="73">
  <tileset firstgid="1" name="mi_seleccion" tilewidth="32" tileheight="32" tilecount="54" columns="9">
   <image source="../images/mi_seleccion.png" width="288" height="192"/>
   <tile id="0">
@@ -1174,6 +1174,8 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
+   <tile gid="365"/>
+   <tile gid="355"/>
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
@@ -1181,10 +1183,7 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
-   <tile gid="336"/>
-   <tile gid="336"/>
-   <tile gid="336"/>
-   <tile gid="345"/>
+   <tile gid="365"/>
    <tile gid="346"/>
    <tile gid="346"/>
    <tile gid="346"/>
@@ -1205,8 +1204,9 @@
    <tile gid="346"/>
    <tile gid="346"/>
    <tile gid="346"/>
-   <tile gid="347"/>
-   <tile gid="336"/>
+   <tile gid="346"/>
+   <tile gid="346"/>
+   <tile gid="355"/>
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
@@ -1266,7 +1266,7 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
-   <tile gid="336"/>
+   <tile gid="366"/>
    <tile gid="327"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1289,7 +1289,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="325"/>
-   <tile gid="336"/>
+   <tile gid="356"/>
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
@@ -1747,6 +1747,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="325"/>
+   <tile gid="356"/>
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
@@ -1754,9 +1755,8 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
-   <tile gid="336"/>
-   <tile gid="336"/>
-   <tile gid="336"/>
+   <tile gid="366"/>
+   <tile gid="356"/>
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
@@ -1821,7 +1821,7 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
-   <tile gid="336"/>
+   <tile gid="366"/>
    <tile gid="327"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -1829,7 +1829,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="325"/>
-   <tile gid="336"/>
+   <tile gid="356"/>
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
@@ -1911,7 +1911,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="325"/>
-   <tile gid="336"/>
+   <tile gid="356"/>
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
@@ -1993,6 +1993,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="325"/>
+   <tile gid="356"/>
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
@@ -2002,8 +2003,7 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
-   <tile gid="336"/>
-   <tile gid="336"/>
+   <tile gid="365"/>
    <tile gid="346"/>
    <tile gid="346"/>
    <tile gid="346"/>
@@ -2075,6 +2075,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="325"/>
+   <tile gid="356"/>
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
@@ -2084,8 +2085,7 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
-   <tile gid="336"/>
-   <tile gid="336"/>
+   <tile gid="365"/>
    <tile gid="347"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -2154,9 +2154,10 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
-   <tile gid="336"/>
+   <tile gid="366"/>
    <tile gid="326"/>
    <tile gid="326"/>
+   <tile gid="356"/>
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
@@ -2166,8 +2167,7 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
-   <tile gid="336"/>
-   <tile gid="336"/>
+   <tile gid="365"/>
    <tile gid="347"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -2249,7 +2249,7 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
-   <tile gid="336"/>
+   <tile gid="365"/>
    <tile gid="347"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -2331,7 +2331,7 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
-   <tile gid="336"/>
+   <tile gid="365"/>
    <tile gid="347"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -2413,7 +2413,7 @@
    <tile gid="336"/>
    <tile gid="336"/>
    <tile gid="336"/>
-   <tile gid="336"/>
+   <tile gid="365"/>
    <tile gid="347"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -8715,6 +8715,60 @@
     <property name="velY" value="40"/>
    </properties>
   </object>
+  <object id="63" gid="487" x="992" y="672" width="45" height="45">
+   <properties>
+    <property name="velX" value="40"/>
+    <property name="velY" value="40"/>
+   </properties>
+  </object>
+  <object id="64" gid="487" x="1024" y="224" width="45" height="45">
+   <properties>
+    <property name="velX" value="40"/>
+    <property name="velY" value="40"/>
+   </properties>
+  </object>
+  <object id="66" gid="487" x="1408" y="160" width="45" height="45">
+   <properties>
+    <property name="velX" value="40"/>
+    <property name="velY" value="40"/>
+   </properties>
+  </object>
+  <object id="67" gid="487" x="1408" y="608" width="45" height="45">
+   <properties>
+    <property name="velX" value="40"/>
+    <property name="velY" value="40"/>
+   </properties>
+  </object>
+  <object id="68" gid="487" x="2496" y="672" width="45" height="45">
+   <properties>
+    <property name="velX" value="40"/>
+    <property name="velY" value="40"/>
+   </properties>
+  </object>
+  <object id="69" gid="487" x="2432" y="736" width="45" height="45">
+   <properties>
+    <property name="velX" value="40"/>
+    <property name="velY" value="40"/>
+   </properties>
+  </object>
+  <object id="70" gid="487" x="2144" y="608" width="45" height="45">
+   <properties>
+    <property name="velX" value="40"/>
+    <property name="velY" value="40"/>
+   </properties>
+  </object>
+  <object id="71" gid="487" x="2208" y="672" width="45" height="45">
+   <properties>
+    <property name="velX" value="40"/>
+    <property name="velY" value="40"/>
+   </properties>
+  </object>
+  <object id="72" gid="487" x="2304" y="96" width="45" height="45">
+   <properties>
+    <property name="velX" value="40"/>
+    <property name="velY" value="40"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Cofres">
   <object id="1" gid="5" x="832" y="192" width="32" height="32"/>
@@ -8744,7 +8798,6 @@
   <object id="24" gid="45" x="1120" y="672" width="32" height="32"/>
   <object id="25" gid="45" x="1152" y="704" width="32" height="32"/>
   <object id="26" gid="45" x="1120" y="736" width="32" height="32"/>
-  <object id="27" gid="45" x="1120" y="640" width="32" height="32"/>
   <object id="28" gid="45" x="1120" y="768" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Player">
