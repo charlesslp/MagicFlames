@@ -7,7 +7,7 @@ Alumnos:
 */
 
 var conversacionMago = [
-  ["Hola chaval, por fin te encuentro, escucha\ncorremos un gran peligro.","Hay rumores de que un malvado hechicero\nse está poniendo to tocho para\nconquistar Softwareland.", "Mi deber es proteger este reino\nde los pringaos que creen que\npueden conquistarlo.",
+  ["Hola chaval, vuelves a mí \n y encima sin pibas, bueno centrémonos\ncorremos un gran peligro.","Hay rumores de que un malvado hechicero\nse está poniendo to tocho para\nconquistar Softwareland.", "Mi deber es proteger este reino\nde los pringaos que creen que\npueden conquistarlo.",
   "Pero antes necesito las llamas\nde los elementos para poder frenarle.", "\n¿Que me dices?¿Me echas una mano?", "Tras cada portal se encuentran\nlas llamas que debes traerme", "Como soy to majo, te voy a dar\nel poder del fuego de primeras",
   "Con él podrás quemar cosas y dañar\na los enemigos que te encuentres", "\no dañar a quien quieras, no es mi problema", "y te voy a abrir el portal rojo para que\npuedas traerme la llama del desierto.", "Cuando lo hagas, ven a verme\ny te doy el siguiente poder."],
   ["\n¿Aun sigues aqui?", "¡Vete a por la llama!\n¡¡¡El tiempo corre!!!"],
@@ -23,6 +23,12 @@ var conversacionMago = [
   ["¡Que haces aquí!\n¿No ves que estoy ocupado?", "Gracias a las llamas que me\ntrajiste me he convertido en el mago\nmás poderoso del mundo.", "Nadie puede detenerme ahora.\nY menos un mocoso como tu.", "\nPor cierto, ¿tienes un espejo?", "Me ha desaparecido la barba de repente\ny no se que aspecto debo tener sin ella", "\n...",
   "¿Vas a decir algo?\n¿O vas a seguir callado?", "\n...", "¡Me estás poniendo nervioso!\n¡Deja de mirarme sin hacer nada!", "\n...", "\n...........", "Veo que no lo entiendes por las buenas.\nEn ese caso, ¡¡preparate \npara sufrir mi ira!!!"],
   ["\n¡¿QUE?!", "\n¡¡IMPOSIBLE!!", "\n¡¡NOOOOOOOOOOOOOOOOOOOOOOO!!"]
+]
+
+var conversacionIntro = [
+  ["Bienvenido a las tierras de Softwareland\njoven aprendiz de mago","En estos peligrosos lares predomina \nel uso de la magia de los 4 elementos", "Fuego, Agua, Tierra \n y la más poderosa de todas el Aire", "pero un mal acecha estas tierras, \n conseguiras TÚ nuestro valiente \n y apuesto aprendiz de mago",
+  "salvar las tierras de Softwareland \n después de que se te haya \nolvidado toda clase de magia \npor estar ligoteando y no estudiando", "Para ello te está esperando \n tu antiguo maestro Gandeldore \n en esta cueva habla con él\n para comenzar tu aventura"
+  ],
 ]
 
 
@@ -312,6 +318,9 @@ var game = function() {
 //FIn
         if(!Q.inputs['f'] && !Q.inputs['s'] && !Q.inputs['a'] && !Q.inputs['d'] && !Q.inputs['fire'] && this.p.lanzado){
           this.p.lanzado = false;
+        }
+        if(this.p.animacion_intro === "true"){
+          Q.inputs['up'] = true;
         }
 
     }
@@ -1190,7 +1199,9 @@ Q.component("defaultObject", {
         	this.conversacion = conversacion;
 
         this.p.label = this.conversacion[this.i];
+        
         Q.stage(0).pause();
+      
         this.keydown = true;
         this.i++;
 
@@ -1228,6 +1239,9 @@ Q.component("defaultObject", {
   });
 
 
+
+
+
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //FIN CONVERSACIÓN
 //FIN CONVERSACIÓN
@@ -1251,7 +1265,7 @@ Q.component("defaultObject", {
 
 	Q.scene("startGame", function(stage){
 		//Tendremos en el estado el nivel en el que se encuentra el personaje aparte de la vida, mana, etc..
-	Q.state.reset({ level:"portales"});
+	Q.state.reset({ level:"Introduccion"});
 
 	var container = stage.insert(new Q.UI.Container({
 		x: Q.width, y: Q.height, fill: "rgba(0,0,0,0.5)", w: 480, h: 480
@@ -1259,6 +1273,8 @@ Q.component("defaultObject", {
 	var button = container.insert(new Q.UI.Button({x: -Q.width/2, y: -Q.height/2, asset: "Intro.png", keyActionName: "fire"}));
 	button.on("click", function(){
 	cambiarNivel(Q.state.get("level"));
+  crearHUDConversacion("magoface.png");
+  Q.state.set("texto_conversacion", conversacionIntro[0]);
   });
 	container.fit(20);
 
@@ -1309,9 +1325,25 @@ Q.component("defaultObject", {
         }
   }
 
+  //Introduccion
+  Q.scene("Introduccion", function(stage) {
+    Q.stageTMX("nivel_intro.tmx", stage);
+    stage.add("viewport");
+
+    Q.state.set("texto_conversacion", "");
+
+    var player = Q("Player").at(0);
+    player.del("basicControls");
+    stage.follow(player);
+
+
+    Q.state.set("nivel_ant", "Introduccion");
+
+  });
 
   //Nivel de los portales
   Q.scene("portales", function(stage) {
+    Q.inputs['up'] = false;
     Q.stageTMX("Portales.tmx", stage);
     stage.add("viewport");
 
@@ -1321,6 +1353,7 @@ Q.component("defaultObject", {
 
     switch(Q.state.get("nivel_ant")){
     	case "nivel1": n = 1; break;
+      case "Introduccion": n = 1; break;
       case "NivelFuego": n = 2; break;
       case "NivelAgua": n = 3; break;
       case "NivelTierra": n = 4; break;
@@ -1647,7 +1680,7 @@ Q.load( recursos , function(){
  Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   //Cargamos el contenido del TMX
- Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx, nivel_aire.tmx, nivel_agua_mod.tmx, nivel_tierra.tmx", function() {
+ Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx, nivel_aire.tmx, nivel_agua_mod.tmx, nivel_tierra.tmx, nivel_intro.tmx", function() {
    Q.stageScene("startGame");
  });
 
