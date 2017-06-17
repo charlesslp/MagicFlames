@@ -14,9 +14,9 @@ var conversacionMago = [
   ["¡¡Gracias!!", "Toma, aquí tienes el poder del agua,\nahora podrás apagar el fuego\nque se cruce en tu camino.", "También puedes usarlo para dañar\na tus enemigos, ya que es más\npoderoso que el fuego.", "O puedes empapar a tus amigas y hacer\nun concurso de camisetas mojadas.",
   "Por cierto, avisame si decides\nhacer eso último.","Ahora te abriré el portal azul para que\nme traigas la llama del mar.", "\nBuena suerte."],
   ["Tío, que más quieres, no mucha gente\npuede apagar el fuego con magia.", "Cualquier bombero estaría\nenvidioso de ti", "\n¡Pero ahora traeme la siguiente llama!"],
-  ["¡¡Gracias majo!!\n¡Eso si que es una cosa bien hecha!", "No como los dibujos de mi nieto...\nBueno el caso, aqui tienes el\npoder de la tierra.", "Con él podrás romper piedras\ne incluso rocas.","Ya queda poco, traeme la\nllama del bosque y te daré\nel siguiente poder"],
+  ["¡¡Gracias majo!!\n¡Eso si que es una cosa bien hecha!", "No como los dibujos de mi nieto...\nBueno el caso, aqui tienes el\npoder de la tierra.", "Con él podrás romper las piedras\nmáss duras.","Ya queda poco, traeme la\nllama del bosque y te daré\nel siguiente poder"],
   ["Mirate, con 3 poderes ya.\nLos chavales de hoy en día\ncreceis tan rápido..."],
-  ["¡Genial!\n¡Ya solo queda uno!", "Toma el poder del viento,\ncon él podras mover algunos\nobjetos de gran peso", "Y levantar las faldas a las chicas\nsin que se enteren... Aunque yo no\nhago eso, ¿eh? ¡Lo juro!", "Ahora traeme la llama del cielo,\nes la última llama.","Te prometo que cuando me la traigas\nte daré el poder más chulo de todos..."],
+  ["¡Genial!\n¡Ya solo queda uno!", "Toma el poder del viento,\ncon él podras destruir\nlas fuertes corrientes de aire", "Y levantar las faldas a las chicas\nsin que se enteren... Aunque yo no\nhago eso, ¿eh? ¡Lo juro!", "Ahora traeme la llama del cielo,\nes la última llama.","Te prometo que cuando me la traigas\nte daré el poder más chulo de todos..."],
   ["¿Que pasa?¿No te fias de mi?\nTu traeme la llama chico", "\nQuien te has creido para cuestionarme..."],
   ["\nJajaja...", "\nJAJAJAJAJA", "¡¡POR FIN!!\n¡¡¡EL PODER DE LOS ELEMENTOS\nPOR FIN ES MIO!!!", "Ahora podré hacer lo que me de la gana\nsin nadie que me lo impida.", "Lo primero que haré será\nquemar un par de aldeas.", "\nDespués comeré un poco", "Un sandwich con crema de cacahuete,\nque esa mierda esta super rica",
   "Luego iré al baño, que no me suelen\nsentar muy bien esos sandwiches.", "Y después... Despues.......\n¿Después que iba a hacer yo?", "¡Ah si, conquistar Softwareland!\nMaldito alzheimer...", "Gracias por hacerme el trabajo chaval,\nahora hazte a un lado, tengo un mundo\nque conquistar..."],
@@ -27,7 +27,7 @@ var conversacionMago = [
 
 var conversacionIntro = [
   ["Bienvenido a las tierras de Softwareland\njoven aprendiz de mago","En estos peligrosos lares predomina \nel uso de la magia de los 4 elementos", "Fuego, Agua, Tierra \n y la más poderosa de todas el Aire", "pero un mal acecha estas tierras, \n conseguiras TÚ nuestro valiente \n y apuesto aprendiz de mago",
-  "salvar las tierras de Softwareland \n después de que se te haya \nolvidado toda clase de magia \npor estar ligoteando y no estudiando", "Para ello te está esperando \n tu antiguo maestro Gandeldore \n en esta cueva habla con él\n para comenzar tu aventura"
+  "salvar las tierras de Softwareland \n del mal que las acecha, " , "Después de que se te haya \nolvidado toda clase de magia \npor estar ligoteando y no estudiando,", "Para ello te está esperando \n tu antiguo maestro Gandeldore \n en esta cueva,", "habla con él\n para comenzar tu aventura"
   ],
 ]
 
@@ -528,35 +528,39 @@ var magia = Q.Sprite.extend("Magic", {
     this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
 
 
-        if(collision.obj.isA("Hierba")){
-
-            collision.obj.sonido();
-            collision.obj.play("destruir_hierba");
-
-        } else if(collision.obj.isA("Jarron")){
+         if(collision.obj.isA("Jarron")){
 
           collision.obj.sonido();
           collision.obj.play("destruir_jarron");
-
-        } else if(collision.obj.isA("Roca")){
-
-          if(this.p.tipo === "tierra"){
-            collision.obj.sonido();
-            collision.obj.play("destruir_roca");
-          }
 
         } else if(collision.obj.isA("Murcielago") || collision.obj.isA("Esqueleto")|| collision.obj.isA("Demon")){
 
           collision.obj.hit(this.p.potencia);
 
-        } else if(collision.obj.isA("Tornado")){
+        } 
+        else if(collision.obj.isA("Hierba")){
+
+            if(this.p.tipo === "fuego"){
+            collision.obj.sonido();
+            collision.obj.play("destruir_hierba");
+          }
+
+        }else if(collision.obj.isA("Tornado")){
 
           if(this.p.tipo === "viento"){
 		        collision.obj.sonido();
             collision.obj.destroy();
           }
 
-        } else if(collision.obj.isA("ObstaculoFuego")){
+        } 
+         else if(collision.obj.isA("Roca")){
+
+          if(this.p.tipo === "tierra"){
+            collision.obj.sonido();
+            collision.obj.play("destruir_roca");
+          }
+
+        }else if(collision.obj.isA("ObstaculoFuego")){
 
           if(this.p.tipo === "agua"){
             collision.obj.sonido();
@@ -1176,7 +1180,7 @@ Q.component("defaultObject", {
 
 
 
-  //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
+  
    Q.UI.Text.extend("Conversacion",{
     init: function(p) {
       this.keydown = false;
@@ -1238,6 +1242,52 @@ Q.component("defaultObject", {
     }
   });
 
+ Q.UI.Text.extend("Introduccion",{
+    init: function(p) {
+      this.conversacion;
+      this.i = 0;
+      this.tiempo = 0;
+
+      this._super(p,{
+        label: Q.state.get("texto_Introduccion"),
+        color: "black",
+        size: 12,
+        x: 0,
+        y: 0
+      });
+
+      Q.state.on("change.texto_Introduccion",this,"update_conv");
+    },
+    update_conv: function(conversacion) {
+
+        if(conversacion !== this.i)
+          this.conversacion = conversacion;
+
+        this.p.label = this.conversacion[this.i];
+      
+        
+        this.i++;
+
+    },
+    step: function(dt) {
+      this.tiempo += dt;
+      if(this.tiempo > 4){
+        this.tiempo = 0;
+        if(!this.conversacion[this.i]){
+          this.i = 0;
+          this.conversacion = [];
+          this.conversacion[0] = "";
+            Q.state.set("texto_Introduccion", this.conversacion);
+            this.i = 0
+        
+      }
+      else {
+            Q.state.set("texto_Introduccion", this.i);
+        }
+      }
+    }
+  });
+
 
 
 
@@ -1265,7 +1315,7 @@ Q.component("defaultObject", {
 
 	Q.scene("startGame", function(stage){
 		//Tendremos en el estado el nivel en el que se encuentra el personaje aparte de la vida, mana, etc..
-	Q.state.reset({ level:"Introduccion"});
+	Q.state.reset({ level:"nivelIntroduccion"});
 
 	var container = stage.insert(new Q.UI.Container({
 		x: Q.width, y: Q.height, fill: "rgba(0,0,0,0.5)", w: 480, h: 480
@@ -1273,8 +1323,10 @@ Q.component("defaultObject", {
 	var button = container.insert(new Q.UI.Button({x: -Q.width/2, y: -Q.height/2, asset: "Intro.png", keyActionName: "fire"}));
 	button.on("click", function(){
 	cambiarNivel(Q.state.get("level"));
-  crearHUDConversacion("magoface.png");
-  Q.state.set("texto_conversacion", conversacionIntro[0]);
+  crearHUDConversacion();
+  Q.stageScene('HUDIntro', 2);
+  Q.clearStage(3);
+  Q.state.set("texto_Introduccion", conversacionIntro[0]);
   });
 	container.fit(20);
 
@@ -1326,7 +1378,7 @@ Q.component("defaultObject", {
   }
 
   //Introduccion
-  Q.scene("Introduccion", function(stage) {
+  Q.scene("nivelIntroduccion", function(stage) {
     Q.stageTMX("nivel_intro.tmx", stage);
     stage.add("viewport");
 
@@ -1348,6 +1400,7 @@ Q.component("defaultObject", {
     stage.add("viewport");
 
     Q.state.set("texto_conversacion", "");
+    Q.state.set("texto_Introduccion", "");
 
     var player, n = 0;
 
@@ -1404,6 +1457,7 @@ Q.component("defaultObject", {
     }
 
     Q.state.set("texto_conversacion", "");
+    Q.state.set("texto_Introduccion", "");
     Q.state.set("nivel_ant", "nivel1");
 
   });
@@ -1420,6 +1474,7 @@ Q.component("defaultObject", {
     stage.follow(Q("Player").at(0));
 
     Q.state.set("texto_conversacion", "");
+    Q.state.set("texto_Introduccion", "");
     Q.state.set("nivel_ant", "nivel_final");
 
     var p = Q("Player").at(0);
@@ -1432,6 +1487,7 @@ Q.component("defaultObject", {
 	  stage.add("viewport");
 
     Q.state.set("texto_conversacion", "");
+    Q.state.set("texto_Introduccion", "");
     var player = Q("Player").at(0);
 	  stage.follow(player);
 
@@ -1446,6 +1502,7 @@ Q.component("defaultObject", {
     stage.add("viewport");
 
     Q.state.set("texto_conversacion", "");
+    Q.state.set("texto_Introduccion", "");
     var player = Q("Player").at(0);
     stage.follow(player);
 
@@ -1461,6 +1518,7 @@ Q.component("defaultObject", {
     stage.add("viewport");
 
     Q.state.set("texto_conversacion", "");
+    Q.state.set("texto_Introduccion", "");
     var player = Q("Player").at(0);
     stage.follow(player);
 
@@ -1475,6 +1533,7 @@ Q.component("defaultObject", {
     stage.add("viewport");
 
     Q.state.set("texto_conversacion", "");
+    Q.state.set("texto_Introduccion", "");
     var player = Q("Player").at(0);
     stage.follow(player);
 
@@ -1533,6 +1592,24 @@ Q.component("defaultObject", {
     }));
     container3.insert(new Q.Conversacion({
         x: Q.width/2 +30,
+        y: Q.height-70,
+
+    }));
+  
+
+  });
+ Q.scene('HUDIntro',function(stage) {
+
+
+    var container3 = stage.insert(new Q.UI.Container({
+      x: 0,
+      y: 0,
+      w: Q.width,
+      h: Q.height
+    }));
+   
+    container3.insert(new Q.Introduccion({
+        x: Q.width/2,
         y: Q.height-70,
 
     }));

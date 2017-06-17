@@ -20111,7 +20111,7 @@
     <property name="animacion_intro" value="true"/>
     <property name="direction" value="up"/>
     <property name="mover" value="false"/>
-    <property name="vy" value="-80"/>
+    <property name="vy" value="-70"/>
    </properties>
   </object>
  </objectgroup>
