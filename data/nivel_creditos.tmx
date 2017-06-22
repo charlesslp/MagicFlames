@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="170" tilewidth="32" tileheight="32" nextobjectid="441">
+ <tileset firstgid="1" name="Player" tilewidth="32" tileheight="32" tilecount="12" columns="3">
+  <image source="../images/character.png" width="96" height="128"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="Player"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="13" name="Mi_seleccion" tilewidth="32" tileheight="32" tilecount="54" columns="9">
+  <image source="../images/Mi_seleccion.png" width="288" height="192"/>
+  <tile id="4">
+   <properties>
+    <property name="Class" value="Cofre"/>
+   </properties>
+  </tile>
+  <tile id="13">
+   <properties>
+    <property name="Class" value="Jarron"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="Class" value="Hierba"/>
+   </properties>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="Class" value="ObstaculoFuego"/>
+   </properties>
+  </tile>
+  <tile id="37">
+   <properties>
+    <property name="Class" value="Roca"/>
+   </properties>
+  </tile>
+  <tile id="44">
+   <properties>
+    <property name="Class" value="Tornado"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="67" name="murciegalo" tilewidth="32" tileheight="32" tilecount="16" columns="4">
+  <image source="../images/murcielago.png" width="128" height="128"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="Murcielago"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="83" name="portales" tilewidth="40" tileheight="68" tilecount="20" columns="5">
+  <image source="../images/portales.png" width="200" height="272"/>
+  <tile id="4">
+   <properties>
+    <property name="Class" value="Portal"/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="Class" value="portal"/>
+   </properties>
+  </tile>
+  <tile id="14">
+   <properties>
+    <property name="Class" value="portal"/>
+   </properties>
+  </tile>
+  <tile id="19">
+   <properties>
+    <property name="Class" value="portal"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="103" name="personaje" tilewidth="32" tileheight="32" tilecount="24" columns="3">
+  <image source="../images/mago.png" width="96" height="256"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="Personaje"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="127" name="galeria2" tilewidth="32" tileheight="32" tilecount="6640" columns="8">
+  <image source="../images/galeria2.png" width="256" height="26560"/>
+ </tileset>
+ <tileset firstgid="6767" name="galeria" tilewidth="32" tileheight="32" tilecount="4416" columns="8">
+  <image source="../images/galeria.png" width="256" height="17664"/>
+  <tile id="1675">
+   <properties>
+    <property name="Class" value="Salida"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Suelo" width="60" height="170">
+  <properties>
+   <property name="type" value="0"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztwwENAAAMw6A6n/VLuAFIWDVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV9Hq29xUY=
+  </data>
+ </layer>
+ <layer name="Suelo2" width="60" height="170">
+  <properties>
+   <property name="type" value="0"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztz7EJwDAQBMEPVZdRz27PbkIghp3kwmNnznnWzPvvXgdPLlKvrV5bvbZ6bfXa6rXVa6vXVq+tXlu9tnpt9drqtdVrq9dWr61eW722em312uq11Wur11avrV5bvbZ6bfXa6rXVa6vXVq+tXlu9tnpt9drqtdVrq9dWr61eW722em312uq11Wur11avrV5bvbZ6bfXa6rXVa6vXVq+tXlu9tnpt9drqtdVrq9dWr61eW722em312uq11Wur11avrV5bvbZ6bfXa6rXVa6vXVq+tXlu9tnptN/Z+2fLdIw==
+  </data>
+ </layer>
+ <layer name="Decorado" width="60" height="170">
+  <properties>
+   <property name="type" value="0"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJztmsdPVFEcRh9FEDaWjeLGsrFsLBvLxrKxbOy9964oKsWOHey9/z/WhW1hW4iQKMWCHQHPBEnGeTP6nqMOv+t3koNANLmf4b2Qm+N5Igzr8zwvHzfgRizATXmpPtXfo5BtRViMJbgVt8XZW5Hjec+xEqty/v05/xQ72bYLd2Mp7sG9cfZWs7EGa7HO8N4DbDuIh7AMy/FwnL31bHyH7/GD4b3H2HYcT+BJPIWn4+xtYONXbMQmw3vDkJnree0wKzfVJxFBGJ/heRNwIk7CyTgFp+K0jB//bkUW72esxKqs1Jw3WaazaQbOxFk4G+fgXJwXs7eajTVYi3VG985n0wJciItwMS7BpbgsZm89G9/he/xgdO9yNq3AlbgKV+MaXIvrYvY2sPErNmKT0b3r2ZSPG3AjFuAm3IxbYvZmZPN+xnaYlZ2a8yZLIZuKsBhLcCtuw+24I+PX/94aO9m0C3djKe7BvbgP9zu49wCbDuIhLMNyPIxH8Oj3vdf48zrewJt4C28b/b84xrmP4wk8iafwNJ7Bs1Gb7vD5XbyH9/GB0b3nOPd5vIAX8RJexit4NWrTQz5/hI/xCT41ujcoz9hXgc+xEquM721O5wMb0jA9ZssLvn6J1ViDtVhnfG8252+POZhrfEsQOrCxI3bCzv/B3i5s7Ip52C3E3p89B22Z7py1B/bEXgnOXZrG7yNpP37P+nPQmzP3wb7YL+b8ZWwtj9lr/Tnoz5kH4EAcFOD8v/sctBUGc+YhOBSHRZ0/0Z18kOegLTOcM4/AkTgq6vxB7+QtEP0eGs3GMTgWx0XtDXonb4F476FYgt7Ju0LQO3nXeMXP+Gt8g28Nvp/C8pGNn/AzfjG+N8h9enNkYya/P2J65j893h8nyH16NhvbYw7mGt8b5D69Axs7YifsbHyvC/fpYXDhPl34UZ+jPieC+hybqM9JjPocW6jPUZ/Tivoce6jPUZ/jEupz1OdEUJ+T6hMlh/oct7HeJYRFfY4f9Tn2nwP1OS2oz1GfYwX1OX7U56jPsYb6HD/qc+ziwn16GFy4TxdCPZJ6pAjqkWyiHikx6pFsoR5JPVIr6pHsoR5JPZJLqEdSjxRBPVKqT5Qc6pHcxnqHERb1SH7UI9l/DtQjtaAeST2SFdQj+VGPpB7JGuqR/KhHsosL9+lhcOE+XYj/DfVX6q8iqL+yifqrxKi/soX6K/VXrai/sof6K/VXLqH+Sv1VBPVXqT5Rcqi/chvr3UlY1F/5UX9l/zlQf9WC+iv1V1ZQf+VH/ZX6K2uov/Kj/souLtynh8GF+3QhhBBCCCGEEO7yDVfWn4s=
+  </data>
+ </layer>
+ <objectgroup name="Heroe">
+  <object id="440" gid="1" x="768" y="224" width="32" height="32">
+   <properties>
+    <property name="animacion_creditos" value="true"/>
+    <property name="direction" value="down"/>
+    <property name="mover" value="false"/>
+    <property name="vy" value="70"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Decorado sobrepuesto" width="60" height="170">
+  <properties>
+   <property name="type" value="0"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJzt2sENABAQRFGJ/otzdNSJGkQsWe9VMHP/pQAAAAC7Wr29IFb/7O/47C8AAAAAAAAAwGv0ObnpcwAAAAAAAAAAiKRHyk2PBAAAAAAAAAAA5+ivctNfAQAAAAAAAACrJi/ZClE=
+  </data>
+ </layer>
+</map>

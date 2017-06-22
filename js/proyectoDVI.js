@@ -31,6 +31,11 @@ var conversacionIntro = [
   ],
 ]
 
+var conversacionCreditos = "\n\n\n\n\nY así es como nuestro héroe\nsalvó a Softwareland de las\nmalvadas garras del viejo\npederasta con alzheimer\n\n\n\n\n\n\n\n\n\n"+
+"LAS LLAMAS DE LA MAGIA\n\n\n\n\nDesarrolladores:\n\n"+
+"Carlos Martínez Pérez\nArturo Marino Quintana\nPablo Martín Atienza\nPablo Márquez Fernández\n\n\n"+
+"Este proyecto ha sido realizado\npara la asignatura de\ndesarrollo de videojuegos\nmediante tegnologías web\nde la Universidad Complutense\nde Madrid\n\n\n"+
+"Recursos:\n\nRPG Maker\nOpenGameArt.org\nFreeSound\nJunkhunt.net"
 
 var game = function() {
 
@@ -266,35 +271,37 @@ var game = function() {
           	this.play("stop_right");
         }
 
-        if(Q.inputs['a'] && !this.p.lanzado){
-        	if(Q.state.get("texto_mana") >= 10 && Q.state.get("poderes_conseguidos") > 0){
-        		  Q.state.dec("texto_mana", 10);
-          		this.stage.insert(new magia({tipo: "fuego", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 10, master: "heroe"}));
-          		this.p.lanzado = true;
-          	}
-        }
-        if(Q.inputs['s'] && !this.p.lanzado){
+        if(this.p.animacion_creditos !== "true"){
+	        if(Q.inputs['a'] && !this.p.lanzado){
+	        	if(Q.state.get("texto_mana") >= 10 && Q.state.get("poderes_conseguidos") > 0){
+	        		  Q.state.dec("texto_mana", 10);
+	          		this.stage.insert(new magia({tipo: "fuego", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 10, master: "heroe"}));
+	          		this.p.lanzado = true;
+	          	}
+	        }
+	        if(Q.inputs['s'] && !this.p.lanzado){
 
-        	if(Q.state.get("texto_mana") >= 20 && Q.state.get("poderes_conseguidos") > 1){
-        		Q.state.dec("texto_mana", 20);
-          		this.stage.insert(new magia({tipo: "agua", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 20, master: "heroe"}));
-          		this.p.lanzado = true;
-          	}
-        }
-        if(Q.inputs['d'] && !this.p.lanzado){
-        	if(Q.state.get("texto_mana") >= 30 && Q.state.get("poderes_conseguidos") > 2){
-        		Q.state.dec("texto_mana", 30);
-          		this.stage.insert(new magia({tipo: "tierra", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 30, master: "heroe"}));
-          		this.p.lanzado = true;
-          	}
-        }
-        if(Q.inputs['f'] && !this.p.lanzado){
-        	if(Q.state.get("texto_mana") >= 40 && Q.state.get("poderes_conseguidos") > 3){
-        		Q.state.dec("texto_mana", 40);
-          		this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 50, master: "heroe"}));
-          		this.p.lanzado = true;
-          	}
-        }
+	        	if(Q.state.get("texto_mana") >= 20 && Q.state.get("poderes_conseguidos") > 1){
+	        		Q.state.dec("texto_mana", 20);
+	          		this.stage.insert(new magia({tipo: "agua", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 20, master: "heroe"}));
+	          		this.p.lanzado = true;
+	          	}
+	        }
+	        if(Q.inputs['d'] && !this.p.lanzado){
+	        	if(Q.state.get("texto_mana") >= 30 && Q.state.get("poderes_conseguidos") > 2){
+	        		Q.state.dec("texto_mana", 30);
+	          		this.stage.insert(new magia({tipo: "tierra", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 30, master: "heroe"}));
+	          		this.p.lanzado = true;
+	          	}
+	        }
+	        if(Q.inputs['f'] && !this.p.lanzado){
+	        	if(Q.state.get("texto_mana") >= 40 && Q.state.get("poderes_conseguidos") > 3){
+	        		Q.state.dec("texto_mana", 40);
+	          		this.stage.insert(new magia({tipo: "viento", direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 50, master: "heroe"}));
+	          		this.p.lanzado = true;
+	          	}
+	        }
+    	}
 
 
 
@@ -321,6 +328,13 @@ var game = function() {
         }
         if(this.p.animacion_intro === "true"){
           Q.inputs['up'] = true;
+          if(Q.inputs['esc']){
+          	Q.audio.stop();
+          	cambiarNivel("portales");
+          }
+        }
+        if(this.p.animacion_creditos === "true"){
+          Q.inputs['down'] = true;
         }
 
     }
@@ -894,6 +908,26 @@ Q.component("defaultObject", {
 
       });
 
+      //Stop
+      var stop = Q.Sprite.extend("Stop",{
+         init: function(p) {
+          this._super(p, {sheet: "nada", gravity:0});
+          this.add('2d, animation');
+
+           this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
+
+	        if(collision.obj.isA("Player")){
+          		Q.audio.stop();
+          		collision.obj.p.vy=0;
+          		collision.obj.p.animacion_creditos=false;
+          		Q.inputs["down"]=false;
+	        }
+	      });
+        }
+
+      });
+
+
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1043,7 +1077,6 @@ Q.component("defaultObject", {
         else if(this.p.vida <=0){
           this.p.golpeado = true;
           this.p.hitted = true;
-          Q.audio.play("monster_die.ogg");
           this.play("enemy_die");
         }
       }
@@ -1070,6 +1103,7 @@ Q.component("defaultObject", {
         this.p.hitted = false;
       });
       this.on("destroy",function() {
+      	Q.audio.play("monster_die.ogg");
         this.destroy();
       });
     }
@@ -1094,6 +1128,7 @@ Q.component("defaultObject", {
         this.p.hitted = false;
       });
       this.on("destroy",function() {
+        Q.audio.play("devil_die.ogg");
         this.destroy();
       });
     }
@@ -1118,6 +1153,7 @@ Q.component("defaultObject", {
         this.p.hitted = false;
       });
       this.on("destroy",function() {
+        Q.audio.play("skeleton_die.ogg");
         this.destroy();
       });
     }
@@ -1231,7 +1267,7 @@ Q.component("defaultObject", {
               			Q.state.inc("num_conversacion", 1)
               			cambiarNivel("nivel_final");
               		} else if(Q.state.get("num_conversacion") === 11){
-              			cambiarNivel("portales");
+              			cambiarNivelCreditos();
               		}
 			    }
 			    else {
@@ -1336,11 +1372,11 @@ Q.component("defaultObject", {
   Q.state.set("nivel_ant", "portales");
   Q.state.set("texto_monedas", 0);
   Q.state.set("cofres_abiertos", []);
-  Q.state.set("llamas_conseguidas", 0);
-  Q.state.set("poderes_conseguidos", 0);
-  Q.state.set("num_conversacion", 0);
+  Q.state.set("llamas_conseguidas", 4);
+  Q.state.set("poderes_conseguidos", 4);
+  Q.state.set("num_conversacion", 9);
   Q.state.set("inventario", []);
-  //Q.audio.play("looperman_opening.ogg", {loop:true});
+
 
 });
 
@@ -1377,6 +1413,12 @@ Q.component("defaultObject", {
         }
   }
 
+  function cambiarNivelCreditos(){
+        Q.clearStages();
+        Q.stageScene("nivelCreditos");
+        Q.stageScene('HUDCreditos', 2);
+  }
+
   //Introduccion
   Q.scene("nivelIntroduccion", function(stage) {
     Q.stageTMX("nivel_intro.tmx", stage);
@@ -1390,6 +1432,22 @@ Q.component("defaultObject", {
 
 
     Q.state.set("nivel_ant", "Introduccion");
+  	Q.audio.play("portales_song.ogg");
+
+  });
+
+  //Introduccion
+  Q.scene("nivelCreditos", function(stage) {
+    Q.stageTMX("nivel_creditos2.tmx", stage);
+    stage.add("viewport");
+
+    Q.state.set("texto_conversacion", "");
+
+    var player = Q("Player").at(0);
+    player.del("basicControls");
+    stage.follow(player);
+    Q.audio.stop();
+  	Q.audio.play("portales_song.ogg", {loop:true});
 
   });
 
@@ -1478,6 +1536,7 @@ Q.component("defaultObject", {
     Q.state.set("nivel_ant", "nivel_final");
 
     var p = Q("Player").at(0);
+  	Q.audio.play("boss_song.ogg", {loop:true});
 
   });
 
@@ -1614,6 +1673,38 @@ Q.component("defaultObject", {
 
     }));
 
+    var container2 = stage.insert(new Q.UI.Container({
+      x: 0,
+      y: 0,
+      w: Q.width,
+      h: Q.height
+    }));
+
+    container2.insert(new Q.Esc({
+        x: Q.width-90,
+        y: 10,
+
+    }));
+
+  });
+
+ Q.scene('HUDCreditos',function(stage) {
+
+	var container = stage.insert(new Q.UI.Container({
+      x: 0,
+      y: 0,
+      w: Q.width,
+      h: Q.height
+    }));
+    
+
+    container.insert(new Q.Creditos({
+        x: Q.width/2,
+        y: Q.height-70,
+
+    }));
+
+
   });
 
 Q.scene('Corazones',function(stage) {
@@ -1729,6 +1820,41 @@ function crearHUDConversacion(face){
     }
   });
 
+  //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
+  Q.UI.Text.extend("Esc",{
+    init: function(p) {
+
+      this._super(p,{
+        label: "Pulsa 'Esc' para omitir",
+        color: "black",
+        size: 12,
+        x: 0,
+        y: 0
+      });
+    }
+  });
+
+
+
+  //Definimos la etiqueta de las monedas (variable global del juego) que se actualizara en el HUD
+  Q.UI.Text.extend("Creditos",{
+    init: function(p) {
+
+      this._super(p,{
+        label: conversacionCreditos,
+        color: "black",
+        size: 20,
+        x: 0,
+        y: 0
+      });
+    },
+    step: function() {
+        this.p.y-=0.8;
+    }
+  });
+
+
+
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //FIN HUD
@@ -1739,8 +1865,8 @@ function crearHUDConversacion(face){
 
 //Cargamos recursos y lo necesario para el menu del titulo
 var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
-'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg , sonido_romper_jarron.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, '+
-'sonido_romper_hierba.ogg, sonido_romper_fuego.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json, corazones.png, corazones.json, Demon_2.png, Demon.json';
+'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg, skeleton_die.ogg, devil_die.ogg, sonido_romper_jarron.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, portales_song.ogg, boss_song.ogg, credits_song.ogg, '+
+'sonido_romper_hierba.ogg, sonido_romper_fuego.ogg, sonido_romper_roca.ogg, sonido_romper_tornado.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json, corazones.png, corazones.json, Demon_2.png, Demon.json';
 
 Q.load( recursos , function(){
 
@@ -1757,7 +1883,7 @@ Q.load( recursos , function(){
  Q.sheet("intro","Intro.png", { tilew: 420, tileh: 420 });
 
   //Cargamos el contenido del TMX
- Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx, nivel_aire.tmx, nivel_agua_mod.tmx, nivel_tierra.tmx, nivel_intro.tmx", function() {
+ Q.loadTMX("nivel_fuego.tmx, Portales.tmx, nivel1.tmx, nivel_final.tmx, nivel_aire.tmx, nivel_agua_mod.tmx, nivel_tierra.tmx, nivel_intro.tmx, nivel_creditos2.tmx", function() {
    Q.stageScene("startGame");
  });
 

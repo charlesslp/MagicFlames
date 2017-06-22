@@ -20152,7 +20152,6 @@
   </object>
  </objectgroup>
  <objectgroup name="obstaculosFuego">
-  <object id="274" gid="43" x="1344" y="2304" width="32" height="32"/>
   <object id="278" gid="43" x="1440" y="928" width="32" height="32"/>
   <object id="279" gid="43" x="1440" y="960" width="32" height="32"/>
   <object id="283" gid="43" x="1312" y="960" width="32" height="32"/>
@@ -20176,7 +20175,6 @@
   <object id="437" gid="43" x="1312" y="928" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="Tornados">
-  <object id="364" gid="57" x="1376" y="2336" width="32" height="32"/>
   <object id="365" gid="57" x="1312" y="1632" width="32" height="32"/>
   <object id="367" gid="57" x="1312" y="1696" width="32" height="32"/>
   <object id="370" gid="57" x="1408" y="1664" width="32" height="32"/>
@@ -20192,7 +20190,6 @@
   <object id="435" gid="57" x="1344" y="1664" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="rocas">
-  <object id="332" gid="50" x="1408" y="2304" width="32" height="32"/>
   <object id="333" gid="50" x="1344" y="1312" width="32" height="32"/>
   <object id="335" gid="50" x="1408" y="1312" width="32" height="32"/>
   <object id="336" gid="50" x="1440" y="1312" width="32" height="32"/>
