@@ -329,7 +329,6 @@ var game = function() {
         if(this.p.animacion_intro === "true"){
           Q.inputs['up'] = true;
           if(Q.inputs['esc']){
-          	Q.audio.stop();
           	cambiarNivel("portales");
           }
         }
@@ -917,7 +916,6 @@ Q.component("defaultObject", {
            this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
 
 	        if(collision.obj.isA("Player")){
-          		Q.audio.stop();
           		collision.obj.p.vy=0;
           		collision.obj.p.animacion_creditos=false;
           		Q.inputs["down"]=false;
@@ -1432,6 +1430,7 @@ Q.component("defaultObject", {
 
 
     Q.state.set("nivel_ant", "Introduccion");
+    Q.audio.stop();
   	Q.audio.play("portales_song.ogg");
 
   });
@@ -1491,6 +1490,8 @@ Q.component("defaultObject", {
 
     stage.follow(player);
     Q.state.set("nivel_ant", "portales");
+    Q.audio.stop();
+  	Q.audio.play("portales.ogg", {loop:true});
 
 
   });
@@ -1517,6 +1518,8 @@ Q.component("defaultObject", {
     Q.state.set("texto_conversacion", "");
     Q.state.set("texto_Introduccion", "");
     Q.state.set("nivel_ant", "nivel1");
+    Q.audio.stop();
+  	Q.audio.play("portales_song.ogg", {loop:true});
 
   });
 
@@ -1536,6 +1539,7 @@ Q.component("defaultObject", {
     Q.state.set("nivel_ant", "nivel_final");
 
     var p = Q("Player").at(0);
+    Q.audio.stop();
   	Q.audio.play("boss_song.ogg", {loop:true});
 
   });
@@ -1552,6 +1556,8 @@ Q.component("defaultObject", {
 
 
     Q.state.set("nivel_ant", "NivelFuego");
+    Q.audio.stop();
+  	Q.audio.play("desierto.ogg", {loop:true});
 
   });
 
@@ -1567,6 +1573,8 @@ Q.component("defaultObject", {
 
 
     Q.state.set("nivel_ant", "NivelAgua");
+    Q.audio.stop();
+  	Q.audio.play("cueva.ogg", {loop:true});
 
   });
 
@@ -1583,6 +1591,8 @@ Q.component("defaultObject", {
 
 
     Q.state.set("nivel_ant", "NivelTierra");
+    Q.audio.stop();
+  	Q.audio.play("plantas.ogg", {loop:true});
 
   });
 
@@ -1598,6 +1608,8 @@ Q.component("defaultObject", {
 
 
     Q.state.set("nivel_ant", "NivelAire");
+    Q.audio.stop();
+  	Q.audio.play("viento.ogg", {loop:true});
 
   });
 
@@ -1865,7 +1877,8 @@ function crearHUDConversacion(face){
 
 //Cargamos recursos y lo necesario para el menu del titulo
 var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
-'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg, skeleton_die.ogg, devil_die.ogg, sonido_romper_jarron.ogg, magia.ogg, chest_openning.ogg, looperman_opening.ogg, portales_song.ogg, boss_song.ogg, credits_song.ogg, '+
+'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg, skeleton_die.ogg, devil_die.ogg, sonido_romper_jarron.ogg, magia.ogg, chest_openning.ogg, '+
+'looperman_opening.ogg, portales_song.ogg, boss_song.ogg, credits_song.ogg, cueva.ogg, desierto.ogg, plantas.ogg, portales.ogg, viento.ogg, '+
 'sonido_romper_hierba.ogg, sonido_romper_fuego.ogg, sonido_romper_roca.ogg, sonido_romper_tornado.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json, corazones.png, corazones.json, Demon_2.png, Demon.json';
 
 Q.load( recursos , function(){
