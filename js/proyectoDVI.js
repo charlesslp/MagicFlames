@@ -1517,12 +1517,12 @@ Q.component("defaultObject", {
       Q("Personaje").at(0).destroy();
     }
 
-    /*
+    
     stage.insert(new llama({x:600, y:150, tipo:0}));
     stage.insert(new llama({x:600, y:200, tipo:1}));
     stage.insert(new llama({x:600, y:250, tipo:2}));
     stage.insert(new llama({x:600, y:300, tipo:3}));
-    */
+    
 
     stage.follow(player);
     Q.state.set("nivel_ant", "portales");
