@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="60" height="120" tilewidth="32" tileheight="32" nextobjectid="453">
+<map version="1.0.0" orientation="orthogonal" renderorder="right-down" width="60" height="120" tilewidth="32" tileheight="32" nextobjectid="453">
  <tileset firstgid="1" name="Player" tilewidth="32" tileheight="32" tilecount="12" columns="3">
   <image source="../images/character.png" width="96" height="128"/>
   <tile id="0">
@@ -21731,7 +21731,7 @@
   </object>
  </objectgroup>
  <objectgroup name="stop">
-  <object id="452" gid="63" x="1376" y="3296" width="32" height="32"/>
+  <object id="452" gid="63" x="1376" y="2528" width="32" height="32"/>
  </objectgroup>
  <layer name="ObjetosPorDetras" width="60" height="120">
   <properties>

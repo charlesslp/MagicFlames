@@ -31,11 +31,12 @@ var conversacionIntro = [
   ],
 ]
 
-var conversacionCreditos = "\n\n\n\n\nY así es como nuestro héroe\nsalvó a Softwareland de las\nmalvadas garras del viejo\npederasta con alzheimer\n\n\n\n\n\n\n\n\n\n"+
+var conversacionCreditos = "\n\n\n\n\nY así es como nuestro héroe\nsalvó a Softwareland de las\nmalvadas garras del viejo\nese... No me acuerdo ahora\nde su nombre, la verdad\n\n\n\n\n\n\n\n\n\n"+
 "LAS LLAMAS DE LA MAGIA\n\n\n\n\nDesarrolladores:\n\n"+
 "Carlos Martínez Pérez\nArturo Marino Quintana\nPablo Martín Atienza\nPablo Márquez Fernández\n\n\n"+
 "Este proyecto ha sido realizado\npara la asignatura de\ndesarrollo de videojuegos\nmediante tegnologías web\nde la Universidad Complutense\nde Madrid\n\n\n"+
-"Recursos:\n\nRPG Maker\nOpenGameArt.org\nFreeSound\nJunkhunt.net"
+"Recursos:\n\nRPG Maker\nOpenGameArt.org\nJunkhunt.net\n\n\n"+
+"Sonidos y música:\n\nFreeSound"
 
 var game = function() {
 
@@ -335,6 +336,11 @@ var game = function() {
         if(this.p.animacion_creditos === "true"){
           Q.inputs['down'] = true;
         }
+
+        if(this.p.animacion_intro !== "true" && this.p.animacion_creditos !== "true" && Q.inputs['esc']){
+          Q.stageScene("HUDInstruccionesEsc", 4);
+        }
+
 
     }
   });
@@ -817,7 +823,6 @@ Q.component("defaultObject", {
               Q.state.inc("llamas_conseguidas", 1);
             }
 
-	        	console.log("te da el poder de "+this.p.tipo+" " +Q.state.get("llamas_conseguidas"));
 	        	this.play("apagar_"+this.p.tipo);
 	        }
         }
@@ -916,9 +921,12 @@ Q.component("defaultObject", {
            this.on("bump.top, bump.bottom, bump.left, bump.right", function(collision){
 
 	        if(collision.obj.isA("Player")){
+            /*
           		collision.obj.p.vy=0;
           		collision.obj.p.animacion_creditos=false;
           		Q.inputs["down"]=false;
+            */
+            cambiarNivelCreditos("FotoFinish");
 	        }
 	      });
         }
@@ -1119,7 +1127,7 @@ Q.component("defaultObject", {
 
   var demonio  = Q.Sprite.extend("Demon",{
     init: function(p){
-      this._super(p, {sprite: "DemonAnimation", sheet: "demon_walk_down", vx: p.velX, vy: p.velY, gravity: 0, vida: 30, golpeado:false, hitted:false});
+      this._super(p, {sprite: "DemonAnimation", sheet: "demon_walk_down", vx: p.velX, vy: p.velY, gravity: 0, vida: 50, golpeado:false, hitted:false});
       this.add('2d, animation, defaultEnemy');
 
       this.on("seguir",function() {
@@ -1246,8 +1254,7 @@ Q.component("defaultObject", {
     },
     step: function(dt) {
 
-
-	    if(Q.stage(0).paused){
+	    if(Q.stage(0).paused && Q.state.get("escape") === 0){
 	      if(!Q.inputs['fire'])
 	        this.keydown = false;
 
@@ -1259,14 +1266,30 @@ Q.component("defaultObject", {
 			        Q.state.set("texto_conversacion", this.conversacion);
 			        this.i = 0;
 			        Q.stage(0).unpause();
-                console.log(Q.state.get("num_conversacion"));
               		eliminarHUDConversacion();
-              		if(Q.state.get("num_conversacion") === 10){
-              			Q.state.inc("num_conversacion", 1)
-              			cambiarNivel("nivel_final");
-              		} else if(Q.state.get("num_conversacion") === 11){
-              			cambiarNivelCreditos();
-              		}
+                  switch(Q.state.get("num_conversacion")){
+                    case 1: if(Q.state.get("instrucciones") === 0){
+                      Q.stageScene("HUDDesbloqueo", 4); 
+                      Q.state.inc("instrucciones", 1);
+                    } break; 
+                    case 3: if(Q.state.get("instrucciones") === 1){
+                      Q.stageScene("HUDDesbloqueo", 4); 
+                      Q.state.inc("instrucciones", 1);
+                    } break; 
+                    case 5: if(Q.state.get("instrucciones") === 2){
+                      Q.stageScene("HUDDesbloqueo", 4); 
+                      Q.state.inc("instrucciones", 1);
+                    } break; 
+                    case 7: if(Q.state.get("instrucciones") === 3){
+                      Q.stageScene("HUDDesbloqueo", 4); 
+                      Q.state.inc("instrucciones", 1);
+                    } break; 
+                    case 10: Q.state.inc("num_conversacion", 1); cambiarNivel("nivel_final"); break;
+                    case 11: cambiarNivelCreditos("nivelCreditos"); break;
+
+
+                  }
+
 			    }
 			    else {
 			        Q.state.set("texto_conversacion", this.i);
@@ -1367,32 +1390,46 @@ Q.component("defaultObject", {
 
   Q.state.set("texto_mana", 100);
   Q.state.set("texto_vida", 100);
-  Q.state.set("nivel_ant", "portales");
+  Q.state.set("nivel_ant", "");
   Q.state.set("texto_monedas", 0);
   Q.state.set("cofres_abiertos", []);
   Q.state.set("llamas_conseguidas", 0);
   Q.state.set("poderes_conseguidos", 0);
   Q.state.set("num_conversacion", 0);
   Q.state.set("inventario", []);
+  Q.state.set("escape", 0);
+  Q.state.set("instrucciones", 0);
 
 });
 
   function cambiarNivel(nivel){
         Q.clearStages();
-        console.log(nivel);
-        Q.stageScene(nivel);
-        Q.stageScene('Pergamino', 1);
-        Q.stageScene('HUD', 2);
-        Q.stageScene('Corazones', 3);
-         Q.state.on("change.texto_vida",function(){;
-          Q.clearStage(3);
+
+        if(Q.state.get("nivel_ant") === "Introduccion"){
+          Q.stageScene(nivel);
+          Q.stageScene('Pergamino', 1);
+          Q.stageScene('HUD', 2);
           Q.stageScene('Corazones', 3);
-        });
+           Q.state.on("change.texto_vida",function(){
+            Q.clearStage(3);
+            Q.stageScene('Corazones', 3);
+          });
+          Q.stageScene('HUDInstrucciones', 4);
+        }
+        else {
+          Q.stageScene(nivel);
+          Q.stageScene('Pergamino', 1);
+          Q.stageScene('HUD', 2);
+          Q.stageScene('Corazones', 3);
+           Q.state.on("change.texto_vida",function(){
+            Q.clearStage(3);
+            Q.stageScene('Corazones', 3);
+          });
+         }
 
         //Abrimos todos los cofres del nivel
         var cofres_abiertos_aux = Q.state.get("cofres_abiertos");
 
-        //console.log(Q("Cofre").at(1));
 
         for(var i = 0; i < Q("Cofre").length; i++){
 
@@ -1401,19 +1438,18 @@ Q.component("defaultObject", {
           var posicion = cofres_abiertos_aux.indexOf(id_aux); //Posicion dentro del array de cofres abiertos
 
           if( posicion != -1){ //Es decir, si existe en la lista de abiertos
-            //console.log("cofre " + id_aux + " por abrir. Esta en la posicion "+posicion+" de la lista de cofres abiertos");
             Q("Cofre").at(i).play("cofre_abierto_inicialmente");
             Q("Cofre").at(i).p.abierto = true;
-            //console.log("El cofre identificado es: "+Q("Cofre").at(i).p.identificador);
             //Q("Cofre").at(posicion).play("cofre_abierto_inicialmente");
           }
         }
   }
 
-  function cambiarNivelCreditos(){
+  function cambiarNivelCreditos(level){
         Q.clearStages();
-        Q.stageScene("nivelCreditos");
-        Q.stageScene('HUDCreditos', 2);
+        Q.stageScene(level);
+        if(level === "nivelCreditos")
+          Q.stageScene('HUDCreditos', 2);
   }
 
   //Introduccion
@@ -1481,11 +1517,12 @@ Q.component("defaultObject", {
       Q("Personaje").at(0).destroy();
     }
 
+    /*
     stage.insert(new llama({x:600, y:150, tipo:0}));
     stage.insert(new llama({x:600, y:200, tipo:1}));
     stage.insert(new llama({x:600, y:250, tipo:2}));
     stage.insert(new llama({x:600, y:300, tipo:3}));
-
+    */
 
     stage.follow(player);
     Q.state.set("nivel_ant", "portales");
@@ -1613,6 +1650,24 @@ Q.component("defaultObject", {
   });
 
 
+
+
+//Nivel aire
+  Q.scene("FotoFinish", function(stage) {
+  
+  var container = stage.insert(new Q.UI.Container({
+      x: Q.width, y: Q.height, fill: "rgba(0,0,0,0.5)", w: 480, h: 480
+    }));
+
+    var button = container.insert(new Q.UI.Button({x: -Q.width/2, y: -Q.height/2, asset: "fin.png", keyActionName: "fire"}));
+    container.fit(20);
+
+  });
+
+
+
+
+
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //FIN JUEGO
 //FIN JUEGO
@@ -1714,6 +1769,95 @@ Q.component("defaultObject", {
         y: Q.height-70,
 
     }));
+
+
+  });
+
+ Q.scene('HUDInstrucciones',function(stage) {
+
+  var container = stage.insert(new Q.UI.Container({
+    x: Q.width, y: Q.height, w: 480, h: 480
+  }));
+
+  Q.stage(0).pause();
+
+  var button = container.insert(new Q.UI.Button({x: -Q.width/2, y: -Q.height/2, asset: "instrucciones.png", keyActionName: "fire"}));
+    button.on("click", function(){
+    Q.stage(0).unpause();
+    Q.clearStage(4);
+  });
+  container.fit(20);
+
+
+  });
+
+ Q.scene('HUDInstruccionesEsc',function(stage) {
+
+  Q.state.set("escape", 1);
+
+  var container = stage.insert(new Q.UI.Container({
+    x: Q.width, y: Q.height, w: 480, h: 480
+  }));
+
+  Q.stage(0).pause();
+
+  var ins;
+
+  switch(Q.state.get("poderes_conseguidos")){
+    case 0: ins = "ins_nada.png"; break;
+    case 1: ins = "ins_fuego.png"; break;
+    case 2: ins = "ins_agua.png"; break;
+    case 3: ins = "ins_tierra.png"; break;
+    case 4: ins = "ins_aire.png"; break;
+  }
+
+  var button = container.insert(new Q.UI.Button({x: -Q.width/2, y: -Q.height/2, asset: "instrucciones.png", keyActionName: "fire"}));
+    button.on("click", function(){
+
+      var button = container.insert(new Q.UI.Button({x: -Q.width/2, y: -Q.height/2, asset: ins, keyActionName: "fire"}));
+      button.on("click", function(){
+        Q.stage(0).unpause();
+        Q.clearStage(4);
+        Q.state.set("escape", 0);
+
+      });
+
+  });
+
+  container.fit(20);
+
+
+  });
+
+
+
+  Q.scene('HUDDesbloqueo',function(stage) {
+
+  Q.state.set("escape", 1);
+
+  var container = stage.insert(new Q.UI.Container({
+    x: Q.width, y: Q.height, w: 480, h: 480
+  }));
+
+  Q.stage(0).pause();
+
+  var des;
+
+  switch(Q.state.get("poderes_conseguidos")){
+    case 1: des = "des_fuego.png"; break;
+    case 2: des = "des_agua.png"; break;
+    case 3: des = "des_tierra.png"; break;
+    case 4: des = "des_aire.png"; break;
+  }
+
+  var button = container.insert(new Q.UI.Button({x: -Q.width/2, y: -Q.height/2, asset: des, keyActionName: "fire"}));
+    button.on("click", function(){
+        Q.stage(0).unpause();
+        Q.clearStage(4);
+        Q.state.set("escape", 0);
+  });
+
+  container.fit(20);
 
 
   });
@@ -1876,7 +2020,8 @@ function crearHUDConversacion(face){
 
 //Cargamos recursos y lo necesario para el menu del titulo
 var recursos = 'character.png , character.json , mi_seleccion.png, mi_seleccion.json, galeria.png, galeria2.png, '+
-'Intro.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, monster_die.ogg, skeleton_die.ogg, devil_die.ogg, sonido_romper_jarron.ogg, magia.ogg, chest_openning.ogg, '+
+'Intro.png, fin.png, instrucciones.png, mago.png, mago.json, murcielago.png, murcielago.json, portales.png, portales.json, ins_nada.png, ins_fuego.png, ins_agua.png, ins_tierra.png, ins_aire.png, des_fuego.png, des_agua.png, des_tierra.png, des_aire.png, '+
+'monster_die.ogg, skeleton_die.ogg, devil_die.ogg, sonido_romper_jarron.ogg, magia.ogg, chest_openning.ogg, '+
 'looperman_opening.ogg, portales_song.ogg, boss_song.ogg, credits_song.ogg, cueva.ogg, desierto.ogg, plantas.ogg, portales.ogg, viento.ogg, '+
 'sonido_romper_hierba.ogg, sonido_romper_fuego.ogg, sonido_romper_roca.ogg, sonido_romper_tornado.ogg, bones.png, esqueleto.json,  Pergamino.png , magoface.png, bossface.png, bossFinal.png, bossFinal.json, corazones.png, corazones.json, Demon_2.png, Demon.json';
 
