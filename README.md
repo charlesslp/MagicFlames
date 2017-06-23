@@ -16,7 +16,7 @@ Al final de cada nivel, nos tendremos que enfrentar a un enemigo al que solo le 
  
 Finalmente, una vez obtengamos todas las llamas de la magia, nos tendremos que enfrentar al enemigo final, que cambiará el tipo de magia que le afecta (cambiará entre rojo, azul, verde y blanco, indicando el tipo de magia que le afecta en ese momento) mientras nos lanza magia de ese tipo. Tras derrotar al boss final, habremos ganado el juego y nos apareceran los creditos.
  
-Si a lo largo del juego nos quedamos sin vida, el juego se reiniciará automáticamente desde el principio y habremos perdido la partida.
+Si a lo largo del juego nos quedamos sin vida, tendrás que volverte a pasar el nivel en el que te encuentras desde el principio.
 
 
 
