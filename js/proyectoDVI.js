@@ -1374,7 +1374,7 @@ Q.component("defaultObject", {
   Q.state.set("poderes_conseguidos", 0);
   Q.state.set("num_conversacion", 0);
   Q.state.set("inventario", []);
-
+asdfg
 
 });
 
