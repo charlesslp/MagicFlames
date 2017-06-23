@@ -1372,7 +1372,7 @@ Q.component("defaultObject", {
   Q.state.set("cofres_abiertos", []);
   Q.state.set("llamas_conseguidas", 0);
   Q.state.set("poderes_conseguidos", 0);
-  Q.state.set("num_conversacion", 9);
+  Q.state.set("num_conversacion", 0);
   Q.state.set("inventario", []);
 
 

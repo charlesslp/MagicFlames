@@ -12,7 +12,7 @@
   <properties>
    <property name="Class" value="Volver"/>
   </properties>
-  <image source="../images/Mi_seleccion.png" width="288" height="192"/>
+  <image source="../images/mi_seleccion.png" width="288" height="192"/>
   <tile id="4">
    <properties>
     <property name="Class" value="Cofre"/>

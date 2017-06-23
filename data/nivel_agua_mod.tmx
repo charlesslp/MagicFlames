@@ -9,7 +9,7 @@
   </tile>
  </tileset>
  <tileset firstgid="13" name="Mi_seleccion" tilewidth="32" tileheight="32" tilecount="54" columns="9">
-  <image source="../images/Mi_seleccion.png" width="288" height="192"/>
+  <image source="../images/mi_seleccion.png" width="288" height="192"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Llama"/>
