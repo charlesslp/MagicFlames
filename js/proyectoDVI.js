@@ -1370,8 +1370,8 @@ Q.component("defaultObject", {
   Q.state.set("nivel_ant", "portales");
   Q.state.set("texto_monedas", 0);
   Q.state.set("cofres_abiertos", []);
-  Q.state.set("llamas_conseguidas", 4);
-  Q.state.set("poderes_conseguidos", 4);
+  Q.state.set("llamas_conseguidas", 0);
+  Q.state.set("poderes_conseguidos", 0);
   Q.state.set("num_conversacion", 9);
   Q.state.set("inventario", []);
 
