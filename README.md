@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 1. Diseño del juego: se puede confeccionar a partir del documento de concepto
 entregado anteriormente, ampliando con las nuevas mecánicas añadidas y
 explicando mínimamente en qué consisten.
