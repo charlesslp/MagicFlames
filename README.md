@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 1. Diseño del juego: se puede confeccionar a partir del documento de concepto
 entregado anteriormente, ampliando con las nuevas mecánicas añadidas y
 explicando mínimamente en qué consisten.
@@ -124,3 +125,16 @@ El resto de las imágenes son modificaciones propias realizadas con photoshop o 
 Como tutoriales de Quintus hemos usado la práctica del mario, revisado el codigo de “http://www.html5quintus.com/quintus/examples/platformer_full/” para solucionar problemas y los apuntes de la asignatura.
  
 Todo el código ha sido realizado por nosotros.
+=======
+# MagicFlames
+Las llamas de la magia es un juego de rol desarrollado desde 0 con ayuda del motor Quintus.
+
+Desarrolladores:
+  - Carlos Martínez Pérez
+  - Arturo Marino Quintana
+  - Pablo Marquez Fernandez
+  - Pablo Martín Atienza
+
+Pruébalo:
+https://charlesslp.github.io/MagicFlames/
+>>>>>>> 8a7551f77a470b5218bbf0bfa2707f860309f9a2
