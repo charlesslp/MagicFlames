@@ -591,7 +591,14 @@ var magia = Q.Sprite.extend("Magic", {
           if(collision.obj.p.tipo === this.p.tipo && this.p.master === "heroe")
           	collision.obj.hit(10);
 
-        } else if(collision.obj.isA("Player") && this.p.master === "boss"){
+        } else if(collision.obj.isA("MiniBoss")){
+
+          if(collision.obj.p.tipo === this.p.tipo && this.p.master === "heroe")
+            collision.obj.hit(10);
+
+        }
+
+        else if(collision.obj.isA("Player") && this.p.master === "boss"){
 
           collision.obj.hit(10);
 
@@ -670,8 +677,12 @@ Q.component("defaultObject", {
   		init: function(p) {
         		this._super(p, { sprite: "miJarron", sheet: "jarron", gravity:0, tipo: "jarron"});
 		      this.add('defaultObject');
-      	}
-  	});
+      	  this.on("destruir", function(){
+            Q.stage().insert(new corazon({x:this.p.x, y:this.p.y}));
+            this.destroy();
+          });
+        }
+    });
 
     //Corazon
       Q.animations('animacion_corazon', {
@@ -1020,36 +1031,36 @@ Q.component("defaultObject", {
         if(this.p.vy > 0 && (Math.abs(heroe.p.x - this.p.x) < 4 || this.p.golpeado)){
           this.p.golpeado = false;
           this.play("enemy_walk_down");
-          if(this.p.Class === "Boss")
+          if(this.p.Class === "Boss" || this.p.Class === "MiniBoss")
           	this.p.direction = "down";
         } else if(this.p.vy < 0 && (Math.abs(heroe.p.x - this.p.x) < 4 || this.p.golpeado)){
           this.p.golpeado = false;
           this.p.golpeado = false;this.play("enemy_walk_up");
-          if(this.p.Class === "Boss")
+          if(this.p.Class === "Boss" || this.p.Class === "MiniBoss")
           	this.p.direction = "up";
         } else if(this.p.vx < 0 && (Math.abs(heroe.p.y - this.p.y) < 4 || this.p.golpeado)){
           this.p.golpeado = false;
           this.play("enemy_walk_left");
-          if(this.p.Class === "Boss")
+          if(this.p.Class === "Boss" || this.p.Class === "MiniBoss")
           	this.p.direction = "left";
         } else if(this.p.vx > 0 && (Math.abs(heroe.p.y - this.p.y) < 4 || this.p.golpeado)){
           this.p.golpeado = false;
           this.play("enemy_walk_right");
-          if(this.p.Class === "Boss")
+          if(this.p.Class === "Boss" || this.p.Class === "MiniBoss")
           	this.p.direction = "right";
         }
 
-        if(this.p.Class === "Boss"){
+        if(this.p.Class === "Boss" || this.p.Class === "MiniBoss"){
 
         	if(!this.p.matar){
 	        	this.p.tiempo += dt;
 	        	this.p.tiempoSinLanzar += dt;
-	        	if(this.p.tiempoSinLanzar > 3 && !this.p.hitted){
+	        	if(this.p.tiempoSinLanzar > 3 && !this.p.hitted && Math.abs(xyHeroe - xyBicho) < rango){
 	        		this.p.tiempoSinLanzar = 0;
 					this.stage.insert(new magia({tipo: this.p.tipo, direction: this.p.direction, x: this.p.x+this.p.vx/15, y: this.p.y+this.p.vy/15, potencia: 5, speed: 150, master: "boss"}));
 	        	}
 
-	        	if(this.p.tiempo > this.p.timesUp){
+	        	if(this.p.tiempo > this.p.timesUp && this.p.Class === "Boss"){
 	        		this.p.tiempo = 0;
 	        		this.p.cambiarA = Math.floor((Math.random() * 4));
 	        		this.p.timesUp = Math.floor((Math.random() * 3)) + 4;
@@ -1199,6 +1210,40 @@ Q.component("defaultObject", {
 		this.p.conversacion = conversacionMago[10];
 		Q.state.set("texto_conversacion", this.p.conversacion);
 		this.p.matar = true;
+      });
+    }
+  });
+
+
+    Q.animations('MiniBossAnimation', {
+    enemy_walk_down:{frames: [0, 1, 2], rate: 1/4},
+    enemy_walk_left: {frames: [3, 4, 5], rate: 1/4},
+    enemy_walk_right: {frames: [6, 7, 8], rate: 1/4},
+    enemy_walk_up: {frames: [9, 10, 11], rate: 1/4},
+  enemy_hit: {frames: [1, -1, 1, -1, 1, -1, 1, -1, 1], loop:false, rate: 1/6, trigger: "seguir"},
+  enemy_die: {frames: [1, -1, 1, -1, 1, -1, 1, -1, 1], loop:false, rate: 1/6, trigger: "destroy"}
+  });
+
+  var miniboss = Q.Sprite.extend("MiniBoss",{
+ 
+      init: function(p){
+
+
+      this._super(p, {sprite: "MiniBossAnimation", sheet: "boss_"+p.tipo, vx: p.velX, vy: p.velY, gravity: 0, golpeado:false, hitted:false});
+      this.add('2d, animation, defaultEnemy');
+
+      this.p.tiempo = 0;
+      this.p.tiempoSinLanzar = 0;
+      this.p.direction = "down";
+      this.p.cambiarA = null;
+      this.p.timesUp = Math.floor((Math.random() * 3)) + 4;
+      this.p.matar = false;
+
+      this.on("seguir",function() {
+        this.p.hitted = false;
+      });
+      this.on("destroy",function() {
+        this.destroy();
       });
     }
   });

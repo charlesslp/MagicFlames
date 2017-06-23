@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0.0" orientation="orthogonal" renderorder="right-down" width="90" height="70" tilewidth="32" tileheight="32" nextobjectid="1311">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="90" height="70" tilewidth="32" tileheight="32" nextobjectid="1313">
  <tileset firstgid="1" name="Player" tilewidth="32" tileheight="32" tilecount="12" columns="3">
   <image source="../images/character.png" width="96" height="128"/>
   <tile id="0">
@@ -83,6 +83,15 @@
   <tile id="0">
    <properties>
     <property name="Class" value="Personaje"/>
+   </properties>
+  </tile>
+  <tile id="12">
+   <properties>
+    <property name="Class" value="MiniBoss"/>
+    <property name="tipo" value="agua"/>
+    <property name="velX" value="40"/>
+    <property name="velY" value="40"/>
+    <property name="vida" value="50"/>
    </properties>
   </tile>
  </tileset>
@@ -19029,6 +19038,9 @@
    <tile gid="0"/>
   </data>
  </layer>
+ <objectgroup name="miniboss">
+  <object id="1311" gid="515" x="2304" y="832" width="32" height="32"/>
+ </objectgroup>
  <objectgroup name="llama">
   <object id="1289" gid="13" x="2528" y="768" width="32" height="32">
    <properties>
@@ -19195,12 +19207,6 @@
     <property name="velY" value="30"/>
    </properties>
   </object>
-  <object id="1210" gid="467" x="2016" y="832" width="32" height="32">
-   <properties>
-    <property name="velX" value="30"/>
-    <property name="velY" value="30"/>
-   </properties>
-  </object>
   <object id="1211" gid="467" x="1568" y="448" width="32" height="32">
    <properties>
     <property name="velX" value="30"/>
@@ -19214,24 +19220,6 @@
    </properties>
   </object>
   <object id="1213" gid="467" x="1824" y="1056" width="32" height="32">
-   <properties>
-    <property name="velX" value="30"/>
-    <property name="velY" value="30"/>
-   </properties>
-  </object>
-  <object id="1214" gid="467" x="2368" y="768" width="32" height="32">
-   <properties>
-    <property name="velX" value="30"/>
-    <property name="velY" value="30"/>
-   </properties>
-  </object>
-  <object id="1215" gid="467" x="2368" y="800" width="32" height="32">
-   <properties>
-    <property name="velX" value="30"/>
-    <property name="velY" value="30"/>
-   </properties>
-  </object>
-  <object id="1216" gid="467" x="2368" y="832" width="32" height="32">
    <properties>
     <property name="velX" value="30"/>
     <property name="velY" value="30"/>
